@@ -71,9 +71,13 @@
 }
 
 #recalButton{
-  margin-top:5px;
-  margin-right:5px;
-  display:none;
+  position:absolute;
+  top: 85px;
+  left: 0; 
+  right: 0; 
+  margin-left: auto; 
+  margin-right: auto; 
+  width: 135px;
 }
 
 .row {

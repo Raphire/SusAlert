@@ -7,6 +7,7 @@ const appColor = A1lib.mixColor(255, 255, 255);
 
 let isPaused = true;
 let isAttackable = false;
+let recalButtonVisible = false;
 let tooltipEnabled = true;
 let autoStopEnabled = false;
 let startDate = Date.now();
@@ -17,6 +18,7 @@ let lastUpcomingMessage = "";
 let attackOffset = 0;
 let recalOffset = 0;
 let midOffset = 14;
+let startOffset = 0;
 
 let attacks = {
 	15: ["Red bomb", "Move"],
@@ -90,15 +92,6 @@ function showSelectedChat(chat) {
   } catch { }
 }
 
-function readBossTimer() {
-  if (bossTimerReader.find() != null && isPaused == true){
-    startEncounter();
-  }
-  else if (bossTimerReader.find() == null && isPaused == false) {
-    stopEncounter();
-  }
-}
-
 //Reading and parsing info from the chatbox.
 function readChatbox() {
   var opts = reader.read() || [];
@@ -112,6 +105,7 @@ function readChatbox() {
   if (isPaused == false && isAttackable == false && (chat.indexOf("is vulnerable. Attack its core!") > -1 || 
                                                     chat.indexOf("dark feast subsides. Strike now!") > -1 || 
                                                     chat.indexOf("is the time. To the core!") > -1)) {
+    console.log("Attack detected");
     startAttack();
   }
   
@@ -119,18 +113,19 @@ function readChatbox() {
   if (isPaused == false && isAttackable == true && (chat.indexOf("feeds again - stand ready!") > -1 || 
                                                      chat.indexOf("out - it is awakening.") > -1 ||
                                                      chat.indexOf("is going to wake any moment.") > -1)) { // Might not be correct?
+    console.log("End of attack detected");
     endAttack();
   }
   
-  // Check for lines indicating the mid enrgy fungi have spawned
+  // Check for lines indicating the mid energy fungi have spawned
   if (isPaused == false && isAttackable == false && (chat.indexOf("the fungus at Croesus's base!") > -1 ||
                                                      chat.indexOf("fungus at Croesus's base - destroy it, now!") > -1)) { 
-    recalibrateTime();
+    console.log("Mid detected");
   }
 }
 
-function recalibrateTime(){
-  let currentDate = Date.now();
+// Calculates an offset to recalibrate the  timer
+function calculateRecalOffset(){
   let time = Date.now() - startDate;
   let adjTime = new Date(time < 0 ? 0 : time).getTime()/1000;
   
@@ -138,40 +133,28 @@ function recalibrateTime(){
   
   let totalTime = 147 + midOffset;
   
-  adjTime = (adjTime % totalTime);
+  console.log("Time before mod: " + adjTime);
   
-  //let attackCycles = Math.round(adjTime / totalTime);
+  adjTime = adjTime % totalTime;
   
-  //let calculatedStart = Date.now() - (((totalTime * attackCycles) - midOffset) * 1000)
+  console.log("Time after mod: " + adjTime);
   
-  recalOffset = 144 - adjTime;
-  
-  console.log("Mid started, recalibration offset: " + recalOffset);
+  if (adjTime >= 148) {
+    recalOffset = adjTime - totalTime;
+  }
+  else if (adjTime <= 25) {
+    recalOffset = adjTime;
+  }
+
+  recalButtonVisible = false;
+
+  let rButton = document.getElementById("recalButton");
+  rButton.classList.add("d-none");
 }
 
-function startAttack() {
-  isAttackable = true;
-  
-  lastUpcomingMessage = document.getElementById('upcomingBox').textContent;
-    
-  message("","upcomingBox");
-  message("Croesus is vulnerable,\nattack the core!");
-  
-  attackStartDate = Date.now();
-}
-
-function endAttack() {
-  isAttackable = false;
-    
-  message(lastUpcomingMessage,"upcomingBox");
-  message("",true);
-  
-  attackOffset = attackOffset + (Date.now() - attackStartDate) / 1000;
-  console.log("Attack ended, time offset: " + attackOffset);
-}
-
-function updateClock(){
-  if(!isPaused){
+// Updates clock, upcoming/incoming attack messages and the tooltip (Needs to be broken up)
+function updateClock() {
+  if (!isPaused) {
     let upcomingAttack = false;
     let incomingAttack = 0;
     let attackTime = 0;
@@ -180,22 +163,14 @@ function updateClock(){
     let adjTime = new Date(time < 0 ? 0 : time).getTime()/1000;
     message(adjTime.toFixed(0) + "s", "timerBox");
     
-    adjTime = adjTime - attackOffset;
+    adjTime = adjTime - attackOffset - recalOffset;
     
-    if(adjTime >= 143) {
+    // Check if fight is at least at or past first mid
+    if (adjTime >= 143 + midOffset) {
       let totalTime = 147 + midOffset;
-      let rOffset = 0;
       oldAdjTime = adjTime;
       
-      //if(adjTime >= 180) {
-      //  rOffset = recalOffset;
-      //} 
-      //else if(recalOffset != 0)
-      //{
-      //  recalOffset = 0;
-      //}
-      
-      adjTime = (adjTime % totalTime) - rOffset;
+      adjTime = adjTime % totalTime;
       
       if(adjTime < 0){
         adjTime = oldAdjTime - recalOffset;
@@ -205,22 +180,43 @@ function updateClock(){
     let count = 0;
     
     for (var key in attacks) {
-      if(!isAttackable && upcomingAttack) {
+      // Check if this is an upcoming attack
+      if (!isAttackable && upcomingAttack) {
         upcomingAttack = false;
         
         message("Upcoming attack: " + attacks[key][0], "upcomingBox");
       }
-      if(!isAttackable && ((parseInt(key) - 4) < adjTime && adjTime < (parseInt(key) + 10))) {
-          if(count == (Object.keys(attacks).length - 1)){
-            incomingAttack = key;
-            attackTime = parseInt(key);
-              
-            message("Upcoming attack: Red bomb", "upcomingBox");
-          } 
-          else {
-            if(adjTime < (parseInt(key) + 3)) {
+      // Check if this is an incoming attack
+      if (!isAttackable && ((parseInt(key) - 4) < adjTime && adjTime < (parseInt(key) + 11))) {
+          // Check if this is the last attack (Mid energy fungi)
+          if (count == (Object.keys(attacks).length - 1)) {
+            if (adjTime < (parseInt(key) + 10)) {
               incomingAttack = key;
               attackTime = parseInt(key);
+                
+              message("Upcoming attack: Red bomb", "upcomingBox");
+            } 
+            else if (!recalButtonVisible && ((parseInt(key) + 10) <= adjTime && adjTime < (parseInt(key) + 11))) {
+              console.log("visible");
+              recalButtonVisible = true;
+      
+              let rButton = document.getElementById("recalButton");
+              rButton.classList.remove("d-none");
+            }
+          }
+          // This is different attack
+          else {
+            if (adjTime < (parseInt(key) + 3)) {
+              incomingAttack = key;
+              attackTime = parseInt(key);
+              
+              if (recalButtonVisible) {
+                console.log("invisible");
+                recalButtonVisible = false;
+        
+                let rButton = document.getElementById("recalButton");
+                rButton.classList.add("d-none");
+              }
             }
             
             upcomingAttack = true;
@@ -252,6 +248,7 @@ function updateClock(){
   }
 }
 
+// Toggles whether or not the tooltip is visible
 function toggleTooltip() {
   updateTooltip("");
   alt1.clearTooltip();
@@ -262,6 +259,7 @@ function toggleTooltip() {
   localStorage.setItem("susTooltip", tooltipEnabled);
 }
 
+// Update the text in the tooltip
 function updateTooltip(){
   if(currentTooltip!=""){
     if(!alt1.setTooltip(" " + currentTooltip)){
@@ -287,10 +285,14 @@ function startEncounter(offset = 0) {
 function stopEncounter() {
   isPaused = true;
   isAttackable = false;
+  recalButtonVisible = false;
   currentTooltip = "";
   lastUpcomingMessage = "";
   attackOffset = 0;
   recalOffset = 0;
+
+  let rButton = document.getElementById("recalButton");
+  rButton.classList.add("d-none");
   
   sBtn.innerHTML = "Start";
   alt1.clearTooltip();
@@ -298,8 +300,32 @@ function stopEncounter() {
   message("","upcomingBox");
 }
 
+function startAttack() {
+  isAttackable = true;
+  
+  lastUpcomingMessage = document.getElementById('upcomingBox').textContent;
+    
+  message("","upcomingBox");
+  message("Croesus is vulnerable,\nattack the core!");
+  
+  updateTooltip("Attack the core!");
+  
+  attackStartDate = Date.now();
+}
+
+function endAttack() {
+  isAttackable = false;
+    
+  message(lastUpcomingMessage,"upcomingBox");
+  message("",true);
+  alt1.clearTooltip();
+  
+  attackOffset = attackOffset + (Date.now() - attackStartDate) / 1000;
+  console.log("Attack ended, time offset: " + attackOffset);
+}
+
 function message(str,elementId="incomingBox"){
-  elid(elementId).innerHTML=str+"\n";
+  elid(elementId).innerHTML=str;
 }
 
 function startTimer(){
@@ -307,6 +333,15 @@ function startTimer(){
     startEncounter();
   }
   else {
+    stopEncounter();
+  }
+}
+
+function readBossTimer() {
+  if (bossTimerReader.find() != null && isPaused == true){
+    startEncounter(startOffset);
+  }
+  else if (bossTimerReader.find() == null && isPaused == false) {
     stopEncounter();
   }
 }
@@ -323,8 +358,9 @@ function changeDelay() {
   localStorage.setItem("susMidDelay", midOffset);
 }
 
+// Gets called when user presses the alt + 1 keybind.
 function alt1onrightclick(obj){
-  startTimer();
+  calculateRecalOffset();
 }
 
 $(function () {
