@@ -26,6 +26,7 @@
   overflow-x:hidden; 
   overflow-y:hidden;
 }
+
 #incomingBox{
   margin-left:10px; 
   margin-bottom:10px; 
@@ -78,6 +79,10 @@
   margin-left: auto; 
   margin-right: auto; 
   width: 135px;
+}
+
+.input-width {
+  width: 90px;
 }
 
 .row {

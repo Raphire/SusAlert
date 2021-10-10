@@ -102,11 +102,19 @@
             </div>
           </div>
           <div class="row">
-            <div class="col" title="Changes the delay after the mid energy fungi">
+            <div class="col" title="Changes the delay after the start of an encounter is detected (default: 0)">
+              <p>Start delay (ms)</p>
+            </div>
+            <div class="col">
+              <input class="input-width" type="number" id="startDelayInput" name="startDelayInput" min="0" max="2000" onchange="changeStartDelay()">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col" title="Changes the delay after the mid energy fungi (default: 14)">
               <p>Delay after mid (s)</p>
             </div>
             <div class="col">
-              <input type="number" id="delayInput" name="delayInput" min="5" max="25" onchange="changeDelay()">
+              <input class="input-width" type="number" id="delayInput" name="delayInput" min="5" max="25" onchange="changeDelay()">
             </div>
           </div>
         </div>

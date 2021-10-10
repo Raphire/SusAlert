@@ -32,3 +32,6 @@ https://raphire.github.io/SusAlert/
 - The timer can go out of sync after the mid energy fungi appears. (Can be manually recalibrated by clicking the 'Mid Down' button or pressing alt + 1 when the mid energy fungi dies)
 - Old messages can sometimes trigger again.
 - The manual startbutton currently only works when a bosstimer is visible. (The timer will start automatically)
+
+## Credits
+Special thanks to [ZeroGwafa](https://github.com/ZeroGwafa) for his chat detection function, and [Skillbert](https://github.com/skillbert) for his help with making the bosstimer detection.

@@ -3,8 +3,6 @@
 //Enable "Add App" button for Alt1 Browser.
 A1lib.identifyApp("appconfig.json");
 
-const appColor = A1lib.mixColor(255, 255, 255);
-
 let isPaused = true;
 let isAttackable = false;
 let recalButtonVisible = false;
@@ -34,6 +32,7 @@ let attacks = {
 	135: ["Stun", "Use anticipation"],
 	144: ["Mid energy fungi", "Go to mid"],
 }
+
 // Set Chat reader
 let reader = new Chatbox.default();
 reader.readargs = {
@@ -53,9 +52,11 @@ let bossTimer = setInterval(function () {
 reader.find();
 reader.read();
 
+// Chat finder & parser functions adapted from: https://github.com/ZeroGwafa/SerenTracker
 let findChat = setInterval(function () {
-  if (reader.pos === null)
+  if (reader.pos === null) {
     reader.find();
+  }
   else {
     clearInterval(findChat);
     reader.pos.boxes.map((box, i) => {
@@ -64,7 +65,8 @@ let findChat = setInterval(function () {
 
     if (localStorage.susChat) {
       reader.pos.mainbox = reader.pos.boxes[localStorage.susChat];
-    } else {
+    } 
+    else {
       //If multiple boxes are found, this will select the first, which should be the top-most chat box on the screen.
       reader.pos.mainbox = reader.pos.boxes[0];
     }
@@ -81,7 +83,7 @@ function showSelectedChat(chat) {
   //Attempt to show a temporary rectangle around the chatbox.  skip if overlay is not enabled.
   try {
     alt1.overLayRect(
-      appColor,
+      A1lib.mixColor(255, 255, 255),
       chat.mainbox.rect.x,
       chat.mainbox.rect.y,
       chat.mainbox.rect.width,
@@ -92,7 +94,7 @@ function showSelectedChat(chat) {
   } catch { }
 }
 
-//Reading and parsing info from the chatbox.
+// Reading and parsing info from the chatbox.
 function readChatbox() {
   var opts = reader.read() || [];
   var chat = "";
@@ -352,6 +354,12 @@ function nudgeTimer(time) {
   updateClock();
 }
 
+function changeStartDelay() {
+  startOffset = document.getElementsByName('startDelayInput')[0].value;
+  
+  localStorage.setItem("susStartDelay", startOffset);
+}
+
 function changeDelay() {
   midOffset = document.getElementsByName('delayInput')[0].value;
   
@@ -373,8 +381,19 @@ $(function () {
 });
 
 $('document').ready(function(){
+  startDelayInput = document.getElementsByName('startDelayInput');
   delayInput = document.getElementsByName('delayInput');
   ttCheck = document.getElementById('tooltipCheck');  
+
+  // Check for saved start delay & set it
+  if (localStorage.susStartDelay) {
+    startOffset = parseInt(localStorage.susStartDelay);
+    
+    startDelayInput[0].value = startOffset;
+  }
+  else {
+    startDelayInput[0].value = startOffset;
+  }
   
   // Check for saved delay & set it
   if (localStorage.susMidDelay) {
