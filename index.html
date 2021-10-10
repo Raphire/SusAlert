@@ -1,0 +1,123 @@
+<html>
+
+<head>
+    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://runeapps.org/nis/nis.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <script type="text/javascript" src="https://runeapps.org/runeappslib.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://runeapps.org/runeappslib.css">
+    <script src="https://www.unpkg.com/@alt1/base/dist/index.bundle.js"></script>
+    <script src="https://www.unpkg.com/@alt1/ocr/dist/index.bundle.js"></script>
+    <script src="https://www.unpkg.com/@alt1/chatbox/dist/index.bundle.js"></script>
+    <script src="scripts/bosstimer.bundle.js"></script>
+</head>
+
+<body class="nis">
+  <div class="container">
+	<div class="row">
+    <div class="col">
+      <h4 style="position:absolute;left:15px;">SusAlert</h4>
+      <div id="settingsButton" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#settings"></div>
+      <div id="infoButton" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#info"></div>
+      <div id="recalButton" type="button" class="nissmallimagebutton menubutton float-right" onclick="recalibrateTime()" >t</div>
+    </div>
+	</div>
+  <div class="row">
+		<div id="upcomingBox" class="nistext"></div>
+	</div>
+	<div class="row">
+		<div id="incomingBox" class="nistext font-weight-bold h5">Awaiting boss start...</div>
+	</div>
+    <div class="row fixed-bottom">
+      <div class="col">
+        <h4><div id="timerBox" class="nistext float-left">0s</div></h4>
+        <div id="minusButton" type="button" class="nissmallimagebutton menubutton" onclick="nudgeTimer(1000)" >-</div>
+        <div id="plusButton" type="button" class="nissmallimagebutton menubutton" onclick="nudgeTimer(-1000)" >+</div>
+        <div class="nisbutton float-right" onclick="startTimer()" id="startButton">
+            Start
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Info Modal -->
+  <div class="modal nis" tabindex="-1" role="dialog" id="info">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title"><b>Information</b></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col">
+              <p>To avoid issues please <b>set font size to 12 or higher</b>, and make sure the chatbox is large enough and <b>NOT transparant</b>.</p>
+              <p><b>Known issues:<br/></b>
+                 - Timer goes out of sync after mid fungi.<br/>
+                 - Old messages sometimes trigger again.</p>
+              <span>If the timing after the first mid energy fungi seems off you can tweak the delay in the settings, default delay is 14s.</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <span><b>Report bugs & feedback on our github: <a href="https://github.com/Raphire/SusAlert" target="_blank">https://github.com/Raphire/SusAlert</a></b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Settings Modal -->
+  <div class="modal nis" tabindex="-1" role="dialog" id="settings">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title"><b>Settings</b></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col" title="Allows the user to select the chat box the app should target.">
+              <p>Select Chat</p>
+            </div>
+            <div class="col">
+              <select class="chat">
+                <option value="">Select Chat</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col" title="Allows user to toggle tooltip">
+              <p>Show tooltip</p>
+            </div>
+            <div class="col">
+              <input type="checkbox" value="false" id="tooltipCheck" onclick="toggleTooltip()">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col" title="Allows user to change delay after mid">
+              <p>Delay after mid (s)</p>
+            </div>
+            <div class="col">
+              <input type="number" id="delayInput" name="delayInput" min="5" max="25" onchange="changeDelay()">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <span><b>Report bugs & feedback on our github: <a href="https://github.com/Raphire/SusAlert" target="_blank">https://github.com/Raphire/SusAlert</a></b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="scripts/script.js"></script>
+
+</html>

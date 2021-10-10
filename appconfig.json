@@ -1,0 +1,16 @@
+{
+  "appName": "SusAlert",
+  "description": "A timer for the croesus fight, alerting you off all it's attacks.",
+  "appUrl": "./index.html",
+  "configUrl": "./appconfig.json",
+  "iconUrl": "./assets/favicon.png",
+  "defaultWidth": 313,
+  "defaultHeight": 213,
+  "minWidth":313,
+	"minHeight":213,
+	"maxWidth":600,
+	"maxHeight":205,
+  "requestHandlers": [],
+  "activators": [],
+  "permissions": "pixel,gamestate,overlay"
+}

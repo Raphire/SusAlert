@@ -1,0 +1,111 @@
+#timerBox{
+  position:absolute; 
+  bottom:10px; 
+  left:25px; 
+  right:130px; 
+  white-space:pre; 
+  background:rgba(0,0,0,0.5); 
+  outline:1px solid gray; 
+  padding:5px; 
+  font-family:monospace; 
+  overflow-x:hidden; 
+  overflow-y:hidden;
+}
+
+#upcomingBox{
+  margin-top:10px; 
+  margin-left:10px; 
+  margin-bottom:10px; 
+  height: 30px; 
+  width:calc(100% - 20px); 
+  white-space:pre; 
+  background:rgba(0,0,0,0.5); 
+  outline:1px solid gray; 
+  padding:5px; 
+  font-family:monospace; 
+  overflow-x:hidden; 
+  overflow-y:hidden;
+}
+#incomingBox{
+  margin-left:10px; 
+  margin-bottom:10px; 
+  height: 60px; 
+  width:calc(100% - 20px); 
+  white-space:pre;
+  background:rgba(0,0,0,0.5); 
+  outline:1px solid gray; 
+  padding:5px; 
+  font-family:monospace; 
+  overflow-x:hidden; 
+  overflow-y:hidden;
+}
+
+#startButton{
+  margin-bottom:13px; 
+  margin-right:10px;
+  width:90px;
+}
+
+#settingsButton{
+  margin-top:5px;
+  margin-right:-5px;
+  background-image: url(../assets/settingsbutton2.png);
+}
+    
+#infoButton{
+  margin-top:5px;
+  margin-right:5px;
+  background-image: url(../assets/helpbutton.png);
+}
+
+#plusButton{
+  position:absolute; 
+  bottom:19px;
+  right:138px; 
+}
+
+#minusButton{
+  position:absolute; 
+  bottom:19px; 
+  left:33px; 
+}
+
+#recalButton{
+  margin-top:5px;
+  margin-right:5px;
+  display:none;
+}
+
+.row {
+    text-align: center;
+}
+
+body {
+    margin-top: 10px !important;
+}
+
+.main {
+    overflow-y: scroll;
+    max-height: 75vh;
+    margin-top: 8px;
+}
+
+.modal-body,
+.modal-header,
+.modal-footer {
+    background-color:whitesmoke;
+    color: black;
+}
+
+.header {
+    text-align: center;
+    background: url(https://runeapps.org/nis/alt1-currentskin/nisbutton.png) 0px -100%/24px 400% repeat content-box;
+    background-color: black;
+    color: black;
+    font-family: 'trajan-pro-3';
+    padding: unset;
+    position: fixed;
+    top: 10px;
+    width: 100%;
+    z-index: 1;
+}
