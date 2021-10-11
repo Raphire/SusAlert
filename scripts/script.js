@@ -17,6 +17,7 @@ let attackOffset = 0;
 let recalOffset = 0;
 let midOffset = 14;
 let startOffset = 0;
+let tempCount = 0;
 
 let attacks = {
 	15: ["Red bomb", "Move"],
@@ -47,7 +48,7 @@ let bossTimerReader = new BossTimer.default();
 
 let bossTimer = setInterval(function () {
   updateClock();
-}, 300);
+}, 600);
 
 reader.find();
 reader.read();
@@ -73,9 +74,15 @@ let findChat = setInterval(function () {
     
     showSelectedChat(reader.pos);
     setInterval(function () {
-      readChatbox();
-      readBossTimer();
-    }, 600);
+      if (tempCount % 2 == 0) {
+        readChatbox();
+      }
+      else {
+        readBossTimer();
+      }
+
+      tempCount = tempCount + 1;
+    }, 300);
   }
 }, 1000);
 
@@ -292,6 +299,7 @@ function stopEncounter() {
   lastUpcomingMessage = "";
   attackOffset = 0;
   recalOffset = 0;
+  tempCount = 0;
 
   let rButton = document.getElementById("recalButton");
   rButton.classList.add("d-none");
