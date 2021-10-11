@@ -1,19 +1,18 @@
 <html>
 
 <head>
-    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="https://runeapps.org/nis/nis.css" />
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="https://runeapps.org/nis/nis.css" />
+  <link rel="stylesheet" type="text/css" href="css/style.css">
 
-    <script type="text/javascript" src="https://runeapps.org/runeappslib.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://runeapps.org/runeappslib.css">
-    <script src="https://www.unpkg.com/@alt1/base/dist/index.bundle.js"></script>
-    <script src="https://www.unpkg.com/@alt1/ocr/dist/index.bundle.js"></script>
-    <script src="https://www.unpkg.com/@alt1/chatbox/dist/index.bundle.js"></script>
-    <script src="scripts/bosstimer.bundle.js"></script>
+  <script type="text/javascript" src="https://runeapps.org/runeappslib.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://runeapps.org/runeappslib.css">
+  <script src="https://www.unpkg.com/@alt1/base/dist/index.bundle.js"></script>
+  <script src="https://www.unpkg.com/@alt1/ocr/dist/index.bundle.js"></script>
+  <script src="https://www.unpkg.com/@alt1/chatbox/dist/index.bundle.js"></script>
+  <script src="scripts/bosstimer.bundle.js"></script>
 </head>
 
 <body class="nis">
@@ -23,7 +22,7 @@
       <h4 style="position:absolute;left:15px;">SusAlert</h4>
       <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#settings"></div>
       <div id="infoButton" title="Information" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#info"></div>
-      <div id="recalButton" title="Recalibrate timer (Click when mid goes down)" type="button" class="nisbutton menubutton float-right d-none" onclick="calculateRecalOffset()">Mid Down</div>
+      <div id="recalButton" title="Recalibrate timer (Click when mid goes down)" type="button" class="nisbutton menubutton d-none" onclick="calculateRecalOffset()">Mid Down</div>
     </div>
 	</div>
   <div class="row">
@@ -45,11 +44,11 @@
   </div>
   
   <!-- Info Modal -->
-  <div class="modal nis" tabindex="-1" role="dialog" id="info">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade nis" tabindex="-1" id="info" aria-labelledby="infoLabel">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h6 class="modal-title"><b>Information</b></h6>
+          <h6 class="modal-title" id="infoLabel"><b>Information</b></h6>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -60,7 +59,7 @@
               <p>To avoid issues please <b>set font size to 12 or higher</b>, and make sure the chatbox is large enough and <b>NOT transparant</b>.</p>
               <p>You can sync the timing after the mid energy fungi as down by clicking the <b>Mid Down</b> button or pressing <b>alt + 1.</b></p>
               <span><b>Known issues:<br/></b>
-                 - Timer goes out of sync after mid fungi.<br/>
+                 - Timer can go out of sync after mid fungi.<br/>
                  - Old messages sometimes trigger again.</span>
             </div>
           </div>
@@ -73,11 +72,11 @@
   </div>
   
   <!-- Settings Modal -->
-  <div class="modal nis" tabindex="-1" role="dialog" id="settings">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade nis" tabindex="-1" id="settings" aria-labelledby="settingsLabel">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h6 class="modal-title"><b>Settings</b></h6>
+          <h6 class="modal-title" id="settingsLabel"><b>Settings</b></h6>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
