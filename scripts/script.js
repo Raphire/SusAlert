@@ -242,9 +242,11 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
     message("");
   }
   
-  if(tooltipEnabled && incomingAttack != 0 && currentTooltip == "") {
+  if(incomingAttack != 0 && currentTooltip == "") {
     currentTooltip = attacks[incomingAttack][0] + ": " + attacks[incomingAttack][1];
-    updateTooltip();
+    if (tooltipEnabled) {
+      updateTooltip();
+    }
   }
 
   if (upcomingAttack != 0) {
@@ -308,6 +310,8 @@ function startAttack() {
   isAttackable = true;
   
   lastUpcomingMessage = document.getElementById('upcomingBox').textContent;
+
+  elid("recalButton").classList.add("d-none");
     
   message("","upcomingBox");
   message("Croesus is vulnerable,\nattack the core!");
