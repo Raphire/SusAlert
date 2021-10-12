@@ -197,16 +197,16 @@ function updateClock() {
     if (!isAttackable) {
       for (var key in attacks) {
         // Check if this is an incoming attack
-        if ((parseInt(key) - 4) < adjTime && adjTime < (parseInt(key) + 11)) {
+        if ((parseInt(key) - 4) < adjTime && adjTime < (parseInt(key) + 9)) {
           // Check if this is the last attack (Mid energy fungi)
           if (count == (Object.keys(attacks).length - 1)) {
-            if (adjTime < (parseInt(key) + 10)) {
+            if (adjTime < (parseInt(key) + 7)) {
               incomingAttack = key;
               attackTime = parseInt(key);
                 
               message("Upcoming attack: Red bomb", "upcomingBox");
             } 
-            else if (!recalButtonVisible && ((parseInt(key) + 10) <= adjTime && adjTime < (parseInt(key) + 11))) {
+            else if (!recalButtonVisible && ((parseInt(key) + 7) <= adjTime && adjTime < (parseInt(key) + 9))) {
               recalButtonVisible = true;
               elid("recalButton").classList.remove("d-none");
             }

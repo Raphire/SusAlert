@@ -3,14 +3,14 @@ SusAlert is an alt1 toolkit app for the croesus fight, it keeps track of croesus
 
 **Please note that this plugin is still in a pre-release state and may contain bugs.**
 
-![SusAlert-MainWindow](https://user-images.githubusercontent.com/9938813/136677639-16636582-ebe3-4c5e-8e64-192c30c90361.png)
+![SusAlert-MainWindow](/assets/mainscreen.png)
 
 ## How to use
 SusAlert is very easy to use, simply install and open the plugin in alt1 toolkit. The plugin will automatically detect when the croesus fight starts or ends, but it does have a manual start/stop button if you need it.
 
-To prevent the timer from drifting you can synchronize it by clicking the button that appears on the interface or pressing alt+1 when the mid energy fungus dies, another solution may be to edit the delay after mid in the settings. 
+To prevent the timer from drifting you can synchronize it by clicking the button that appears on the interface or pressing alt+1 when the mid energy fungus dies, another solution may be to edit the delay after mid in the settings. For finer control you can use the + and - buttons on the timer to 'nudge' the timer forward or back in 1s increments.
 
-Lastly, you can use the + and - buttons on the timer to 'nudge' the timer forward or back in 1s increments.
+Lastly, there's a mushroom button to start & sync a timer for the mushroom path, which makes it easy to see when the mushroom path will change next. You only need to click the button once when the mushroom path changes, from then on it will continue to work for the rest of the instance.
 
 ## Requirements
 To function SusAlert needs the following:
