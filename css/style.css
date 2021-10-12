@@ -1,3 +1,8 @@
+#appTitle{
+  position:absolute; 
+  left:15px; 
+}
+
 #timerBox{
   position:absolute; 
   bottom:10px; 
@@ -47,16 +52,36 @@
   width:90px;
 }
 
+#shroomImage{
+  position:absolute;
+  top: 7px;
+  left: 144px;
+  width:15px;
+  height:15px;
+}
+
+#shroomTimer{
+  position:absolute;
+  top:6px;
+  left:165px;
+}
+
 #settingsButton{
   margin-top:5px;
   margin-right:-5px;
-  background-image: url(../assets/settingsbutton2.png);
+  background-image: url(../assets/settingsbutton.png);
 }
     
 #infoButton{
   margin-top:5px;
   margin-right:5px;
-  background-image: url(../assets/helpbutton.png);
+  background-image: url(../assets/infobutton.png);
+}
+
+#shroomSyncButton{
+  margin-top:5px;
+  margin-right:5px;
+  background-image: url(../assets/shroombutton.png);
 }
 
 #plusButton{
@@ -73,12 +98,13 @@
 
 #recalButton{
   position:absolute;
-  top: 85px;
+  top: 95px;
   left: 0; 
   right: 0; 
   margin-left: auto; 
   margin-right: auto; 
-  width: 135px;
+  width: 261px;
+  font-size:15px;
 }
 
 .input-width {

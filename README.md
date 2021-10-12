@@ -1,5 +1,5 @@
 # SusAlert
-SusAlert is an alt1 toolkit plugin for the croesus fight, it keeps track of croesus' attacks and warns you before they happen.
+SusAlert is an alt1 toolkit app for the croesus fight, it keeps track of croesus' attacks and warns you before they happen.
 
 **Please note that this plugin is still in a pre-release state and may contain bugs.**
 
@@ -8,7 +8,7 @@ SusAlert is an alt1 toolkit plugin for the croesus fight, it keeps track of croe
 ## How to use
 SusAlert is very easy to use, simply install and open the plugin in alt1 toolkit. The plugin will automatically detect when the croesus fight starts or ends, but it does have a manual start/stop button if you need it.
 
-If the timer drifts after the first mid energy fungi you can synchronize it by clicking the 'Mid Down' button or pressing alt+1 when the mid energy fungi dies, another solution may be to edit the delay after mid in the settings. 
+To prevent the timer from drifting you can synchronize it by clicking the button that appears on the interface or pressing alt+1 when the mid energy fungus dies, another solution may be to edit the delay after mid in the settings. 
 
 Lastly, you can use the + and - buttons on the timer to 'nudge' the timer forward or back in 1s increments.
 
@@ -29,7 +29,7 @@ Or go to this URL in the alt1 browser:<br/>
 https://raphire.github.io/SusAlert/
 
 ## Known issues
-- The timer can go out of sync after the mid energy fungi appears. (Can be manually recalibrated by clicking the 'Mid Down' button or pressing alt + 1 when the mid energy fungi dies)
+- The timer can go out of sync after the mid energy fungus appears. (Can be manually synced by clicking the button that appears or pressing alt + 1 when the mid energy fungus dies)
 - Old messages can sometimes trigger again.
 - The manual startbutton currently only works when a bosstimer is visible. (The timer will start automatically)
 

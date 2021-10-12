@@ -9,6 +9,7 @@ let recalButtonVisible = false;
 let tooltipEnabled = true;
 let autoStopEnabled = false;
 let startDate = Date.now();
+let shroomStartDate = Date.now();
 let attackStartDate = Date.now();
 let currentTooltip = "";
 let lastUpcomingMessage = "";
@@ -20,18 +21,18 @@ let startOffset = 0;
 let tempCount = 0;
 
 let attacks = {
-	15: ["Red bomb", "Move"],
-	27: ["Fairy ring", "Move"],
-	39: ["Slimes", "Evade"],
-	51: ["Yellow bomb", "Move"],
-	63: ["Stun", "Use anticipation"],
-	72: ["Sticky fungi", "Click feet"],
-	87: ["Green bomb", "Move"],
-	99: ["Fairy ring", "Move"],
-	111: ["Slimes", "Evade"],
-	123: ["Blue bomb", "Move"],
-	135: ["Stun", "Use anticipation"],
-	144: ["Mid energy fungi", "Go to mid"],
+  15: ["Red bomb", "Move"],
+  27: ["Fairy ring", "Move"],
+  39: ["Slimes", "Evade"],
+  51: ["Yellow bomb", "Move"],
+  63: ["Stun", "Use anticipation"],
+  72: ["Sticky fungi", "Click feet"],
+  87: ["Green bomb", "Move"],
+  99: ["Fairy ring", "Move"],
+  111: ["Slimes", "Evade"],
+  123: ["Blue bomb", "Move"],
+  135: ["Stun", "Use anticipation"],
+  144: ["Mid energy fungi", "Go to mid"],
 }
 
 // Set Chat reader
@@ -127,9 +128,18 @@ function readChatbox() {
   }
   
   // Check for lines indicating the mid energy fungi have spawned
-  if (isPaused == false && isAttackable == false && (chat.indexOf("the fungus at Croesus's base!") > -1 ||
-                                                     chat.indexOf("fungus at Croesus's base - destroy it, now!") > -1)) { 
-    console.log("Mid detected");
+  //if (isPaused == false && isAttackable == false && (chat.indexOf("the fungus at Croesus's base!") > -1 ||
+  //                                                   chat.indexOf("fungus at Croesus's base - destroy it, now!") > -1)) { 
+  //  console.log("Mid detected");
+  //}
+}
+
+function readBossTimer() {
+  if (bossTimerReader.find() != null && isPaused == true){
+    startEncounter(startOffset);
+  }
+  else if (bossTimerReader.find() == null && isPaused == false) {
+    stopEncounter();
   }
 }
 
@@ -255,17 +265,6 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
   }
 }
 
-// Toggles whether or not the tooltip is visible
-function toggleTooltip() {
-  updateTooltip("");
-  alt1.clearTooltip();
-  
-  cb = document.getElementById('tooltipCheck');
-	tooltipEnabled = cb.checked;
-  
-  localStorage.setItem("susTooltip", tooltipEnabled);
-}
-
 // Update the text in the tooltip
 function updateTooltip(){
   if(currentTooltip!=""){
@@ -332,26 +331,25 @@ function endAttack() {
   console.log("Attack ended, time offset: " + attackOffset);
 }
 
-function message(str,elementId="incomingBox"){
-  elid(elementId).innerHTML=str;
-}
+function updateShroomTimer() {
+  shroomStartDate = Date.now() - 400;
+  elid("shroomImage").classList.remove("d-none");
+  message("29s","shroomTimer");
+  
+  setInterval(function() { 
+    let time = Date.now() - shroomStartDate;
 
-function startTimer(){
-  if(isPaused){
-    startEncounter();
-  }
-  else {
-    stopEncounter();
-  }
-}
+    let adjTime = new Date(time < 0 ? 0 : time).getTime()/1000;
 
-function readBossTimer() {
-  if (bossTimerReader.find() != null && isPaused == true){
-    startEncounter(startOffset);
-  }
-  else if (bossTimerReader.find() == null && isPaused == false) {
-    stopEncounter();
-  }
+    adjTime = adjTime % 30;
+    adjTime = Math.abs(29 - adjTime).toFixed(0);
+
+    if(adjTime < 0){
+      adjTime = 0;
+    }
+
+    message(adjTime + "s","shroomTimer");
+  }, 1000);
 }
 
 function nudgeTimer(time) {
@@ -360,35 +358,70 @@ function nudgeTimer(time) {
   updateClock();
 }
 
-function changeStartDelay() {
-  startOffset = document.getElementsByName('startDelayInput')[0].value;
-  
-  localStorage.setItem("susStartDelay", startOffset);
-}
-
-function changeDelay() {
-  midOffset = document.getElementsByName('delayInput')[0].value;
-  
-  localStorage.setItem("susMidDelay", midOffset);
+function message(str,elementId="incomingBox"){
+  elid(elementId).innerHTML=str;
 }
 
 // Gets called when user presses the alt + 1 keybind.
-function alt1onrightclick(obj){
+function alt1onrightclick(obj) {
   calculateRecalOffset();
 }
 
-$(function () {
+$('document').ready(function(){
+  // Settings
   $(".chat").change(function () {
     reader.pos.mainbox = reader.pos.boxes[$(this).val()];
     showSelectedChat(reader.pos);
     localStorage.setItem("susChat", $(this).val());
     $(this).val("");
   });
-});
 
-$('document').ready(function(){
+  $("#tooltipCheck").change(function () {
+    updateTooltip("");
+    alt1.clearTooltip();
+    
+    tooltipEnabled = $(this).prop("checked");
+    localStorage.setItem("susTooltip", tooltipEnabled);
+  });
+
+  $("#startDelayInput").change(function () {
+    startOffset = parseInt($(this).val());
+    localStorage.setItem("susStartDelay", startOffset);
+  });
+
+  $("#midDelayInput").change(function () {
+    midOffset = parseInt($(this).val());
+    localStorage.setItem("susMidDelay", midOffset);
+  });
+
+  // UI Buttons
+  $("#shroomSyncButton").click(function () {
+    updateShroomTimer();
+  });
+
+  $("#recalButton").click(function () {
+    calculateRecalOffset();
+  });
+
+  $("#plusButton").click(function () {
+    nudgeTimer(-1000);
+  });
+
+  $("#minusButton").click(function () {
+    nudgeTimer(1000);
+  });
+
+  $("#startButton").click(function () {
+    if(isPaused){
+      startEncounter();
+    }
+    else {
+      stopEncounter();
+    }
+  });
+
   startDelayInput = document.getElementsByName('startDelayInput');
-  delayInput = document.getElementsByName('delayInput');
+  delayInput = document.getElementsByName('midDelayInput');
   ttCheck = document.getElementById('tooltipCheck');  
 
   // Check for saved start delay & set it

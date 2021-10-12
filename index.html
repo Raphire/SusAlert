@@ -17,26 +17,29 @@
 
 <body class="nis">
   <div class="container">
-	<div class="row">
-    <div class="col">
-      <h4 style="position:absolute;left:15px;">SusAlert</h4>
-      <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#settings"></div>
-      <div id="infoButton" title="Information" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#info"></div>
-      <div id="recalButton" title="Recalibrate timer (Click when mid goes down)" type="button" class="nisbutton menubutton d-none" onclick="calculateRecalOffset()">Mid Down</div>
+    <div class="row">
+      <div class="col">
+        <h4 id="appTitle">SusAlert</h4>
+        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#settings"></div>
+        <div id="infoButton" title="Information" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#info"></div>
+        <div id="shroomSyncButton" title="Starts/syncs mushroom path timer" type="button" class="nissmallimagebutton menubutton float-right"></div>
+        <span id="shroomTimer" title="Time until the mushroom path changes"></span>
+        <img id="shroomImage" src="./assets/mushroom.png" title="Time until the mushroom path changes" class="d-none"></img>
+        </div>
     </div>
-	</div>
-  <div class="row">
-		<div id="upcomingBox" class="nistext"></div>
-	</div>
-	<div class="row">
-		<div id="incomingBox" class="nistext font-weight-bold h5">Awaiting boss start...</div>
-	</div>
+    <div class="row">
+      <div id="upcomingBox" class="nistext"></div>
+    </div>
+    <div class="row">
+      <div id="incomingBox" class="nistext font-weight-bold h5">Awaiting boss start...</div>
+      <div id="recalButton" title="Syncs the bosstimer (Keybind: alt + 1)" type="button" class="nisbutton menubutton d-none">Click when fungus dies</div>
+    </div>
     <div class="row fixed-bottom">
       <div class="col">
         <h4><div id="timerBox" class="nistext float-left">0s</div></h4>
-        <div id="minusButton" title="Reduces timer by 1 second" type="button" class="nissmallimagebutton menubutton" onclick="nudgeTimer(1000)" >-</div>
-        <div id="plusButton" title="Increases timer by 1 second" type="button" class="nissmallimagebutton menubutton" onclick="nudgeTimer(-1000)" >+</div>
-        <div class="nisbutton float-right" title="Manually start/stop timer" onclick="startTimer()" id="startButton">
+        <div id="minusButton" title="Reduces timer by 1 second" type="button" class="nissmallimagebutton menubutton">-</div>
+        <div id="plusButton" title="Increases timer by 1 second" type="button" class="nissmallimagebutton menubutton">+</div>
+        <div id="startButton" title="Manually start/stop timer" class="nisbutton float-right">
             Start
         </div>
       </div>
@@ -57,15 +60,15 @@
           <div class="row">
             <div class="col">
               <p>To avoid issues please <b>set font size to 12 or higher</b>, and make sure the chatbox is large enough and <b>NOT transparant</b>.</p>
-              <p>You can sync the timing after the mid energy fungi as down by clicking the <b>Mid Down</b> button or pressing <b>alt + 1.</b></p>
+              <p>You can sync the timer after the mid energy fungus dies by clicking the button that appears or pressing <b>alt + 1.</b></p>
               <span><b>Known issues:<br/></b>
-                 - Timer can go out of sync after mid fungi.<br/>
-                 - Old messages sometimes trigger again.</span>
+                 - Timer can go out of sync after mid fungi<br/>
+                 - Old messages sometimes trigger again</span>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <span><b>Report bugs & feedback on our github: <a href="https://github.com/Raphire/SusAlert" target="_blank">https://github.com/Raphire/SusAlert</a></b></span>
+          <span><b>Report bugs & feedback on my github: <a href="https://github.com/Raphire/SusAlert" target="_blank">https://github.com/Raphire/SusAlert</a></b></span>
         </div>
       </div>
     </div>
@@ -97,7 +100,7 @@
               <p>Show tooltip</p>
             </div>
             <div class="col">
-              <input type="checkbox" value="false" id="tooltipCheck" onclick="toggleTooltip()">
+              <input type="checkbox" value="false" id="tooltipCheck" name="tooltipCheck">
             </div>
           </div>
           <div class="row">
@@ -105,20 +108,20 @@
               <p>Start delay (ms)</p>
             </div>
             <div class="col">
-              <input class="input-width" type="number" id="startDelayInput" name="startDelayInput" min="0" max="2000" onchange="changeStartDelay()">
+              <input class="input-width" type="number" id="startDelayInput" name="startDelayInput" min="0" max="2000">
             </div>
           </div>
           <div class="row">
-            <div class="col" title="Changes the delay after the mid energy fungi (default: 14)">
+            <div class="col" title="Changes the delay after the mid energy fungus (default: 14)">
               <p>Delay after mid (s)</p>
             </div>
             <div class="col">
-              <input class="input-width" type="number" id="delayInput" name="delayInput" min="5" max="25" onchange="changeDelay()">
+              <input class="input-width" type="number" id="midDelayInput" name="midDelayInput" min="5" max="25">
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <span><b>Report bugs & feedback on our github: <a href="https://github.com/Raphire/SusAlert" target="_blank">https://github.com/Raphire/SusAlert</a></b></span>
+          <span><b>Report bugs & feedback on my github: <a href="https://github.com/Raphire/SusAlert" target="_blank">https://github.com/Raphire/SusAlert</a></b></span>
         </div>
       </div>
     </div>
