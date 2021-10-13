@@ -83,7 +83,7 @@ let findChat = setInterval(function () {
       }
 
       tempCount = tempCount + 1;
-    }, 150);
+    }, 165);
   }
 }, 1000);
 
