@@ -8,6 +8,8 @@ let isAttackable = false;
 let recalButtonVisible = false;
 let tooltipEnabled = true;
 let autoStopEnabled = false;
+let imgFound = false;
+let crystalMaskActive = false;
 let startDate = Date.now();
 let shroomStartDate = Date.now();
 let attackStartDate = Date.now();
@@ -16,9 +18,13 @@ let lastUpcomingMessage = "";
 
 let attackOffset = 0;
 let recalOffset = 0;
+let intervalCount = 0;
+let cMaskCount = 0;
+let attackEndCount = 0;
+
 let midOffset = 14;
 let startOffset = 0;
-let tempCount = 0;
+let crystalMaskSetting = 0;
 
 let attacks = {
   15: ["Red bomb", "Move"],
@@ -35,9 +41,11 @@ let attacks = {
   144: ["Mid energy fungi", "Go to mid"],
 }
 
+let alertSound = new Audio("./assets/shatter.mp3");
+
 // Set Chat reader
-let reader = new Chatbox.default();
-reader.readargs = {
+let chatReader = new Chatbox.default();
+chatReader.readargs = {
   colors: [
     A1lib.mixColor(255, 255, 255),
     A1lib.mixColor(128, 69, 182),
@@ -47,42 +55,54 @@ reader.readargs = {
 
 let bossTimerReader = new BossTimer.default();
 
+let buffReader = new BuffsReader.default();
+
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+
+// Buff reader interval
+let buffReadInterval = null;
+
+// Boss timer interval
 let bossTimer = setInterval(function () {
   updateClock();
 }, 300);
 
-reader.find();
-reader.read();
+chatReader.find();
+chatReader.read();
+
+buffReader.find();
 
 // Chat finder & parser functions adapted from: https://github.com/ZeroGwafa/SerenTracker
 let findChat = setInterval(function () {
-  if (reader.pos === null) {
-    reader.find();
+  if (chatReader.pos === null) {
+    chatReader.find();
   }
   else {
     clearInterval(findChat);
-    reader.pos.boxes.map((box, i) => {
+    chatReader.pos.boxes.map((box, i) => {
       $(".chat").append(`<option value=${i}>Chat ${i}</option>`);
     });
 
     if (localStorage.susChat) {
-      reader.pos.mainbox = reader.pos.boxes[localStorage.susChat];
+      $(".chat").val(localStorage.susChat);
+      chatReader.pos.mainbox = chatReader.pos.boxes[localStorage.susChat];
     } 
     else {
       //If multiple boxes are found, this will select the first, which should be the top-most chat box on the screen.
-      reader.pos.mainbox = reader.pos.boxes[0];
+      chatReader.pos.mainbox = chatReader.pos.boxes[0];
     }
     
-    showSelectedChat(reader.pos);
+    showSelectedChat(chatReader.pos);
     setInterval(function () {
-      if (tempCount % 2 == 0) {
+      if (intervalCount % 2) {
         readBossTimer();
       }
       else {
         readChatbox();
       }
 
-      tempCount = tempCount + 1;
+      intervalCount = intervalCount + 1;
     }, 165);
   }
 }, 1000);
@@ -104,7 +124,7 @@ function showSelectedChat(chat) {
 
 // Reading and parsing info from the chatbox.
 function readChatbox() {
-  var opts = reader.read() || [];
+  var opts = chatReader.read() || [];
   var chat = "";
 
   for (a in opts) {
@@ -112,34 +132,40 @@ function readChatbox() {
   }
   
   // Check for lines indicating the core can be attacked.
-  if (isPaused == false && isAttackable == false && (chat.indexOf("is vulnerable. Attack its core!") > -1 || 
-                                                    chat.indexOf("dark feast subsides. Strike now!") > -1 || 
-                                                    chat.indexOf("is the time. To the core!") > -1)) {
+  if (!isPaused && !isAttackable && (chat.indexOf("is vulnerable. Attack its core!") > -1 || 
+                                     chat.indexOf("dark feast subsides. Strike now!") > -1 || 
+                                     chat.indexOf("is the time. To the core!") > -1)) {
     console.log("Attack detected");
     startAttack();
   }
   
   // Check for lines indicating the attack phase has ended
-  if (isPaused == false && isAttackable == true && (chat.indexOf("feeds again - stand ready!") > -1 || 
-                                                     chat.indexOf("out - it is awakening.") > -1 ||
-                                                     chat.indexOf("is going to wake any moment.") > -1)) { // Might not be correct?
+  if (!isPaused  && isAttackable && (chat.indexOf("feeds again - stand ready!") > -1 || 
+                                     chat.indexOf("out - it is awakening.") > -1 ||
+                                     chat.indexOf("is going to wake any moment.") > -1)) { // Might not be correct?
     console.log("End of attack detected");
     endAttack();
   }
   
   // Check for lines indicating the mid energy fungi have spawned
-  //if (isPaused == false && isAttackable == false && (chat.indexOf("the fungus at Croesus's base!") > -1 ||
-  //                                                   chat.indexOf("fungus at Croesus's base - destroy it, now!") > -1)) { 
+  //if (!isPaused && !isAttackable && (chat.indexOf("the fungus at Croesus's base!") > -1 ||
+  //                                   chat.indexOf("fungus at Croesus's base - destroy it, now!") > -1)) { 
   //  console.log("Mid detected");
   //}
 }
 
 function readBossTimer() {
-  if (bossTimerReader.find() != null && isPaused == true){
+  if (isPaused && bossTimerReader.find() != null){
+    attackEndCount = 0;
     startEncounter(startOffset);
   }
-  else if (bossTimerReader.find() == null && isPaused == false) {
-    stopEncounter();
+  else if (!isPaused && bossTimerReader.find() == null) {
+    if(attackEndCount >= 3){
+      attackEndCount = 0;
+      stopEncounter();
+    }
+
+    attackEndCount = attackEndCount + 1;
   }
 }
 
@@ -237,6 +263,61 @@ function updateClock() {
   }
 }
 
+function checkBuffBar(imgSrc) {
+  if(buffReader.pos === null){
+    buffReader.find();
+  }
+  else {
+    let buffReadout = buffReader.read();
+    const image = new Image;
+    image.src = imgSrc;
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0);
+      imageData = ctx.getImageData(0, 0, 25, 25);
+      
+      for (var buffObj in buffReadout) {
+        let countMatch = buffReadout[buffObj].countMatch(imageData,false).passed;
+  
+        if(countMatch >= 70){
+          imgFound = true;
+        }
+      }
+    }
+  }
+}
+
+function readBuffBar() {
+  if(crystalMaskSetting != 0){
+    checkBuffBar("./assets/crystalmask.png");
+  
+    if (imgFound && !crystalMaskActive) {
+      crystalMaskActive = true;
+      cMaskCount = 0;
+  
+      elid("body").classList.add("green-border");
+      elid("body").classList.remove("red-border");
+    }
+    else if (crystalMaskActive && !imgFound) {
+      if (cMaskCount > 1){
+        crystalMaskActive = false;
+        cMaskCount = 0;
+
+        elid("body").classList.remove("green-border");
+        elid("body").classList.add("red-border");
+  
+        if(crystalMaskSetting === 2){
+          alertSound.play();
+          //alt1.overLayTextEx("Crystalmask has shattered!", A1lib.mixColor(0, 255, 0), 25,parseInt(alt1.rsWidth/2),parseInt((alt1.rsHeight/2)-300),3000,"monospace",true,true);
+        }
+      }
+      
+      cMaskCount = cMaskCount + 1;
+    }
+  
+    imgFound = false;
+  }
+}
+
 function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
   if (incomingAttack != 0) {
     if (timeLeft <= 0) {
@@ -279,6 +360,7 @@ function updateTooltip(){
 
 function startEncounter(offset = 0) {
   isPaused = false;
+  attackEndCount = 0;
   startDate = Date.now() + offset;
   
   message("Encounter started!");
@@ -295,7 +377,10 @@ function stopEncounter() {
   lastUpcomingMessage = "";
   attackOffset = 0;
   recalOffset = 0;
-  tempCount = 0;
+  intervalCount = 0;
+  cMaskCount = 0;
+  imgFound = 0;
+
 
   elid("recalButton").classList.add("d-none");
   
@@ -368,12 +453,32 @@ function alt1onrightclick(obj) {
 }
 
 $('document').ready(function(){
+  alertSound.volume = 0.3;
+
   // Settings
   $(".chat").change(function () {
-    reader.pos.mainbox = reader.pos.boxes[$(this).val()];
-    showSelectedChat(reader.pos);
+    chatReader.pos.mainbox = chatReader.pos.boxes[$(this).val()];
+    showSelectedChat(chatReader.pos);
     localStorage.setItem("susChat", $(this).val());
-    $(this).val("");
+  });
+
+  $(".cMask").change(function () {
+    crystalMaskSetting = parseInt($(this).val());
+    localStorage.setItem("susCMask", $(this).val());
+
+    if (crystalMaskSetting == 0) {
+      clearInterval(buffReadInterval);
+      buffReadInterval = null;
+      crystalMaskActive = false;
+
+      elid("body").classList.remove("green-border");
+      elid("body").classList.remove("red-border");
+    }
+    else if(buffReadInterval === null) {
+      buffReadInterval = setInterval(function () {
+        readBuffBar();
+      }, 600);
+    }
   });
 
   $("#tooltipCheck").change(function () {
@@ -452,5 +557,15 @@ $('document').ready(function(){
   }
   else {
     ttCheck.checked = true;
+  }
+
+  // Check for saved crystalmask detection & set it
+  if (localStorage.susCMask) {
+    crystalMaskSetting = parseInt(localStorage.susCMask);
+    $(".cMask").val(crystalMaskSetting);
+
+    buffReadInterval = setInterval(function () {
+      readBuffBar();
+    }, 500);
   }
 });
