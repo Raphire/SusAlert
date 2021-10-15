@@ -334,7 +334,7 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
   }
   
   if(incomingAttack != 0 && currentTooltip == "") {
-    currentTooltip = attacks[incomingAttack][0] + ": " + attacks[incomingAttack][1];
+    currentTooltip = attacks[incomingAttack][0];
     if (tooltipEnabled) {
       updateTooltip();
     }
@@ -423,13 +423,12 @@ function updateShroomTimer() {
   
   setInterval(function() { 
     let time = Date.now() - shroomStartDate;
+    let adjTime = new Date(time < 0 ? 0 : time).getTime();
 
-    let adjTime = new Date(time < 0 ? 0 : time).getTime()/1000;
+    adjTime = (adjTime % 30000) / 1000;
+    adjTime = (29 - adjTime).toFixed(0);
 
-    adjTime = adjTime % 30;
-    adjTime = Math.abs(29 - adjTime).toFixed(0);
-
-    if(adjTime < 0){
+    if(adjTime <= 0){
       adjTime = 0;
     }
 
