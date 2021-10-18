@@ -419,7 +419,7 @@ function updateShroomTimer() {
     let time = Date.now() - shroomStartDate;
     let adjTime = new Date(time < 0 ? 0 : time).getTime();
 
-    adjTime = (adjTime % 30000) / 1000;
+    adjTime = (adjTime % 30015) / 1000;
     adjTime = (29 - adjTime).toFixed(0);
 
     if(adjTime <= 0){

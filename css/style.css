@@ -71,10 +71,10 @@
 }
 
 #shroomTimer{
-  margin-top:10px;
-  position:absolute;
-  top:-1px;
+  top:8px;
   left:162px;
+  position:absolute;
+  font-family:monospace; 
 }
 
 #settingsButton{
