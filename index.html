@@ -20,13 +20,19 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <h4 id="appTitle">SusAlert</h4>
+        <div id="timerBox" class="nistext float-left h6">00:00</div>
+        <div id="minusButton" title="Reduces timer by 1 second" type="button" class="nissmallimagebutton menubutton">-</div>
+        <div id="plusButton" title="Increases timer by 1 second" type="button" class="nissmallimagebutton menubutton">+</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
         <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#settings"></div>
         <div id="infoButton" title="Information" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#info"></div>
         <div id="shroomSyncButton" title="Starts/syncs mushroom path timer" type="button" class="nissmallimagebutton menubutton float-right"></div>
         <span id="shroomTimer" title="Time until the mushroom path changes"></span>
         <img id="shroomImage" src="./assets/mushroom.png" title="Time until the mushroom path changes" class="d-none"></img>
-        </div>
+      </div>
     </div>
     <div class="row">
       <div id="upcomingBox" class="nistext"></div>
@@ -34,16 +40,6 @@
     <div class="row">
       <div id="incomingBox" class="nistext font-weight-bold h5">Awaiting boss start...</div>
       <div id="recalButton" title="Syncs the bosstimer (Keybind: alt + 1)" type="button" class="nisbutton menubutton d-none">Click when fungus dies</div>
-    </div>
-    <div class="row fixed-bottom">
-      <div class="col">
-        <div id="timerBox" class="nistext float-left h5">0s</div>
-        <div id="minusButton" title="Reduces timer by 1 second" type="button" class="nissmallimagebutton menubutton">-</div>
-        <div id="plusButton" title="Increases timer by 1 second" type="button" class="nissmallimagebutton menubutton">+</div>
-        <div id="startButton" title="Manually start/stop timer" class="nisbutton float-right">
-            Start
-        </div>
-      </div>
     </div>
   </div>
   
@@ -61,9 +57,9 @@
           <div class="row">
             <div class="col">
               <p>To avoid issues please <b>set font size to 12 or higher</b>, ensure that the chatbox is <b>NOT transparant</b> and the bosstimer is visible on-screen.</p>
-              <p>The timer can be synced by clicking the button that appears or pressing <b>alt+1</b> after the mid energy fungi dies.</p>
               <span><b>Known issues:<br/></b>
                  - Timer can go out of sync after mid<br/>
+                 - Mushroom timer may go out of sync<br/>
                  - Old messages may trigger again</span>
             </div>
           </div>

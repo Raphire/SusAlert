@@ -65,8 +65,10 @@ let buffReadInterval = null;
 
 // Boss timer interval
 let bossTimer = setInterval(function () {
-  updateClock();
-}, 300);
+  updateTimerUI();
+}, 330);
+
+let shroomTimer = null;
 
 chatReader.find();
 chatReader.read();
@@ -146,14 +148,9 @@ function readChatbox() {
     console.log("End of attack detected");
     endAttack();
   }
-  
-  // Check for lines indicating the mid energy fungi have spawned
-  //if (!isPaused && !isAttackable && (chat.indexOf("the fungus at Croesus's base!") > -1 ||
-  //                                   chat.indexOf("fungus at Croesus's base - destroy it, now!") > -1)) { 
-  //  console.log("Mid detected");
-  //}
 }
 
+// Checks for boss timer on-screen
 function readBossTimer() {
   if (isPaused && bossTimerReader.find() != null){
     attackEndCount = 0;
@@ -193,32 +190,34 @@ function calculateRecalOffset(){
   elid("recalButton").classList.add("d-none");
 }
 
-// Updates clock, upcoming/incoming attack messages and the tooltip (Needs to be broken up)
-function updateClock() {
+// Updates clock, upcoming/incoming attack messages and the tooltip (Needs to be cleaned up/broken up)
+function updateTimerUI() {
   if (!isPaused) {
     let upcomingAttack = 0;
     let incomingAttack = 0;
     let attackTime = 0;
     let oldAdjTime = 0;
+    let count = 0;
     let time = Date.now() - startDate;
-    let adjTime = new Date(time < 0 ? 0 : time).getTime()/1000;
-    message(adjTime.toFixed(0) + "s", "timerBox");
+    let adjTime = new Date(time < 0 ? 0 : time).getTime();
+
+    // Update timer UI
+    let timeString = new Date(adjTime).toISOString().substr(14, 5);
+    message(timeString, "timerBox");
     
-    adjTime = adjTime - attackOffset - recalOffset;
+    // Apply all offsets for attack calculations etc.
+    adjTime = (adjTime / 1000) - attackOffset - recalOffset;
     
     // Check if fight is at least at or past first mid
     if (adjTime >= 143 + midOffset) {
       let totalTime = 147 + midOffset;
       oldAdjTime = adjTime;
-      
       adjTime = adjTime % totalTime;
       
       if(adjTime < 0){
         adjTime = oldAdjTime - recalOffset;
       }
     }
-    
-    let count = 0;
     
     if (!isAttackable) {
       for (var key in attacks) {
@@ -228,9 +227,8 @@ function updateClock() {
           if (count == (Object.keys(attacks).length - 1)) {
             if (adjTime < (parseInt(key) + 7)) {
               incomingAttack = key;
+              upcomingAttack = 0;
               attackTime = parseInt(key);
-                
-              message("Upcoming attack: Red bomb", "upcomingBox");
             } 
             else if (!recalButtonVisible && ((parseInt(key) + 7) <= adjTime && adjTime < (parseInt(key) + 9))) {
               recalButtonVisible = true;
@@ -240,6 +238,7 @@ function updateClock() {
           // This is different attack
           else if (adjTime < (parseInt(key) + 3)) {
             incomingAttack = key;
+            upcomingAttack = parseInt(count) + 1;
             attackTime = parseInt(key);
             
             if (recalButtonVisible) {
@@ -247,23 +246,20 @@ function updateClock() {
               elid("recalButton").classList.add("d-none");
             }
 
-            upcomingAttack = parseInt(count) + 1;
-
             break;
           }
         }
-
         count = count + 1;
       }
 
       let timeLeft = (attackTime - adjTime).toFixed(0);  
-  
       updateAttacksUI(incomingAttack, upcomingAttack, timeLeft);
     }
   }
 }
 
 function checkBuffBar(imgSrc) {
+  // Check if a buff bar position has been found or not
   if(buffReader.pos === null){
     buffReader.find();
   }
@@ -275,6 +271,7 @@ function checkBuffBar(imgSrc) {
       ctx.drawImage(image, 0, 0);
       imageData = ctx.getImageData(0, 0, 25, 25);
       
+      // Iterate through all buffs to find buff matching the imgSrc
       for (var buffObj in buffReadout) {
         let countMatch = buffReadout[buffObj].countMatch(imageData,false).passed;
   
@@ -346,7 +343,7 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
   }
 }
 
-// Update the text in the tooltip
+// Updates the text in the tooltip
 function updateTooltip(){
   if(currentTooltip!=""){
     if(!alt1.setTooltip(" " + currentTooltip)){
@@ -365,8 +362,6 @@ function startEncounter(offset = 0) {
   
   message("Encounter started!");
   message("Upcoming attack: Red bomb","upcomingBox");
-  
-  elid("startButton").innerHTML = "Stop";
 }
 
 function stopEncounter() {
@@ -381,10 +376,7 @@ function stopEncounter() {
   cMaskCount = 0;
   imgFound = 0;
 
-
   elid("recalButton").classList.add("d-none");
-  
-  elid("startButton").innerHTML = "Start";
   alt1.clearTooltip();
   message("Encounter stopped!");
   message("","upcomingBox");
@@ -420,8 +412,10 @@ function updateShroomTimer() {
   shroomStartDate = Date.now() - 400;
   elid("shroomImage").classList.remove("d-none");
   message("29s","shroomTimer");
+
+  clearInterval(shroomTimer);
   
-  setInterval(function() { 
+  shroomTimer = setInterval(function() { 
     let time = Date.now() - shroomStartDate;
     let adjTime = new Date(time < 0 ? 0 : time).getTime();
 
@@ -439,7 +433,7 @@ function updateShroomTimer() {
 function nudgeTimer(time) {
   startDate = new Date(startDate).getTime() + time;
   
-  updateClock();
+  updateTimerUI();
 }
 
 function message(str,elementId="incomingBox"){
@@ -515,15 +509,6 @@ $('document').ready(function(){
     nudgeTimer(1000);
   });
 
-  $("#startButton").click(function () {
-    if(isPaused){
-      startEncounter();
-    }
-    else {
-      stopEncounter();
-    }
-  });
-
   startDelayInput = document.getElementsByName('startDelayInput');
   delayInput = document.getElementsByName('midDelayInput');
   ttCheck = document.getElementById('tooltipCheck');  
@@ -565,6 +550,6 @@ $('document').ready(function(){
 
     buffReadInterval = setInterval(function () {
       readBuffBar();
-    }, 500);
+    }, 600);
   }
 });
