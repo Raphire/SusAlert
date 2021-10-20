@@ -137,7 +137,6 @@ function readChatbox() {
   if (!isPaused && !isAttackable && (chat.indexOf("is vulnerable. Attack its core!") > -1 || 
                                      chat.indexOf("dark feast subsides. Strike now!") > -1 || 
                                      chat.indexOf("is the time. To the core!") > -1)) {
-    console.log("Attack detected");
     startAttack();
   }
   
@@ -145,12 +144,11 @@ function readChatbox() {
   if (!isPaused  && isAttackable && (chat.indexOf("feeds again - stand ready!") > -1 || 
                                      chat.indexOf("out - it is awakening.") > -1 ||
                                      chat.indexOf("is going to wake any moment.") > -1)) { // Might not be correct?
-    console.log("End of attack detected");
     endAttack();
   }
 }
 
-// Checks for boss timer on-screen
+// Checks for boss timer on-screen and starts/stops the timer accordingly
 function readBossTimer() {
   if (isPaused && bossTimerReader.find() != null){
     attackEndCount = 0;
@@ -166,10 +164,10 @@ function readBossTimer() {
   }
 }
 
-// Calculates an offset to recalibrate the  timer
-function calculateRecalOffset(){
+// Calculates an offset to recalibrate the timer after mid
+function calculateMidOffset(){
   let time = Date.now() - startDate;
-  let adjTime = new Date(time < 0 ? 0 : time).getTime()/1000;
+  let adjTime = new Date(time < 0 ? 0 : time).getTime() / 1000;
   
   adjTime = adjTime - attackOffset;
   
@@ -184,13 +182,13 @@ function calculateRecalOffset(){
     recalOffset = adjTime;
   }
 
-  console.log("Mid down, recalOffset: " + recalOffset);
+  console.log("Mid down, calculated offset: " + recalOffset);
 
   recalButtonVisible = false;
   elid("recalButton").classList.add("d-none");
 }
 
-// Updates clock, upcoming/incoming attack messages and the tooltip (Needs to be cleaned up/broken up)
+// Update clock and attacks UI
 function updateTimerUI() {
   if (!isPaused) {
     let upcomingAttack = 0;
@@ -201,7 +199,7 @@ function updateTimerUI() {
     let time = Date.now() - startDate;
     let adjTime = new Date(time < 0 ? 0 : time).getTime();
 
-    // Update timer UI
+    // Update clock
     let timeString = new Date(adjTime).toISOString().substr(14, 5);
     message(timeString, "timerBox");
     
@@ -249,6 +247,7 @@ function updateTimerUI() {
             break;
           }
         }
+
         count = count + 1;
       }
 
@@ -258,34 +257,49 @@ function updateTimerUI() {
   }
 }
 
-function checkBuffBar(imgSrc) {
-  // Check if a buff bar position has been found or not
-  if(buffReader.pos === null){
-    buffReader.find();
+function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
+  if (incomingAttack != 0) {
+    if (timeLeft <= 0) {
+      message("Incoming attack: \n" + attacks[incomingAttack][0]);
+    }
+    else {
+      message("Incoming attack in " + timeLeft + ": \n" + attacks[incomingAttack][0]);
+    }
+  }
+  else if (incomingAttack == 0 && currentTooltip != "") {
+    updateTooltip();
+    message("");
+  }
+  
+  if(incomingAttack != 0 && currentTooltip == "") {
+    if (tooltipEnabled) {
+      updateTooltip(attacks[incomingAttack][0]);
+    }
+  }
+
+  if (upcomingAttack != 0) {
+    let keys = Object.keys(attacks);
+    message("Upcoming attack: " + attacks[keys[upcomingAttack]][0], "upcomingBox");
+  }
+}
+
+// Updates the text in the tooltip
+function updateTooltip(str = "") {
+  currentTooltip = str;
+
+  if(currentTooltip != ""){
+    if(!alt1.setTooltip(" " + currentTooltip)){
+      console.log("No tooltip permission");
+    }
   }
   else {
-    let buffReadout = buffReader.read();
-    const image = new Image;
-    image.src = imgSrc;
-    image.onload = () => {
-      ctx.drawImage(image, 0, 0);
-      imageData = ctx.getImageData(0, 0, 25, 25);
-      
-      // Iterate through all buffs to find buff matching the imgSrc
-      for (var buffObj in buffReadout) {
-        let countMatch = buffReadout[buffObj].countMatch(imageData,false).passed;
-  
-        if(countMatch >= 70){
-          imgFound = true;
-        }
-      }
-    }
+    alt1.clearTooltip();
   }
 }
 
 function readBuffBar() {
   if(crystalMaskSetting != 0){
-    checkBuffBar("./assets/crystalmask.png");
+    checkBuffBarForImg("./assets/crystalmask.png");
   
     if (imgFound && !crystalMaskActive) {
       crystalMaskActive = true;
@@ -315,97 +329,29 @@ function readBuffBar() {
   }
 }
 
-function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
-  if (incomingAttack != 0) {
-    if (timeLeft <= 0) {
-      message("Incoming attack: \n" + attacks[incomingAttack][0]);
-    }
-    else {
-      message("Incoming attack in " + timeLeft + ": \n" + attacks[incomingAttack][0]);
-    }
+function checkBuffBarForImg(imgSrc) {
+  // Check if a buff bar has already been found
+  if(buffReader.pos === null){
+    buffReader.find();
   }
-  else if (incomingAttack == 0 && currentTooltip != "") {
-    alt1.clearTooltip();
-    currentTooltip = "";
-    message("");
-  }
-  
-  if(incomingAttack != 0 && currentTooltip == "") {
-    currentTooltip = attacks[incomingAttack][0];
-    if (tooltipEnabled) {
-      updateTooltip();
-    }
-  }
-
-  if (upcomingAttack != 0) {
-    let keys = Object.keys(attacks);
-    message("Upcoming attack: " + attacks[keys[upcomingAttack]][0], "upcomingBox");
-  }
-}
-
-// Updates the text in the tooltip
-function updateTooltip(){
-  if(currentTooltip!=""){
-    if(!alt1.setTooltip(" " + currentTooltip)){
-      currentTooltip="";
-      console.log("No tooltip permission");}}
   else {
-    alt1.clearTooltip();
-    currentTooltip="";
+    let buffReadout = buffReader.read();
+    const image = new Image;
+    image.src = imgSrc;
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0);
+      imageData = ctx.getImageData(0, 0, 25, 25);
+      
+      // Iterate through all buffs to find buff matching the imgSrc
+      for (var buffObj in buffReadout) {
+        let countMatch = buffReadout[buffObj].countMatch(imageData,false).passed;
+  
+        if(countMatch >= 70){
+          imgFound = true;
+        }
+      }
+    }
   }
-}
-
-function startEncounter(offset = 0) {
-  isPaused = false;
-  attackEndCount = 0;
-  startDate = Date.now() + offset;
-  
-  message("Encounter started!");
-  message("Upcoming attack: Red bomb","upcomingBox");
-}
-
-function stopEncounter() {
-  isPaused = true;
-  isAttackable = false;
-  recalButtonVisible = false;
-  currentTooltip = "";
-  lastUpcomingMessage = "";
-  attackOffset = 0;
-  recalOffset = 0;
-  intervalCount = 0;
-  cMaskCount = 0;
-  imgFound = 0;
-
-  elid("recalButton").classList.add("d-none");
-  alt1.clearTooltip();
-  message("Encounter stopped!");
-  message("","upcomingBox");
-}
-
-function startAttack() {
-  isAttackable = true;
-  
-  lastUpcomingMessage = document.getElementById('upcomingBox').textContent;
-
-  elid("recalButton").classList.add("d-none");
-    
-  message("","upcomingBox");
-  message("Croesus is vulnerable,\nattack the core!");
-  
-  updateTooltip("Attack the core!");
-  
-  attackStartDate = Date.now();
-}
-
-function endAttack() {
-  isAttackable = false;
-    
-  message(lastUpcomingMessage,"upcomingBox");
-  message("");
-  alt1.clearTooltip();
-  
-  attackOffset = attackOffset + (Date.now() - attackStartDate) / 1000;
-  console.log("Attack ended, time offset: " + attackOffset);
 }
 
 function updateShroomTimer() {
@@ -430,6 +376,60 @@ function updateShroomTimer() {
   }, 1000);
 }
 
+function startEncounter(offset = 0) {
+  isPaused = false;
+  attackEndCount = 0;
+  startDate = Date.now() + offset;
+  
+  message("Encounter started!");
+  message("Upcoming attack: Red bomb","upcomingBox");
+}
+
+function stopEncounter() {
+  isPaused = true;
+  isAttackable = false;
+  recalButtonVisible = false;
+  currentTooltip = "";
+  lastUpcomingMessage = "";
+  attackOffset = 0;
+  recalOffset = 0;
+  intervalCount = 0;
+  cMaskCount = 0;
+  imgFound = 0;
+
+  updateTooltip();
+
+  elid("recalButton").classList.add("d-none");
+  message("Encounter stopped!");
+  message("","upcomingBox");
+}
+
+function startAttack() {
+  isAttackable = true;
+  lastUpcomingMessage = document.getElementById('upcomingBox').textContent;
+
+  // Make sure to make mid down button invisible
+  elid("recalButton").classList.add("d-none");
+  
+  // Change messages in incoming/upcoming attacks boxes
+  message("","upcomingBox");
+  message("Croesus is vulnerable,\nattack the core!");
+  
+  attackStartDate = Date.now();
+}
+
+function endAttack() {
+  isAttackable = false;
+
+  updateTooltip();
+  
+  message(lastUpcomingMessage,"upcomingBox");
+  message("");
+  
+  attackOffset = attackOffset + (Date.now() - attackStartDate) / 1000;
+  console.log("Attack ended, time offset: " + attackOffset);
+}
+
 function nudgeTimer(time) {
   startDate = new Date(startDate).getTime() + time;
   
@@ -442,7 +442,7 @@ function message(str,elementId="incomingBox"){
 
 // Gets called when user presses the alt + 1 keybind.
 function alt1onrightclick(obj) {
-  calculateRecalOffset();
+  calculateMidOffset();
 }
 
 $('document').ready(function(){
@@ -475,8 +475,7 @@ $('document').ready(function(){
   });
 
   $("#tooltipCheck").change(function () {
-    updateTooltip("");
-    alt1.clearTooltip();
+    updateTooltip();
     
     tooltipEnabled = $(this).prop("checked");
     localStorage.setItem("susTooltip", tooltipEnabled);
@@ -498,7 +497,7 @@ $('document').ready(function(){
   });
 
   $("#recalButton").click(function () {
-    calculateRecalOffset();
+    calculateMidOffset();
   });
 
   $("#plusButton").click(function () {
