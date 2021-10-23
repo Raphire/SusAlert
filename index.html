@@ -56,7 +56,7 @@
         <div class="modal-body">
           <div class="row">
             <div class="col">
-              <p>To avoid issues please <b>set font size to 12 or higher</b>, ensure that the chatbox is <b>NOT transparant</b> and the bosstimer is visible on-screen.</p>
+              <p>To avoid issues make sure the bosstimer is <b>visible</b>, game messages are <b>on</b>, fontsize is <b>12</b> or higher, and the chatbox is <b>opaque</b>.</p>
               <span><b>Known issues:<br/></b>
                  - Timer can go out of sync after mid<br/>
                  - Mushroom timer may go out of sync<br/>
@@ -88,29 +88,35 @@
             </div>
             <div class="col">
               <select class="chat" style="width:102px;">
-                <option value="0" disabled>Select Chat</option>
+                <option value="" disabled>Select Chat</option>
               </select>
             </div>
           </div>
           <div class="row">
-            <div class="col" title="Toggles crystalmask warning on/off" style="margin-top:-7px;">
+            <div class="col" title="Enabled/disable crystalmask indicator and alert sound" style="margin-top:-7px;">
               <p>Crystalmask<br/>Detection</p>
             </div>
             <div class="col">
               <select class="cMask" style="width:102px;">
-                <option value="0" disabled>Select Option</option>
+                <option value="" disabled>Select Option</option>
                 <option value="0">Disabled</option>
                 <option value="1">Enabled</option>
                 <option value="2">Enabled w/ sound</option>
               </select>
             </div>
           </div>
-          <div class="row" style="margin-bottom:-20px;">
-            <div class="col" title="Toggles the tooltip on/off" style="margin-top:-5px;">
+          <div class="row" style="margin-bottom:-10px;margin-top:-7px;">
+            <div class="col" title="Enable/disable a tooltip next to cursor with attack/hint">
               <p>Show tooltip</p>
             </div>
-            <div class="col" style="margin-top:-2px;">
-              <input type="checkbox" value="false" id="tooltipCheck" name="tooltipCheck">
+            <div class="col">
+              <select class="ttSelect" style="width:102px;">
+                <option value="" disabled>Select Option</option>
+                <option value="0">Disabled</option>
+                <option value="1">Attack only</option>
+                <option value="2">Hint only</option>
+                <option value="3">Attack & Hint</option>
+              </select>
             </div>
           </div>
           <hr/>

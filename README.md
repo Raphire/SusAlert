@@ -8,18 +8,18 @@ SusAlert is an alt1 toolkit app for the croesus fight, it keeps track of croesus
 ## How to use
 SusAlert is very easy to use, simply install and open the plugin in alt1 toolkit. The plugin will automatically detect when the croesus fight starts or ends.
 
-To prevent the timer from drifting mid-fight you can synchronize it by clicking the button that appears on the interface or pressing alt+1 when the mid energy fungus dies, another solution may be to edit the delay after mid in the settings. For finer control you can use the + and - buttons on the timer to 'nudge' the timer forward or back in 1s increments.
+To prevent the timer from drifting mid-fight you can synchronize it by clicking the button that appears on the interface or pressing alt+1 when the mid energy fungus dies. You can customize the default delays & timings in the settings aswell.
 
 Lastly, there's a mushroom button to start & sync a timer for the mushroom path, which makes it easy to see when the mushroom path will change next. You only need to click the button once when the mushroom path changes, from then on it will continue to work for the rest of the instance.
 
 ## Requirements
 To function SusAlert needs the following:
 - Alt1 toolkit must be installed, you can install that [here](https://runeapps.org/alt1).
+- The bosstimer must be visible on-screen.
 - Chatwindow MUST be opaque, this can be changed in the RuneScape Settings > 
 Interfaces > Appearance > Transparency
+- Game messages need to be turned on.
 - Chat font must be 12 or higher (plugin is tested with fontsize 12).
-- The bosstimer must be visible on-screen.
-- At least one chat window needs to be on-screen with game messages turned on.
 
 ## Installation
 To install SusAlert copy & paste this link into your browser:<br/>

@@ -6,7 +6,6 @@ A1lib.identifyApp("appconfig.json");
 let isPaused = true;
 let isAttackable = false;
 let recalButtonVisible = false;
-let tooltipEnabled = true;
 let autoStopEnabled = false;
 let imgFound = false;
 let crystalMaskActive = false;
@@ -25,6 +24,7 @@ let attackEndCount = 0;
 let midOffset = 14;
 let startOffset = 0;
 let crystalMaskSetting = 0;
+let tooltipSetting = 1;
 
 let attacks = {
   15: ["Red bomb", "Move"],
@@ -272,8 +272,14 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
   }
   
   if(incomingAttack != 0 && currentTooltip == "") {
-    if (tooltipEnabled) {
+    if (tooltipSetting == 1) {
       updateTooltip(attacks[incomingAttack][0]);
+    }
+    else if (tooltipSetting == 2) {
+      updateTooltip(attacks[incomingAttack][1]);
+    }
+    else if (tooltipSetting == 3) {
+      updateTooltip(attacks[incomingAttack][0] + ", " + attacks[incomingAttack][1]);
     }
   }
 
@@ -474,11 +480,11 @@ $('document').ready(function(){
     }
   });
 
-  $("#tooltipCheck").change(function () {
+  $(".ttSelect").change(function () {
     updateTooltip();
     
-    tooltipEnabled = $(this).prop("checked");
-    localStorage.setItem("susTooltip", tooltipEnabled);
+    tooltipSetting = parseInt($(this).val());
+    localStorage.setItem("susTT", tooltipSetting);
   });
 
   $("#startDelayInput").change(function () {
@@ -510,37 +516,39 @@ $('document').ready(function(){
 
   startDelayInput = document.getElementsByName('startDelayInput');
   delayInput = document.getElementsByName('midDelayInput');
-  ttCheck = document.getElementById('tooltipCheck');  
 
   // Check for saved start delay & set it
   if (localStorage.susStartDelay) {
     startOffset = parseInt(localStorage.susStartDelay);
+  }
     
-    startDelayInput[0].value = startOffset;
-  }
-  else {
-    startDelayInput[0].value = startOffset;
-  }
+  startDelayInput[0].value = startOffset;
   
   // Check for saved delay & set it
   if (localStorage.susMidDelay) {
     midOffset = parseInt(localStorage.susMidDelay);
-    
-    delayInput[0].value = midOffset;
-  }
-  else {
-    delayInput[0].value = midOffset;
   }
     
-  // Check for saved tooltipEnabled & set it
+  delayInput[0].value = midOffset;
+    
+  // Check for saved tooltipSetting & set it
+  if (localStorage.susTT) {
+    tooltipSetting = parseInt(localStorage.susTT);
+  }
+
+  // Check for legacy tooltip setting, set it & remove it
   if (localStorage.susTooltip) {
-    tooltipEnabled = JSON.parse(localStorage.susTooltip);
-    
-    ttCheck.checked = tooltipEnabled;
+    let legacyTtSetting = JSON.parse(localStorage.susTooltip);
+
+    if(!legacyTtSetting){
+      tooltipSetting = 0;
+      localStorage.setItem("susTT", tooltipSetting);
+    }
+
+    localStorage.removeItem("susTooltip");
   }
-  else {
-    ttCheck.checked = true;
-  }
+
+  $(".ttSelect").val(tooltipSetting);
 
   // Check for saved crystalmask detection & set it
   if (localStorage.susCMask) {
