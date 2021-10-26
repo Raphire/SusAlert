@@ -10,8 +10,6 @@ SusAlert is very easy to use, simply install and open the plugin in alt1 toolkit
 
 To prevent the timer from drifting mid-fight you can synchronize it by clicking the button that appears on the interface or pressing alt+1 when the mid energy fungus dies. You can customize the default delays & timings in the settings aswell.
 
-Lastly, there's a mushroom button to start & sync a timer for the mushroom path, which makes it easy to see when the mushroom path will change next. You only need to click the button once when the mushroom path changes, from then on it will continue to work for the rest of the instance.
-
 ## Requirements
 To function SusAlert needs the following:
 - Alt1 toolkit must be installed, you can install that [here](https://runeapps.org/alt1).
@@ -30,7 +28,6 @@ https://raphire.github.io/SusAlert/
 
 ## Known issues
 - The timer can go out of sync after the mid energy fungus appears. (Can be manually synced by clicking the button that appears or pressing alt + 1 when the mid energy fungus dies)
-- Mushroompath timer may go out of sync over time.
 - Old messages can sometimes trigger again.
 
 ## Credits

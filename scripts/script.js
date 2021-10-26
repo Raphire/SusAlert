@@ -10,7 +10,6 @@ let autoStopEnabled = false;
 let imgFound = false;
 let crystalMaskActive = false;
 let startDate = Date.now();
-let shroomStartDate = Date.now();
 let attackStartDate = Date.now();
 let currentTooltip = "";
 let lastUpcomingMessage = "";
@@ -67,8 +66,6 @@ let buffReadInterval = null;
 let bossTimer = setInterval(function () {
   updateTimerUI();
 }, 330);
-
-let shroomTimer = null;
 
 chatReader.find();
 chatReader.read();
@@ -360,28 +357,6 @@ function checkBuffBarForImg(imgSrc) {
   }
 }
 
-function updateShroomTimer() {
-  shroomStartDate = Date.now() - 400;
-  elid("shroomImage").classList.remove("d-none");
-  message("29s","shroomTimer");
-
-  clearInterval(shroomTimer);
-  
-  shroomTimer = setInterval(function() { 
-    let time = Date.now() - shroomStartDate;
-    let adjTime = new Date(time < 0 ? 0 : time).getTime();
-
-    adjTime = (adjTime % 30015) / 1000;
-    adjTime = (29 - adjTime).toFixed(0);
-
-    if(adjTime <= 0){
-      adjTime = 0;
-    }
-
-    message(adjTime + "s","shroomTimer");
-  }, 1000);
-}
-
 function startEncounter(offset = 0) {
   isPaused = false;
   attackEndCount = 0;
@@ -495,11 +470,6 @@ $('document').ready(function(){
   $("#midDelayInput").change(function () {
     midOffset = parseInt($(this).val());
     localStorage.setItem("susMidDelay", midOffset);
-  });
-
-  // UI Buttons
-  $("#shroomSyncButton").click(function () {
-    updateShroomTimer();
   });
 
   $("#recalButton").click(function () {

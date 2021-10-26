@@ -61,22 +61,6 @@
   overflow-y:hidden;
 }
 
-#shroomImage{
-  margin-top:10px;
-  position:absolute;
-  top: 0px;
-  left: 143px;
-  width:15px;
-  height:15px;
-}
-
-#shroomTimer{
-  top:8px;
-  left:162px;
-  position:absolute;
-  font-family:monospace; 
-}
-
 #settingsButton{
   margin-top:8px;
   margin-right:-9px;
@@ -87,12 +71,6 @@
   margin-top:8px;
   margin-right:5px;
   background-image: url(../assets/infobutton.png);
-}
-
-#shroomSyncButton{
-  margin-top:8px;
-  margin-right:5px;
-  background-image: url(../assets/shroombutton.png);
 }
 
 #recalButton{
