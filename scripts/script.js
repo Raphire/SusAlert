@@ -7,7 +7,6 @@ let isPaused = true;
 let isAttackable = false;
 let recalButtonVisible = false;
 let autoStopEnabled = false;
-let imgFound = false;
 let crystalMaskActive = false;
 let startDate = Date.now();
 let attackStartDate = Date.now();
@@ -25,6 +24,7 @@ let startOffset = 0;
 let crystalMaskSetting = 0;
 let tooltipSetting = 1;
 
+// Array containing croesus' attacks, their timings and the counter move
 let attacks = {
   15: ["Red bomb", "Move"],
   27: ["Fairy ring", "Move"],
@@ -147,12 +147,12 @@ function readChatbox() {
 
 // Checks for boss timer on-screen and starts/stops the timer accordingly
 function readBossTimer() {
-  if (isPaused && bossTimerReader.find() != null){
+  if (isPaused && bossTimerReader.find() != null) {
     attackEndCount = 0;
     startEncounter(startOffset);
   }
   else if (!isPaused && bossTimerReader.find() == null) {
-    if(attackEndCount >= 3){
+    if (attackEndCount >= 3) {
       attackEndCount = 0;
       stopEncounter();
     }
@@ -162,7 +162,7 @@ function readBossTimer() {
 }
 
 // Calculates an offset to recalibrate the timer after mid
-function calculateMidOffset(){
+function calculateMidOffset() {
   let time = Date.now() - startDate;
   let adjTime = new Date(time < 0 ? 0 : time).getTime() / 1000;
   
@@ -209,7 +209,7 @@ function updateTimerUI() {
       oldAdjTime = adjTime;
       adjTime = adjTime % totalTime;
       
-      if(adjTime < 0){
+      if (adjTime < 0) {
         adjTime = oldAdjTime - recalOffset;
       }
     }
@@ -254,6 +254,7 @@ function updateTimerUI() {
   }
 }
 
+// Updates the incoming & upcoming attacks on the interface
 function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
   if (incomingAttack != 0) {
     if (timeLeft <= 0) {
@@ -268,7 +269,7 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
     message("");
   }
   
-  if(incomingAttack != 0 && currentTooltip == "") {
+  if (incomingAttack != 0 && currentTooltip == "") {
     if (tooltipSetting == 1) {
       updateTooltip(attacks[incomingAttack][0]);
     }
@@ -290,8 +291,8 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
 function updateTooltip(str = "") {
   currentTooltip = str;
 
-  if(currentTooltip != ""){
-    if(!alt1.setTooltip(" " + currentTooltip)){
+  if (currentTooltip != "") {
+    if (!alt1.setTooltip(" " + currentTooltip)) {
       console.log("No tooltip permission");
     }
   }
@@ -300,9 +301,11 @@ function updateTooltip(str = "") {
   }
 }
 
+// Reading & parsing info from the buff bar
 function readBuffBar() {
-  if(crystalMaskSetting != 0){
-    checkBuffBarForImg("./assets/crystalmask.png");
+  // Only check if crystalmask detection is enabled
+  if (crystalMaskSetting != 0) {
+    let imgFound = checkBuffBarForImg("./assets/crystalmask.png");
   
     if (imgFound && !crystalMaskActive) {
       crystalMaskActive = true;
@@ -312,14 +315,14 @@ function readBuffBar() {
       elid("body").classList.remove("red-border");
     }
     else if (crystalMaskActive && !imgFound) {
-      if (cMaskCount > 1){
+      if (cMaskCount > 1) {
         crystalMaskActive = false;
         cMaskCount = 0;
 
         elid("body").classList.remove("green-border");
         elid("body").classList.add("red-border");
   
-        if(crystalMaskSetting === 2){
+        if (crystalMaskSetting === 2) {
           alertSound.play();
           //alt1.overLayTextEx("Crystalmask has shattered!", A1lib.mixColor(0, 255, 0), 25,parseInt(alt1.rsWidth/2),parseInt((alt1.rsHeight/2)-300),3000,"monospace",true,true);
         }
@@ -327,14 +330,13 @@ function readBuffBar() {
       
       cMaskCount = cMaskCount + 1;
     }
-  
-    imgFound = false;
   }
 }
 
+// Checks if the buffbar includes specified buff image
 function checkBuffBarForImg(imgSrc) {
-  // Check if a buff bar has already been found
-  if(buffReader.pos === null){
+  // First check if a buff bar has already been found, if not find one now
+  if (buffReader.pos === null) {
     buffReader.find();
   }
   else {
@@ -349,14 +351,17 @@ function checkBuffBarForImg(imgSrc) {
       for (var buffObj in buffReadout) {
         let countMatch = buffReadout[buffObj].countMatch(imageData,false).passed;
   
-        if(countMatch >= 70){
-          imgFound = true;
+        if (countMatch >= 70) {
+          return true;
         }
       }
     }
   }
+
+  return false;
 }
 
+// Start of boss encounter
 function startEncounter(offset = 0) {
   isPaused = false;
   attackEndCount = 0;
@@ -366,6 +371,7 @@ function startEncounter(offset = 0) {
   message("Upcoming attack: Red bomb","upcomingBox");
 }
 
+// End of boss encounter
 function stopEncounter() {
   isPaused = true;
   isAttackable = false;
@@ -376,7 +382,6 @@ function stopEncounter() {
   recalOffset = 0;
   intervalCount = 0;
   cMaskCount = 0;
-  imgFound = 0;
 
   updateTooltip();
 
@@ -385,6 +390,7 @@ function stopEncounter() {
   message("","upcomingBox");
 }
 
+// Start of core attack
 function startAttack() {
   isAttackable = true;
   lastUpcomingMessage = document.getElementById('upcomingBox').textContent;
@@ -399,6 +405,7 @@ function startAttack() {
   attackStartDate = Date.now();
 }
 
+// End of core attack
 function endAttack() {
   isAttackable = false;
 
@@ -411,13 +418,15 @@ function endAttack() {
   console.log("Attack ended, time offset: " + attackOffset);
 }
 
+// Increases timer by time
 function nudgeTimer(time) {
   startDate = new Date(startDate).getTime() + time;
   
   updateTimerUI();
 }
 
-function message(str,elementId="incomingBox"){
+// Updates the text inside element
+function message(str,elementId="incomingBox") {
   elid(elementId).innerHTML=str;
 }
 
@@ -426,7 +435,7 @@ function alt1onrightclick(obj) {
   calculateMidOffset();
 }
 
-$('document').ready(function(){
+$('document').ready(function() {
   alertSound.volume = 0.3;
 
   // Settings
@@ -448,7 +457,7 @@ $('document').ready(function(){
       elid("body").classList.remove("green-border");
       elid("body").classList.remove("red-border");
     }
-    else if(buffReadInterval === null) {
+    else if (buffReadInterval === null) {
       buffReadInterval = setInterval(function () {
         readBuffBar();
       }, 600);
@@ -510,7 +519,7 @@ $('document').ready(function(){
   if (localStorage.susTooltip) {
     let legacyTtSetting = JSON.parse(localStorage.susTooltip);
 
-    if(!legacyTtSetting){
+    if (!legacyTtSetting) {
       tooltipSetting = 0;
       localStorage.setItem("susTT", tooltipSetting);
     }

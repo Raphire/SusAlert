@@ -1,6 +1,6 @@
 {
     "appName": "SusAlert",
-    "description": "Keeps track of the croesus fight and alerts you when an attack is coming.",
+    "description": "Keeps track of the croesus fight and alerts you of it's attacks.",
     "appUrl": "./index.html",
     "configUrl": "./appconfig.json",
     "iconUrl": "./assets/favicon.png",

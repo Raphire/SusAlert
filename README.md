@@ -1,8 +1,6 @@
 # SusAlert
 SusAlert is an alt1 toolkit app for the croesus fight, it keeps track of croesus' attacks and warns you before they happen.
 
-**Please note that this plugin is still in a pre-release state and may contain bugs.**
-
 ![SusAlert-MainWindow](/assets/mainscreen.png)
 
 ## How to use
