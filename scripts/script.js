@@ -75,9 +75,13 @@ buffReader.find();
 // Chat finder & parser functions adapted from: https://github.com/ZeroGwafa/SerenTracker
 let findChat = setInterval(function () {
   if (chatReader.pos === null) {
+    message("Error: No chatbox found!");
+    
     chatReader.find();
   }
   else {
+    message("Awaiting boss start...");
+    
     clearInterval(findChat);
     chatReader.pos.boxes.map((box, i) => {
       $(".chat").append(`<option value=${i}>Chat ${i}</option>`);
@@ -130,18 +134,20 @@ function readChatbox() {
     chat += opts[a].text + " ";
   }
   
-  // Check for lines indicating the core can be attacked.
-  if (!isPaused && !isAttackable && (chat.indexOf("is vulnerable. Attack its core!") > -1 || 
-                                     chat.indexOf("dark feast subsides. Strike now!") > -1 || 
-                                     chat.indexOf("is the time. To the core!") > -1)) {
-    startAttack();
-  }
-  
-  // Check for lines indicating the attack phase has ended
-  if (!isPaused  && isAttackable && (chat.indexOf("feeds again - stand ready!") > -1 || 
-                                     chat.indexOf("out - it is awakening.") > -1 ||
-                                     chat.indexOf("is going to wake any moment.") > -1)) { // Might not be correct?
-    endAttack();
+  if(!isPaused) {
+    // Check for lines indicating the core can be attacked.
+    if (!isAttackable && (chat.indexOf("is vulnerable. Attack its core!") > -1 || 
+                          chat.indexOf("dark feast subsides. Strike now!") > -1 || 
+                          chat.indexOf("is the time. To the core!") > -1)) {
+      startAttack();
+    }
+    
+    // Check for lines indicating the attack phase has ended
+    if (isAttackable && (chat.indexOf("feeds again - stand ready!") > -1 || 
+                         chat.indexOf("out - it is awakening.") > -1 ||
+                         chat.indexOf("is going to wake any moment.") > -1)) { // Might not be correct?
+      endAttack();
+    }
   }
 }
 
@@ -283,7 +289,7 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
 
   if (upcomingAttack != 0) {
     let keys = Object.keys(attacks);
-    message("Upcoming attack: " + attacks[keys[upcomingAttack]][0], "upcomingBox");
+    message("Next attack: " + attacks[keys[upcomingAttack]][0], "upcomingBox");
   }
 }
 
@@ -367,8 +373,8 @@ function startEncounter(offset = 0) {
   attackEndCount = 0;
   startDate = Date.now() + offset;
   
-  message("Encounter started!");
-  message("Upcoming attack: Red bomb","upcomingBox");
+  message("Encounter started");
+  message("Next attack: Red bomb","upcomingBox");
 }
 
 // End of boss encounter
@@ -386,7 +392,7 @@ function stopEncounter() {
   updateTooltip();
 
   elid("recalButton").classList.add("d-none");
-  message("Encounter stopped!");
+  message("Encounter ended\nAwaiting boss start...");
   message("","upcomingBox");
 }
 
