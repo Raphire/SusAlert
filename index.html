@@ -27,7 +27,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#settings"></div>
+        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("settings.html", "_blank", "height=340, width=400, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
         <div id="infoButton" title="Information" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#info"></div>
       </div>
     </div>
@@ -54,79 +54,6 @@
           <div class="row">
             <div class="col">
               SusAlert will automatically start when the Croesus encounter starts. If you encounter any issues check that the bosstimer is <b>visible</b>, game messages are <b>on</b>, fontsize is <b>12</b> or higher, and the chatbox is <b>opaque</b>.
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <span><b>Report bugs & feedback on github: <a href="https://github.com/Raphire/SusAlert" target="_blank">https://github.com/Raphire/SusAlert</a></b></span>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Settings Modal -->
-  <div class="modal fade nis" tabindex="-1" id="settings" aria-labelledby="settingsLabel">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h6 class="modal-title" id="settingsLabel"><b>Settings</b></h6>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col" title="Changes which chatwindow is read by SusAlert">
-              <p>Select Chat</p>
-            </div>
-            <div class="col">
-              <select class="chat" style="width:102px;">
-                <option value="" disabled>Select Chat</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col" title="Enable/disable crystalmask indicator and alert sound" style="margin-top:-7px;">
-              <p>Crystalmask<br/>Detection</p>
-            </div>
-            <div class="col">
-              <select class="cMask" style="width:102px;">
-                <option value="" disabled>Select Option</option>
-                <option value="0">Disabled</option>
-                <option value="1">Enabled</option>
-                <option value="2">Enabled w/ sound</option>
-              </select>
-            </div>
-          </div>
-          <div class="row" style="margin-bottom:-10px;margin-top:-7px;">
-            <div class="col" title="Enable/disable a tooltip next to cursor with attack/hint">
-              <p>Show tooltip</p>
-            </div>
-            <div class="col">
-              <select class="ttSelect" style="width:102px;">
-                <option value="" disabled>Select Option</option>
-                <option value="0">Disabled</option>
-                <option value="1">Attack only</option>
-                <option value="2">Hint only</option>
-                <option value="3">Attack & Hint</option>
-              </select>
-            </div>
-          </div>
-          <hr/>
-          <div class="row">
-            <div class="col" title="Changes the delay after the start of an encounter is detected (default: 0)" style="margin-top:-7px;">
-              <p>Start delay<br/>(ms)</p>
-            </div>
-            <div class="col">
-              <input class="input-width" type="number" id="startDelayInput" name="startDelayInput" placeholder="0" min="0" max="2000">
-            </div>
-          </div>
-          <div class="row" style="margin-bottom:-20px;">
-            <div class="col" title="Changes the delay after the mid energy fungus (default: 14)" style="margin-top:-7px;">
-              <p>Delay after mid<br/>(s)</p>
-            </div>
-            <div class="col">
-              <input class="input-width" type="number" id="midDelayInput" name="midDelayInput" placeholder="14" min="5" max="25">
             </div>
           </div>
         </div>

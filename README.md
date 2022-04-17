@@ -1,12 +1,12 @@
 # SusAlert
-SusAlert is an alt1 toolkit app for the croesus fight, it keeps track of croesus' attacks and gives you onscreen warnings.
+SusAlert is an alt1 toolkit app for the croesus fight, it keeps track of croesus' attacks and gives you onscreen warnings. It can also display the status of the crystal mask spell, and alert you with a sound when it expires.
 
 ![SusAlert-MainWindow](/assets/mainscreen.png)
 
 ## How to use
-SusAlert is very easy to use, simply install and open the plugin in alt1 toolkit. The plugin will automatically detect when the croesus fight starts or ends.
+SusAlert is very easy to use, simply install and open the plugin in alt1 toolkit. It will automatically detect when the croesus fight starts and ends! Some features can be enabled and disabled in the settings, which can be accessed by pressing the cog icon in the top right.
 
-The timer may drift after the mid fungi (attack) phase, to prevent this you can manually click the sync button (or press alt + 1) when the mid fungi dies. It's also possible to customize the default delays & timings in the plugin settings.
+The timer may drift out of sync after the mid fungi (attack) phase, but you can manually sync it by clicking the sync button (or press alt + 1) when the mid fungi dies, it's also possible to tweak the timing in the settings.
 
 ## Requirements
 To function SusAlert needs the following:
@@ -23,9 +23,6 @@ To install SusAlert copy & paste this link into your browser:<br/>
 
 Or go to this URL in the alt1 browser:<br/>
 https://raphire.github.io/SusAlert/
-
-## Known issues
-- The timer can go out of sync after the mid energy fungus appears. This can be manually synced by clicking the button that appears or pressing alt + 1 when the mid energy fungus dies.
 
 ## Credits
 Special thanks to [ZeroGwafa](https://github.com/ZeroGwafa) for his chat detection function, and [Skillbert](https://github.com/skillbert) for his help with making the bosstimer detection.

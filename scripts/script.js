@@ -16,7 +16,6 @@ let lastUpcomingMessage = "";
 let attackOffset = 0;
 let recalOffset = 0;
 let intervalCount = 0;
-let cMaskCount = 0;
 let attackEndCount = 0;
 
 let midOffset = 14;
@@ -83,12 +82,8 @@ let findChat = setInterval(function () {
     message("Awaiting boss start...");
     
     clearInterval(findChat);
-    chatReader.pos.boxes.map((box, i) => {
-      $(".chat").append(`<option value=${i}>Chat ${i}</option>`);
-    });
 
     if (localStorage.susChat) {
-      $(".chat").val(localStorage.susChat);
       chatReader.pos.mainbox = chatReader.pos.boxes[localStorage.susChat];
     } 
     else {
@@ -311,60 +306,51 @@ function updateTooltip(str = "") {
 function readBuffBar() {
   // Only check if crystalmask detection is enabled
   if (crystalMaskSetting != 0) {
-    let imgFound = checkBuffBarForImg("./assets/crystalmask.png");
-  
-    if (imgFound && !crystalMaskActive) {
-      crystalMaskActive = true;
-      cMaskCount = 0;
-  
-      elid("body").classList.add("green-border");
-      elid("body").classList.remove("red-border");
+    // First check if a buff bar has already been found, if not look for one now
+    if (buffReader.pos === null) {
+      buffReader.find();
     }
-    else if (crystalMaskActive && !imgFound) {
-      if (cMaskCount > 1) {
-        crystalMaskActive = false;
-        cMaskCount = 0;
+    else {
+      let buffReadout = buffReader.read();
+      const image = new Image;
+      image.src = "./assets/crystalmask.png";
+      image.onload = () => {
+        let imgFound = false;
 
-        elid("body").classList.remove("green-border");
-        elid("body").classList.add("red-border");
-  
-        if (crystalMaskSetting === 2) {
-          alertSound.play();
-          //alt1.overLayTextEx("Crystalmask has shattered!", A1lib.mixColor(0, 255, 0), 25,parseInt(alt1.rsWidth/2),parseInt((alt1.rsHeight/2)-300),3000,"monospace",true,true);
+        ctx.drawImage(image, 0, 0);
+        imageData = ctx.getImageData(0, 0, 25, 25);
+        
+        // Iterate through all buffs to find a buff matching the imgSrc
+        for (var buffObj in buffReadout) {
+          let countMatch = buffReadout[buffObj].countMatch(imageData,false).passed;
+          
+          if (countMatch >= 70) {
+            imgFound = true;
+          }
         }
-      }
-      
-      cMaskCount = cMaskCount + 1;
-    }
-  }
-}
 
-// Checks if the buffbar includes specified buff image
-function checkBuffBarForImg(imgSrc) {
-  // First check if a buff bar has already been found, if not find one now
-  if (buffReader.pos === null) {
-    buffReader.find();
-  }
-  else {
-    let buffReadout = buffReader.read();
-    const image = new Image;
-    image.src = imgSrc;
-    image.onload = () => {
-      ctx.drawImage(image, 0, 0);
-      imageData = ctx.getImageData(0, 0, 25, 25);
+        // Add border if buff is found
+        if (imgFound && !crystalMaskActive) {
+          crystalMaskActive = true;
       
-      // Iterate through all buffs to find buff matching the imgSrc
-      for (var buffObj in buffReadout) {
-        let countMatch = buffReadout[buffObj].countMatch(imageData,false).passed;
+          elid("body").classList.add("green-border");
+          elid("body").classList.remove("red-border");
+        }
+        else if (crystalMaskActive && !imgFound) {
+          crystalMaskActive = false;
   
-        if (countMatch >= 70) {
-          return true;
+          elid("body").classList.remove("green-border");
+          elid("body").classList.add("red-border");
+    
+          // Play sound if enabled in settings
+          if (crystalMaskSetting === 2) {
+            alertSound.play();
+            //alt1.overLayTextEx("Crystalmask has shattered!", A1lib.mixColor(0, 255, 0), 25,parseInt(alt1.rsWidth/2),parseInt((alt1.rsHeight/2)-300),3000,"monospace",true,true);
+          }
         }
       }
     }
   }
-
-  return false;
 }
 
 // Start of boss encounter
@@ -387,7 +373,6 @@ function stopEncounter() {
   attackOffset = 0;
   recalOffset = 0;
   intervalCount = 0;
-  cMaskCount = 0;
 
   updateTooltip();
 
@@ -441,51 +426,75 @@ function alt1onrightclick(obj) {
   calculateMidOffset();
 }
 
+// Update the selected chatbox with new value from localstorage
+function chatChange() { 
+  if (localStorage.susChat && parseInt(localStorage.susChat) < chatReader.pos.boxes.length) {
+    chatReader.pos.mainbox = chatReader.pos.boxes[localStorage.susChat];
+
+    console.log("Chat changed to: " + localStorage.susChat);
+
+    showSelectedChat(chatReader.pos);
+  } 
+}
+
+// Update the crystal mask setting with new value from localstorage
+function cMaskChange() {
+  if (localStorage.susCMask) {
+    crystalMaskSetting = parseInt(localStorage.susCMask);
+
+    console.log("Crystal mask setting changed to: " + crystalMaskSetting);
+  }
+
+  if (crystalMaskSetting == 0) {
+    clearInterval(buffReadInterval);
+    buffReadInterval = null;
+    crystalMaskActive = false;
+
+    elid("body").classList.remove("green-border");
+    elid("body").classList.remove("red-border");
+  }
+  else if (buffReadInterval === null) {
+    buffReadInterval = setInterval(function () {
+      readBuffBar();
+    }, 600);
+  }
+}
+
+// Update the tooltip setting with new value from localstorage
+function tooltipChange() {
+  if (localStorage.susTT) {
+    tooltipSetting = parseInt(localStorage.susTT);
+
+    console.log("Tooltip setting changed to: " + tooltipSetting);
+
+    updateTooltip();
+  }
+}
+
+// Update the start delay with new value from localstorage
+function startOffsetChange() {
+  if (localStorage.susStartDelay) {
+    startOffset = parseInt(localStorage.susStartDelay);
+
+    console.log("Start delay changed to: " + startOffset);
+  }
+}
+
+// Update the mid delay with new value from localstorage
+function midOffsetChange() {
+  if (localStorage.susMidDelay) {
+    midOffset = parseInt(localStorage.susMidDelay);
+
+    console.log("Mid delay changed to: " + midOffset);
+  }
+}
+
+function getChatReader() {
+  return chatReader;
+}
+
 $('document').ready(function() {
   alertSound.volume = 0.3;
-
-  // Settings
-  $(".chat").change(function () {
-    chatReader.pos.mainbox = chatReader.pos.boxes[$(this).val()];
-    showSelectedChat(chatReader.pos);
-    localStorage.setItem("susChat", $(this).val());
-  });
-
-  $(".cMask").change(function () {
-    crystalMaskSetting = parseInt($(this).val());
-    localStorage.setItem("susCMask", $(this).val());
-
-    if (crystalMaskSetting == 0) {
-      clearInterval(buffReadInterval);
-      buffReadInterval = null;
-      crystalMaskActive = false;
-
-      elid("body").classList.remove("green-border");
-      elid("body").classList.remove("red-border");
-    }
-    else if (buffReadInterval === null) {
-      buffReadInterval = setInterval(function () {
-        readBuffBar();
-      }, 600);
-    }
-  });
-
-  $(".ttSelect").change(function () {
-    updateTooltip();
-    
-    tooltipSetting = parseInt($(this).val());
-    localStorage.setItem("susTT", tooltipSetting);
-  });
-
-  $("#startDelayInput").change(function () {
-    startOffset = parseInt($(this).val());
-    localStorage.setItem("susStartDelay", startOffset);
-  });
-
-  $("#midDelayInput").change(function () {
-    midOffset = parseInt($(this).val());
-    localStorage.setItem("susMidDelay", midOffset);
-  });
 
   $("#recalButton").click(function () {
     calculateMidOffset();
@@ -499,22 +508,15 @@ $('document').ready(function() {
     nudgeTimer(1000);
   });
 
-  startDelayInput = document.getElementsByName('startDelayInput');
-  delayInput = document.getElementsByName('midDelayInput');
-
   // Check for saved start delay & set it
   if (localStorage.susStartDelay) {
     startOffset = parseInt(localStorage.susStartDelay);
   }
-    
-  startDelayInput[0].value = startOffset;
   
   // Check for saved delay & set it
   if (localStorage.susMidDelay) {
     midOffset = parseInt(localStorage.susMidDelay);
   }
-    
-  delayInput[0].value = midOffset;
     
   // Check for saved tooltipSetting & set it
   if (localStorage.susTT) {
@@ -533,12 +535,9 @@ $('document').ready(function() {
     localStorage.removeItem("susTooltip");
   }
 
-  $(".ttSelect").val(tooltipSetting);
-
   // Check for saved crystalmask detection & set it
   if (localStorage.susCMask) {
     crystalMaskSetting = parseInt(localStorage.susCMask);
-    $(".cMask").val(crystalMaskSetting);
 
     buffReadInterval = setInterval(function () {
       readBuffBar();
