@@ -66,20 +66,24 @@ let bossTimer = setInterval(function () {
   updateTimerUI();
 }, 330);
 
-chatReader.find();
-chatReader.read();
-
-buffReader.find();
+// Try to find chatbox
+try {
+  chatReader.find();
+  chatReader.read();
+}
+catch {
+  console.log("Error: Could not find chatbox on initial load");
+}
 
 // Chat finder & parser functions adapted from: https://github.com/ZeroGwafa/SerenTracker
 let findChat = setInterval(function () {
   if (chatReader.pos === null) {
-    message("Error: No chatbox found!");
+    message("Looking for chatbox...");
     
     chatReader.find();
   }
   else {
-    message("Awaiting boss start...");
+    message("Ready!\nAwaiting boss start...");
     
     clearInterval(findChat);
 
@@ -106,7 +110,7 @@ let findChat = setInterval(function () {
 }, 1000);
 
 function showSelectedChat(chat) {
-  //Attempt to show a temporary rectangle around the chatbox.  skip if overlay is not enabled.
+  // Attempt to show a temporary rectangle around the chatbox. Skip if overlay is not enabled.
   try {
     alt1.overLayRect(
       A1lib.mixColor(255, 255, 255),
@@ -294,7 +298,7 @@ function updateTooltip(str = "") {
 
   if (currentTooltip != "") {
     if (!alt1.setTooltip(" " + currentTooltip)) {
-      console.log("No tooltip permission");
+      console.log("Error: No tooltip permission");
     }
   }
   else {
@@ -308,6 +312,8 @@ function readBuffBar() {
   if (crystalMaskSetting != 0) {
     // First check if a buff bar has already been found, if not look for one now
     if (buffReader.pos === null) {
+      console.log("Error: Unable to find buffbar");
+
       buffReader.find();
     }
     else {
@@ -431,9 +437,9 @@ function chatChange() {
   if (localStorage.susChat && parseInt(localStorage.susChat) < chatReader.pos.boxes.length) {
     chatReader.pos.mainbox = chatReader.pos.boxes[localStorage.susChat];
 
-    console.log("Chat changed to: " + localStorage.susChat);
-
     showSelectedChat(chatReader.pos);
+
+    console.log("Chat changed to: " + localStorage.susChat);
   } 
 }
 
@@ -442,21 +448,21 @@ function cMaskChange() {
   if (localStorage.susCMask) {
     crystalMaskSetting = parseInt(localStorage.susCMask);
 
+    if (crystalMaskSetting == 0) {
+      clearInterval(buffReadInterval);
+      buffReadInterval = null;
+      crystalMaskActive = false;
+  
+      elid("body").classList.remove("green-border");
+      elid("body").classList.remove("red-border");
+    }
+    else if (buffReadInterval === null) {
+      buffReadInterval = setInterval(function () {
+        readBuffBar();
+      }, 600);
+    }
+
     console.log("Crystal mask setting changed to: " + crystalMaskSetting);
-  }
-
-  if (crystalMaskSetting == 0) {
-    clearInterval(buffReadInterval);
-    buffReadInterval = null;
-    crystalMaskActive = false;
-
-    elid("body").classList.remove("green-border");
-    elid("body").classList.remove("red-border");
-  }
-  else if (buffReadInterval === null) {
-    buffReadInterval = setInterval(function () {
-      readBuffBar();
-    }, 600);
   }
 }
 
@@ -465,9 +471,9 @@ function tooltipChange() {
   if (localStorage.susTT) {
     tooltipSetting = parseInt(localStorage.susTT);
 
-    console.log("Tooltip setting changed to: " + tooltipSetting);
-
     updateTooltip();
+
+    console.log("Tooltip setting changed to: " + tooltipSetting);
   }
 }
 

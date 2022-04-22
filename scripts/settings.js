@@ -4,8 +4,6 @@ let crystalMaskSetting = 0;
 let tooltipSetting = 1;
 
 $('document').ready(function() {
-  document.title = 'Settings';
-
   $(".chat").change(function () {
     localStorage.setItem("susChat", parseInt($(this).val()));
 
