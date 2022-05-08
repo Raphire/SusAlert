@@ -17,6 +17,7 @@ let attackOffset = 0;
 let recalOffset = 0;
 let intervalCount = 0;
 let attackEndCount = 0;
+let loadingCount = 2;
 
 let midOffset = 14;
 let startOffset = 0;
@@ -72,13 +73,21 @@ try {
   chatReader.read();
 }
 catch {
-  console.log("Error: Could not find chatbox on initial load");
+  console.log("Could not find chatbox on initial load");
 }
 
 // Chat finder & parser functions adapted from: https://github.com/ZeroGwafa/SerenTracker
 let findChat = setInterval(function () {
   if (chatReader.pos === null) {
-    message("Looking for chatbox...");
+    var dots = ".";
+    
+    for (var y = 0; y < loadingCount % 3; y++) {
+      dots += ".";
+    }
+
+    loadingCount++;
+
+    message("Looking for chatbox" + dots);
     
     chatReader.find();
   }
