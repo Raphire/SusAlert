@@ -18,6 +18,7 @@
 
 <body class="nis body" id="body">
   <div class="container">
+    <!-- Timer & +/- Buttons -->
     <div class="row">
       <div class="col">
         <div id="timerBox" class="nistext float-left h6">00:00</div>
@@ -25,15 +26,21 @@
         <div id="plusButton" title="Increases timer by 1 second" type="button" class="nissmallimagebutton menubutton">+</div>
       </div>
     </div>
+
+    <!-- Menu buttons -->
     <div class="row">
       <div class="col">
-        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("settings.html", "_blank", "height=315, width=400, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
+        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("settings.html", "_blank", "height=385, width=400, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
         <div id="infoButton" title="Information" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("info.html", "_blank", "height=405, width=430, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
       </div>
     </div>
+
+    <!-- Upcoming attacks textbox-->
     <div class="row">
       <div id="upcomingBox" class="nistext"></div>
     </div>
+
+    <!-- Incoming attacks textbox-->
     <div class="row">
       <div id="incomingBox" class="nistext font-weight-bold h5">Loading...</div>
       <div id="recalButton" title="Syncs the bosstimer (Keybind: alt + 1)" type="button" class="nisbutton menubutton d-none">Click when fungus dies</div>

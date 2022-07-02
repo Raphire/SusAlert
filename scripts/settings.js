@@ -1,7 +1,19 @@
 let midOffset = 14;
 let startOffset = 0;
 let crystalMaskSetting = 0;
+let crystalMaskSoundSetting = 0;
 let tooltipSetting = 1;
+
+function toggleSoundEffectSetting() {
+  if (crystalMaskSetting == 1) {
+    elid("cMaskSoundSetting").classList.remove("locked");
+    elid("cMaskSoundSelect").disabled = false;
+  }
+  else {
+    elid("cMaskSoundSetting").classList.add("locked");
+    elid("cMaskSoundSelect").disabled = true;
+  }
+}
 
 $('document').ready(function() {
   $(".chat").change(function () {
@@ -15,12 +27,26 @@ $('document').ready(function() {
     localStorage.setItem("susCMask", $(this).val());
 
     window.opener.cMaskChange();
+    toggleSoundEffectSetting();
+  });
+
+  $(".cMaskSound").change(function () {
+    crystalMaskSoundSetting = parseInt($(this).val());
+    localStorage.setItem("susCMaskSound", $(this).val());
+
+    window.opener.cMaskSoundChange(true);
   });
 
   $(".ttSelect").change(function () {
     localStorage.setItem("susTT", parseInt($(this).val()));
 
     window.opener.tooltipChange();
+  });
+
+  $(".styleSelect").change(function () {
+    localStorage.setItem("susStyle", parseInt($(this).val()));
+
+    window.opener.styleChange();
   });
 
   $("#startDelayInput").change(function () {
@@ -65,12 +91,24 @@ $('document').ready(function() {
     tooltipSetting = parseInt(localStorage.susTT);
   }
 
+  // Check for saved styleSetting & set it
+  if (localStorage.susStyle) {
+    styleSetting = parseInt(localStorage.susStyle);
+  }
+
   $(".ttSelect").val(tooltipSetting);
 
   // Check for saved crystalmask detection & set it
   if (localStorage.susCMask) {
     crystalMaskSetting = parseInt(localStorage.susCMask);
     $(".cMask").val(crystalMaskSetting);
+    toggleSoundEffectSetting();
+  }
+
+  // Check for saved crystalmask sound effect & set it
+  if (localStorage.susCMask) {
+    crystalMaskSoundSetting = parseInt(localStorage.susCMaskSound);
+    $(".cMaskSound").val(crystalMaskSoundSetting);
   }
 
   // Get chatboxes found by susalert & fill selection

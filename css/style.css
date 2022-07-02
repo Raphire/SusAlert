@@ -129,3 +129,18 @@
     width: 100%;
     z-index: 1;
 }
+
+.settings-subregion {
+  margin-left: 5px;
+  position: relative;
+  border-left: 1px solid #777;
+  border-bottom-left-radius: 6px;
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+
+.settings-subregion.locked {
+  opacity: 0.5;
+  -webkit-filter: blur(1px);
+  filter: blur(1px);
+}

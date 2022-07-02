@@ -20,32 +20,22 @@
 
 <body class="body" id="body">
   <div class="container">
+    <!-- Chatbox selector -->
     <div class="row mt-2">
       <div class="col" title="Changes which chatwindow is read by SusAlert">
         <p>Selected Chatbox</p>
       </div>
       <div class="col">
-      <select class="chat" style="width:135px;">
-        <option value="" disabled>Select Chat</option>
-      </select>
-    </div>
-    </div>
-    <div class="row">
-      <div class="col" title="Enable/disable crystalmask indicator and alert sound">
-        <p>Crystalmask Detection</p>
-      </div>
-      <div class="col">
-        <select class="cMask" style="width:135px;">
-          <option value="" disabled>Select Option</option>
-          <option value="0">Disabled</option>
-          <option value="1">Enabled</option>
-          <option value="2">Enabled w/ sound</option>
+        <select class="chat" style="width:135px;">
+          <option value="" disabled>Select Chat</option>
         </select>
       </div>
     </div>
-    <div class="row" style="margin-bottom:-10px;">
-      <div class="col" title="Enable/disable a tooltip next to cursor with attack/hint">
-        <p>Show Tooltip</p>
+
+    <!-- Tooltip selector -->
+    <div class="row">
+      <div class="col" title="Enable/disable a tooltip next to cursor with attacks/hints">
+        <p>Cursor Tooltip</p>
       </div>
       <div class="col">
         <select class="ttSelect" style="width:135px;">
@@ -57,7 +47,57 @@
         </select>
       </div>
     </div>
+
+    <!-- Countdown style selector -->
+    <div class="row">
+      <div class="col" title="Change the style of the attack countdown messages">
+        <p>Countdown Style</p>
+      </div>
+      <div class="col">
+        <select class="styleSelect" style="width:135px;">
+          <option value="" disabled>Select Option</option>
+          <option value="0">White</option>
+          <option value="1">Colored</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Crystal mask detection selector -->
+    <div class="row" style="margin-bottom:-10px">
+      <div class="col" title="Enable/disable crystalmask indicator">
+        <p>Crystalmask Indicator</p>
+      </div>
+      <div class="col">
+        <select class="cMask" style="width:135px;">
+          <option value="" disabled>Select Option</option>
+          <option value="0">Disabled</option>
+          <option value="1">Enabled</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Crystal mask sound selector -->
+    <div id="cMaskSoundSetting" class="row settings-subregion locked" style="height:30px; margin-bottom:-5px;">
+      <div class="col" title="Change the sound effect that is played when crystal mask is used or runs out">
+        <p>Sound Effect</p>
+      </div>
+      <div class="col">
+        <select id="cMaskSoundSelect" class="cMaskSound" style="width:124px;" disabled>
+          <option value="" disabled>Select Option</option>
+          <option value="0">Disabled</option>
+          <option value="1">Shatter 1</option>
+          <option value="2">Shatter 2</option>
+          <option value="3">Bell</option>
+          <option value="4">Spell</option>
+          <option value="5">Damage</option>
+          <option value="6">Fireball</option>
+        </select>
+      </div>
+    </div>
+
     <hr>
+
+    <!-- Start delay input -->
     <div class="row">
       <div class="col" title="Changes the delay after the start of an encounter is detected (default: 0)">
         <p>Start Delay (ms)</p>
@@ -66,6 +106,8 @@
         <input class="input-width" type="number" id="startDelayInput" name="startDelayInput" placeholder="0" min="0" max="2000" style="width:100px;">
       </div>
     </div>
+
+    <!-- Delay after mid input -->
     <div class="row" style="margin-bottom:-10px;">
       <div class="col" title="Changes the delay after the mid energy fungus (default: 14)">
         <p>Delay After Mid (s)</p>
@@ -74,7 +116,9 @@
         <input class="input-width" type="number" id="midDelayInput" name="midDelayInput" placeholder="14" min="5" max="25" style="width:100px;">
       </div>
     </div>
+
     <hr>
+
     <div class="row">
       <b>Please report any issues or feedback on github: <a href="https://github.com/Raphire/SusAlert" target="_blank">https://github.com/Raphire/SusAlert</a></b>
     </div>
