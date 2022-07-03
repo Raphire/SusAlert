@@ -84,6 +84,10 @@
   font-size:15px;
 }
 
+.recalButtonCompact{
+  top: 46px !important;
+}
+
 .green-border {
   border: 2px solid #008000FF !important; 
 }
@@ -93,7 +97,7 @@
 }
 
 .input-width {
-  width: 70px;
+  width: 100px;
 }
 
 .body {
@@ -135,12 +139,21 @@
   position: relative;
   border-left: 1px solid #777;
   border-bottom-left-radius: 6px;
-  margin-bottom: 10px;
+  margin-bottom:-5px;
   padding-left: 2px;
+  height:30px; 
 }
 
 .settings-subregion.locked {
   opacity: 0.5;
   -webkit-filter: blur(1px);
   filter: blur(1px);
+}
+
+.main-select-width {
+  width: 135px;
+}
+
+.sub-select-width {
+  width: 124px;
 }

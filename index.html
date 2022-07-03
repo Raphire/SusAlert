@@ -27,25 +27,36 @@
       </div>
     </div>
 
-    <!-- Menu buttons -->
+    <!-- Menu Buttons -->
     <div class="row">
       <div class="col">
-        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("settings.html", "_blank", "height=385, width=400, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
+        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("settings.html", "_blank", "height=425, width=400, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
         <div id="infoButton" title="Information" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("info.html", "_blank", "height=405, width=430, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
       </div>
     </div>
 
-    <!-- Upcoming attacks textbox-->
+    <!-- Upcoming Attacks Textbox-->
     <div class="row">
       <div id="upcomingBox" class="nistext"></div>
     </div>
 
-    <!-- Incoming attacks textbox-->
+    <!-- Incoming Attacks Textbox-->
     <div class="row">
       <div id="incomingBox" class="nistext font-weight-bold h5">Loading...</div>
       <div id="recalButton" title="Syncs the bosstimer (Keybind: alt + 1)" type="button" class="nisbutton menubutton d-none">Click when fungus dies</div>
     </div>
-  </div>
+
+    <!-- Resize Modal -->
+    <div class="modal fade" id="resizeModal" tabindex="-1" role="dialog" aria-labelledby="resizeModal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body text-center">
+            Please manually resize this window
+            <button type="button" class="btn btn-sm btn-primary mt-2" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </body>
 
 <script src="scripts/script.js"></script>

@@ -1,8 +1,10 @@
-let midOffset = 14;
-let startOffset = 0;
+let tooltipSetting = 1;
+let styleSetting = 0;
+let compactModeSetting = 1;
 let crystalMaskSetting = 0;
 let crystalMaskSoundSetting = 0;
-let tooltipSetting = 1;
+let startOffset = 0;
+let midOffset = 14;
 
 function toggleSoundEffectSetting() {
   if (crystalMaskSetting == 1) {
@@ -19,14 +21,32 @@ $('document').ready(function() {
   $(".chat").change(function () {
     localStorage.setItem("susChat", parseInt($(this).val()));
 
-    window.opener.chatChange();
+    window.opener.updateChatSetting();
+  });
+
+  $(".ttSelect").change(function () {
+    localStorage.setItem("susTT", parseInt($(this).val()));
+
+    window.opener.updateTooltipSetting();
+  });
+
+  $(".styleSelect").change(function () {
+    localStorage.setItem("susStyle", parseInt($(this).val()));
+
+    window.opener.updateStyleSetting();
+  });
+
+  $(".compactModeSelect").change(function () {
+    localStorage.setItem("susCompactMode", parseInt($(this).val()));
+
+    window.opener.updateCompactMode(true);
   });
 
   $(".cMask").change(function () {
     crystalMaskSetting = parseInt($(this).val());
     localStorage.setItem("susCMask", $(this).val());
 
-    window.opener.cMaskChange();
+    window.opener.updateCrystalMaskSetting();
     toggleSoundEffectSetting();
   });
 
@@ -34,19 +54,7 @@ $('document').ready(function() {
     crystalMaskSoundSetting = parseInt($(this).val());
     localStorage.setItem("susCMaskSound", $(this).val());
 
-    window.opener.cMaskSoundChange(true);
-  });
-
-  $(".ttSelect").change(function () {
-    localStorage.setItem("susTT", parseInt($(this).val()));
-
-    window.opener.tooltipChange();
-  });
-
-  $(".styleSelect").change(function () {
-    localStorage.setItem("susStyle", parseInt($(this).val()));
-
-    window.opener.styleChange();
+    window.opener.updateAlertSound(true);
   });
 
   $("#startDelayInput").change(function () {
@@ -55,7 +63,7 @@ $('document').ready(function() {
     if (startOffset >= 0 && startOffset <= 2000) {
       localStorage.setItem("susStartDelay", startOffset);
 
-      window.opener.startOffsetChange();
+      window.opener.updateStartOffset();
     }
   });
 
@@ -65,7 +73,7 @@ $('document').ready(function() {
     if (midOffset >= 5 && midOffset <= 25) {
       localStorage.setItem("susMidDelay", midOffset);
 
-      window.opener.midOffsetChange();
+      window.opener.updateMidOffset();
     }
   });
 
@@ -90,26 +98,37 @@ $('document').ready(function() {
   if (localStorage.susTT) {
     tooltipSetting = parseInt(localStorage.susTT);
   }
+  
+  $(".ttSelect").val(tooltipSetting);
 
   // Check for saved styleSetting & set it
   if (localStorage.susStyle) {
     styleSetting = parseInt(localStorage.susStyle);
   }
 
-  $(".ttSelect").val(tooltipSetting);
+  $(".styleSelect").val(styleSetting);
+
+  // Check for saved styleSetting & set it
+  if (localStorage.susCompactMode) {
+    compactModeSetting = parseInt(localStorage.susCompactMode);
+  }
+
+  $(".compactModeSelect").val(compactModeSetting);
 
   // Check for saved crystalmask detection & set it
   if (localStorage.susCMask) {
     crystalMaskSetting = parseInt(localStorage.susCMask);
-    $(".cMask").val(crystalMaskSetting);
     toggleSoundEffectSetting();
   }
 
+  $(".cMask").val(crystalMaskSetting);
+
   // Check for saved crystalmask sound effect & set it
-  if (localStorage.susCMask) {
+  if (localStorage.susCMaskSound) {
     crystalMaskSoundSetting = parseInt(localStorage.susCMaskSound);
-    $(".cMaskSound").val(crystalMaskSoundSetting);
   }
+
+  $("#cMaskSoundSelect").val(crystalMaskSoundSetting);
 
   // Get chatboxes found by susalert & fill selection
   let chatBoxes = window.opener.getChatReader();

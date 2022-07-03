@@ -19,12 +19,13 @@ let intervalCount = 0;
 let attackEndCount = 0;
 let loadingCount = 2;
 
-let midOffset = 14;
-let startOffset = 0;
-let crystalMaskSetting = 0;
-let crystalMaskSoundSetting = 0;
 let tooltipSetting = 1;
 let styleSetting = 0;
+let compactModeSetting = 1;
+let crystalMaskSetting = 0;
+let crystalMaskSoundSetting = 0;
+let startOffset = 0;
+let midOffset = 14;
 
 // Array containing croesus' attacks, their timings and the counter move
 let attacks = {
@@ -66,7 +67,7 @@ let buffReadInterval = null;
 
 // Boss timer interval
 let bossTimer = setInterval(function () {
-  updateTimerUI();
+  calculateTimeAndUpdateUI();
 }, 330);
 
 // Try to find chatbox
@@ -201,8 +202,8 @@ function calculateMidOffset() {
   elid("recalButton").classList.add("d-none");
 }
 
-// Update clock and attacks UI
-function updateTimerUI() {
+// calculate & adjust internal time and update the UI
+function calculateTimeAndUpdateUI() {
   if (!isPaused) {
     let upcomingAttack = 0;
     let incomingAttack = 0;
@@ -272,6 +273,7 @@ function updateTimerUI() {
 
 // Updates the incoming & upcoming attacks on the interface
 function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
+  // Check whether there is an incoming attack, and update UI & tooltip accordingly
   if (incomingAttack != 0) {
     if (timeLeft <= 0) {
       var color = "white";
@@ -314,6 +316,7 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
     }
   }
 
+  // Check whether there is an upcoming attack & update UI accordingly
   if (upcomingAttack != 0) {
     let keys = Object.keys(attacks);
     message("Next attack: " + attacks[keys[upcomingAttack]][0], "upcomingBox");
@@ -415,7 +418,7 @@ function stopEncounter() {
   message("","upcomingBox");
 }
 
-// Start of core attack
+// Start of core (mid) attack
 function startAttack() {
   isAttackable = true;
   lastUpcomingMessage = document.getElementById('upcomingBox').textContent;
@@ -430,7 +433,7 @@ function startAttack() {
   attackStartDate = Date.now();
 }
 
-// End of core attack
+// End of core (mid) attack
 function endAttack() {
   isAttackable = false;
 
@@ -447,13 +450,15 @@ function endAttack() {
 function nudgeTimer(time) {
   startDate = new Date(startDate).getTime() + time;
   
-  updateTimerUI();
+  calculateTimeAndUpdateUI();
 }
 
 // Updates the text inside element
 function message(str,elementId="incomingBox",color="white") {
-  elid(elementId).innerHTML=str;
-  elid(elementId).style.color = color;
+  if(elid(elementId).innerHTML != str){
+    elid(elementId).innerHTML=str;
+    elid(elementId).style.color = color;
+  }
 }
 
 // Gets called when user presses the alt + 1 keybind.
@@ -462,18 +467,63 @@ function alt1onrightclick(obj) {
 }
 
 // Update the selected chatbox with new value from localstorage
-function chatChange() { 
+function updateChatSetting() { 
   if (localStorage.susChat && parseInt(localStorage.susChat) < chatReader.pos.boxes.length) {
     chatReader.pos.mainbox = chatReader.pos.boxes[localStorage.susChat];
 
     showSelectedChat(chatReader.pos);
 
-    console.log("Chat changed to: " + localStorage.susChat);
+    console.log("Selected chatbox changed to: " + localStorage.susChat);
   } 
 }
 
+// Update the tooltip setting with new value from localstorage
+function updateTooltipSetting() {
+  if (localStorage.susTT) {
+    tooltipSetting = parseInt(localStorage.susTT);
+
+    updateTooltip();
+
+    console.log("Tooltip setting changed to: " + tooltipSetting);
+  }
+}
+
+// Update the style setting with new value from localstorage
+function updateStyleSetting() {
+  if (localStorage.susStyle) {
+    styleSetting = parseInt(localStorage.susStyle);
+
+    console.log("Style setting changed to: " + styleSetting);
+  }
+}
+
+function updateCompactMode(showModal=false){
+  compactModeSetting = parseInt(localStorage.susCompactMode);
+
+  if (compactModeSetting === 0) {
+    elid("upcomingBox").classList.add("d-none");
+    elid("upcomingBox").classList.remove("d-block");
+    elid("recalButton").classList.add("recalButtonCompact");
+
+    A1lib.identifyApp("appconfig_compact.json");
+  }
+  else if (compactModeSetting === 1) {
+    elid("upcomingBox").classList.add("d-block");
+    elid("upcomingBox").classList.remove("d-none");
+    elid("recalButton").classList.remove("recalButtonCompact");
+
+    A1lib.identifyApp("appconfig.json");
+  }
+
+  if(showModal){
+    $('#resizeModal').modal('show');
+
+    console.log("Compact mode setting changed to: " + compactModeSetting);
+  }
+}
+
 // Update the crystal mask setting with new value from localstorage
-function cMaskChange() {
+function updateCrystalMaskSetting() {
   if (localStorage.susCMask) {
     crystalMaskSetting = parseInt(localStorage.susCMask);
 
@@ -496,38 +546,47 @@ function cMaskChange() {
 }
 
 // Update the crystal mask sound setting with new value from localstorage
-function cMaskSoundChange() {
+function updateAlertSound(playSound=false) {
   if (localStorage.susCMaskSound) {
     crystalMaskSoundSetting = parseInt(localStorage.susCMaskSound);
 
-    changeAlertSound(true);
+    if (crystalMaskSoundSetting === 1) {
+      alertSound = new Audio("./assets/shatter.mp3");
+      alertSound.volume = 0.6;
+    }
+    else if (crystalMaskSoundSetting === 2) {
+      alertSound = new Audio("./assets/shatter2.mp3");
+      alertSound.volume = 0.5;
+    }
+    else if (crystalMaskSoundSetting === 3) {
+      alertSound = new Audio("./assets/bell.mp3");
+      alertSound.volume = 0.2;
+    }
+    else if (crystalMaskSoundSetting === 4) {
+      alertSound = new Audio("./assets/spell.mp3");
+      alertSound.volume = 0.1;
+    }
+    else if (crystalMaskSoundSetting === 5) {
+      alertSound = new Audio("./assets/damage.mp3");
+      alertSound.volume = 0.2;
+    }
+    else if (crystalMaskSoundSetting === 6) {
+      alertSound = new Audio("./assets/fireball.mp3");
+      alertSound.volume = 0.2;
+    }
+  
+    if (playSound) {
+      if (crystalMaskSoundSetting != 0) {
+        alertSound.play();
+      }
 
-    console.log("Crystal mask sound setting changed to: " + crystalMaskSoundSetting);
-  }
-}
-
-// Update the tooltip setting with new value from localstorage
-function tooltipChange() {
-  if (localStorage.susTT) {
-    tooltipSetting = parseInt(localStorage.susTT);
-
-    updateTooltip();
-
-    console.log("Tooltip setting changed to: " + tooltipSetting);
-  }
-}
-
-// Update the style setting with new value from localstorage
-function styleChange() {
-  if (localStorage.susStyle) {
-    styleSetting = parseInt(localStorage.susStyle);
-
-    console.log("Style setting changed to: " + styleSetting);
+      console.log("Crystal mask sound setting changed to: " + crystalMaskSoundSetting);
+    }
   }
 }
 
 // Update the start delay with new value from localstorage
-function startOffsetChange() {
+function updateStartOffset() {
   if (localStorage.susStartDelay) {
     startOffset = parseInt(localStorage.susStartDelay);
 
@@ -536,42 +595,11 @@ function startOffsetChange() {
 }
 
 // Update the mid delay with new value from localstorage
-function midOffsetChange() {
+function updateMidOffset() {
   if (localStorage.susMidDelay) {
     midOffset = parseInt(localStorage.susMidDelay);
 
     console.log("Mid delay changed to: " + midOffset);
-  }
-}
-
-function changeAlertSound(play=false){
-  if (crystalMaskSoundSetting === 1) {
-    alertSound = new Audio("./assets/shatter.mp3");
-    alertSound.volume = 0.6;
-  }
-  else if (crystalMaskSoundSetting === 2) {
-    alertSound = new Audio("./assets/shatter2.mp3");
-    alertSound.volume = 0.5;
-  }
-  else if (crystalMaskSoundSetting === 3) {
-    alertSound = new Audio("./assets/bell.mp3");
-    alertSound.volume = 0.2;
-  }
-  else if (crystalMaskSoundSetting === 4) {
-    alertSound = new Audio("./assets/spell.mp3");
-    alertSound.volume = 0.1;
-  }
-  else if (crystalMaskSoundSetting === 5) {
-    alertSound = new Audio("./assets/damage.mp3");
-    alertSound.volume = 0.2;
-  }
-  else if (crystalMaskSoundSetting === 6) {
-    alertSound = new Audio("./assets/fireball.mp3");
-    alertSound.volume = 0.2;
-  }
-
-  if (play && crystalMaskSoundSetting != 0) {
-    alertSound.play();
   }
 }
 
@@ -612,6 +640,13 @@ $('document').ready(function() {
     styleSetting = parseInt(localStorage.susStyle);
   }
 
+  // Check for saved styleSetting & set it
+  if (localStorage.susCompactMode) {
+    compactModeSetting = parseInt(localStorage.susCompactMode);
+
+    updateCompactMode();
+  }
+
   // Check for legacy tooltip setting, set it & remove it
   if (localStorage.susTooltip) {
     let legacyTtSetting = JSON.parse(localStorage.susTooltip);
@@ -629,12 +664,7 @@ $('document').ready(function() {
     crystalMaskSetting = parseInt(localStorage.susCMask);
 
     // Check for old settings and change to valid value
-    if(crystalMaskSetting == 1) {
-      crystalMaskSoundSetting = 0;
-
-      localStorage.setItem("susCMaskSound", 0);
-    }
-    else if(crystalMaskSetting == 2) {
+    if(crystalMaskSetting == 2) {
       crystalMaskSetting = 1;
       crystalMaskSoundSetting = 1;
 
@@ -651,9 +681,6 @@ $('document').ready(function() {
   if (localStorage.susCMaskSound) {
     crystalMaskSoundSetting = parseInt(localStorage.susCMaskSound);
 
-    changeAlertSound();
-  }
-  else {
-    localStorage.setItem("susCMaskSound", 0);
+    updateAlertSound();
   }
 });
