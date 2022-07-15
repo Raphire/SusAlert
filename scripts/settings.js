@@ -3,6 +3,7 @@ let styleSetting = 0;
 let compactModeSetting = 1;
 let crystalMaskSetting = 0;
 let crystalMaskSoundSetting = 0;
+let countdownSoundSetting = 0;
 let startOffset = 0;
 let midOffset = 14;
 
@@ -36,6 +37,12 @@ $('document').ready(function() {
     window.opener.updateStyleSetting();
   });
 
+  $(".countdownSoundSelect").change(function () {
+    localStorage.setItem("susCountdownSound", parseInt($(this).val()));
+
+    window.opener.updateCountdownSoundSetting(true);
+  });
+
   $(".compactModeSelect").change(function () {
     localStorage.setItem("susCompactMode", parseInt($(this).val()));
 
@@ -43,7 +50,6 @@ $('document').ready(function() {
   });
 
   $(".cMask").change(function () {
-    crystalMaskSetting = parseInt($(this).val());
     localStorage.setItem("susCMask", $(this).val());
 
     window.opener.updateCrystalMaskSetting();
@@ -51,15 +57,12 @@ $('document').ready(function() {
   });
 
   $(".cMaskSound").change(function () {
-    crystalMaskSoundSetting = parseInt($(this).val());
     localStorage.setItem("susCMaskSound", $(this).val());
 
     window.opener.updateAlertSound(true);
   });
 
   $("#startDelayInput").change(function () {
-    startOffset = parseInt($(this).val());
-  
     if (startOffset >= 0 && startOffset <= 2000) {
       localStorage.setItem("susStartDelay", startOffset);
 
@@ -68,8 +71,6 @@ $('document').ready(function() {
   });
 
   $("#midDelayInput").change(function () {
-    midOffset = parseInt($(this).val());
-
     if (midOffset >= 5 && midOffset <= 25) {
       localStorage.setItem("susMidDelay", midOffset);
 
@@ -107,6 +108,13 @@ $('document').ready(function() {
   }
 
   $(".styleSelect").val(styleSetting);
+
+  // Check for saved countdownSoundSetting & set it
+  if (localStorage.susCountdownSound) {
+    countdownSoundSetting = parseInt(localStorage.susCountdownSound);
+  }
+
+  $(".countdownSoundSelect").val(countdownSoundSetting);
 
   // Check for saved styleSetting & set it
   if (localStorage.susCompactMode) {

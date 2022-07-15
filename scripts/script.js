@@ -18,14 +18,18 @@ let recalOffset = 0;
 let intervalCount = 0;
 let attackEndCount = 0;
 let loadingCount = 2;
+let oldTimeLeft = 0;
 
 let tooltipSetting = 1;
 let styleSetting = 0;
+let countdownSoundSetting = 0;
 let compactModeSetting = 1;
 let crystalMaskSetting = 0;
 let crystalMaskSoundSetting = 0;
 let startOffset = 0;
 let midOffset = 14;
+
+let debugMode = false;
 
 // Array containing croesus' attacks, their timings and the counter move
 let attacks = {
@@ -44,6 +48,8 @@ let attacks = {
 }
 
 let alertSound = new Audio("./assets/shatter.mp3");
+var countdownSound = new Audio("./assets/beep.mp3");
+var countdownFinishSound = new Audio("./assets/beeps.mp3");
 
 // Set Chat reader
 let chatReader = new Chatbox.default();
@@ -168,7 +174,7 @@ function readBossTimer() {
     attackEndCount = 0;
     startEncounter(startOffset);
   }
-  else if (!isPaused && bossTimerReader.find() == null) {
+  else if (!isPaused && bossTimerReader.find() == null && debugMode == false) {
     if (attackEndCount >= 3) {
       attackEndCount = 0;
       stopEncounter();
@@ -212,11 +218,11 @@ function calculateTimeAndUpdateUI() {
     let count = 0;
     let time = Date.now() - startDate;
     let adjTime = new Date(time < 0 ? 0 : time).getTime();
-
+    
     // Update clock
     let timeString = new Date(adjTime).toISOString().substr(14, 5);
     message(timeString, "timerBox");
-    
+
     // Apply all offsets for attack calculations etc.
     adjTime = (adjTime / 1000) - attackOffset - recalOffset;
     
@@ -266,7 +272,16 @@ function calculateTimeAndUpdateUI() {
       }
 
       let timeLeft = (attackTime - adjTime).toFixed(0);  
-      updateAttacksUI(incomingAttack, upcomingAttack, timeLeft);
+
+      if(timeLeft != oldTimeLeft) {
+        if (timeLeft == 0) {
+          timeLeft = 0;
+        }
+
+        oldTimeLeft = timeLeft;
+
+        updateAttacksUI(incomingAttack, upcomingAttack, timeLeft);
+      }
     }
   }
 }
@@ -282,6 +297,10 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
         color = "red";
       }
 
+      if (timeLeft == 0 && countdownSoundSetting != 0) {
+        countdownFinishSound.play();
+      }
+
       message("Incoming attack: \n" + attacks[incomingAttack][0], "incomingBox", color);
     }
     else {
@@ -294,6 +313,10 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
         else if (timeLeft == 1) {
           color = "orange";
         }
+      }
+
+      if (countdownSoundSetting != 0 && (timeLeft > 0 && timeLeft < 4)) {
+        countdownSound.play();
       }
 
       message("Incoming attack in " + timeLeft + ": \n" + attacks[incomingAttack][0], "incomingBox", color);
@@ -456,7 +479,7 @@ function nudgeTimer(time) {
 // Updates the text inside element
 function message(str,elementId="incomingBox",color="white") {
   if(elid(elementId).innerHTML != str){
-    elid(elementId).innerHTML=str;
+    elid(elementId).innerHTML = str;
     elid(elementId).style.color = color;
   }
 }
@@ -497,6 +520,33 @@ function updateStyleSetting() {
   }
 }
 
+// Update the countdown sound setting with new value from localstorage
+function updateCountdownSoundSetting(playSound=false) {
+  if (localStorage.susCountdownSound) {
+    countdownSoundSetting = parseInt(localStorage.susCountdownSound);
+
+    if (countdownSoundSetting === 1) {
+      countdownSound = new Audio("./assets/beep.mp3");
+      countdownSound.volume = 0.6;
+      countdownFinishSound = new Audio("./assets/beeps.mp3");
+      countdownFinishSound.volume = 0.6;
+    }
+    else if (countdownSoundSetting === 2) {
+      countdownSound = new Audio("./assets/race1.mp3");
+      countdownSound.volume = 0.2;
+      countdownFinishSound = new Audio("./assets/race2.mp3");
+      countdownFinishSound.volume = 0.2;
+    }
+
+    if (playSound && countdownSoundSetting != 0) {
+      countdownFinishSound.play();
+
+      console.log("Countdown sound setting changed to: " + countdownSoundSetting);
+    }
+  }
+}
+
+// Update the compact mode setting with new value from localstorage
 function updateCompactMode(showModal=false){
   compactModeSetting = parseInt(localStorage.susCompactMode);
 
@@ -574,11 +624,13 @@ function updateAlertSound(playSound=false) {
       alertSound = new Audio("./assets/fireball.mp3");
       alertSound.volume = 0.2;
     }
+    else if (crystalMaskSoundSetting === 7) {
+      alertSound = new Audio("./assets/alert.mp3");
+      alertSound.volume = 0.2;
+    }
   
-    if (playSound) {
-      if (crystalMaskSoundSetting != 0) {
-        alertSound.play();
-      }
+    if (playSound && crystalMaskSoundSetting != 0) {
+      alertSound.play();
 
       console.log("Crystal mask sound setting changed to: " + crystalMaskSoundSetting);
     }
@@ -608,6 +660,17 @@ function getChatReader() {
 }
 
 $('document').ready(function() {
+  $("#debugButton").click(function () {
+    if (debugMode == false) {
+      startEncounter();
+      debugMode = true;
+    }
+    else {
+      stopEncounter();
+      debugMode = false;
+    }
+  });
+
   $("#recalButton").click(function () {
     calculateMidOffset();
   });
@@ -638,6 +701,13 @@ $('document').ready(function() {
   // Check for saved styleSetting & set it
   if (localStorage.susStyle) {
     styleSetting = parseInt(localStorage.susStyle);
+  }
+
+  // Check for saved countdownSoundSetting & set it
+  if (localStorage.susCountdownSound) {
+    countdownSoundSetting = parseInt(localStorage.susCountdownSound);
+
+    updateCountdownSoundSetting();
   }
 
   // Check for saved styleSetting & set it

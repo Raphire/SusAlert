@@ -49,7 +49,7 @@
     </div>
 
     <!-- Countdown style selector -->
-    <div class="row">
+    <div class="row" style="margin-bottom:-10px;">
       <div class="col" title="Changes the style of the attack countdown messages">
         <p>Countdown Style</p>
       </div>
@@ -58,6 +58,21 @@
           <option value="" disabled>Select Option</option>
           <option value="0">Default (white)</option>
           <option value="1">Colorful</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Countdown sound selector -->
+    <div id="countdownSoundSetting" class="row settings-subregion" style="margin-bottom:10px;">
+      <div class="col" title="Changes the sound effect that is played during the attack countdown">
+        <p>Sound Effect</p>
+      </div>
+      <div class="col">
+        <select class="countdownSoundSelect sub-select-width">
+          <option value="" disabled>Select Option</option>
+          <option value="0">Disabled</option>
+          <option value="1">Beep</option>
+          <option value="2">Race Countdown</option>
         </select>
       </div>
     </div>
@@ -91,7 +106,7 @@
     </div>
 
     <!-- Crystal mask sound selector -->
-    <div id="cMaskSoundSetting" class="row settings-subregion locked">
+    <div id="cMaskSoundSetting" class="row settings-subregion locked" style="margin-bottom:-5px;">
       <div class="col" title="Changes the sound effect that is played when crystal mask is used or runs out">
         <p>Sound Effect</p>
       </div>
@@ -105,6 +120,7 @@
           <option value="4">Spell</option>
           <option value="5">Damage</option>
           <option value="6">Fireball</option>
+          <option value="7">Alert</option>
         </select>
       </div>
     </div>

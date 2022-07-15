@@ -61,6 +61,11 @@
   overflow-y:hidden;
 }
 
+#debugButton{
+  margin-top:8px;
+  margin-right:5px;
+}
+
 #settingsButton{
   margin-top:8px;
   margin-right:-9px;
@@ -139,7 +144,6 @@
   position: relative;
   border-left: 1px solid #777;
   border-bottom-left-radius: 6px;
-  margin-bottom:-5px;
   padding-left: 2px;
   height:30px; 
 }

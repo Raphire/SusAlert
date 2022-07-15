@@ -25,4 +25,4 @@ Or go to this URL in the alt1 browser:<br/>
 https://raphire.github.io/SusAlert/
 
 ## Credits
-Special thanks to [ZeroGwafa](https://github.com/ZeroGwafa) for his chat detection function, and [Skillbert](https://github.com/skillbert) for his help with making the bosstimer detection.
+Special thanks to [ZeroGwafa](https://github.com/ZeroGwafa) for his chat detection function, and [Skillbert](https://github.com/skillbert) for creating alt1 & his help with making the bosstimer detection.
