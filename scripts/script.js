@@ -6,7 +6,6 @@ A1lib.identifyApp("appconfig.json");
 let isPaused = true;
 let isAttackable = false;
 let recalButtonVisible = false;
-let autoStopEnabled = false;
 let crystalMaskActive = false;
 let startDate = Date.now();
 let attackStartDate = Date.now();
@@ -101,12 +100,14 @@ let findChat = setInterval(function () {
     chatReader.find();
   }
   else {
+    console.log("Chatbox found!");
+
     message("Ready!\nAwaiting boss start...");
     
     clearInterval(findChat);
 
-    if (localStorage.susChat) {
-      chatReader.pos.mainbox = chatReader.pos.boxes[localStorage.susChat];
+    if (localStorage.susChat && parseInt(localStorage.susChat) <= (chatReader.pos.boxes.length - 1)) {
+      chatReader.pos.mainbox = chatReader.pos.boxes[parseInt(localStorage.susChat)];
     } 
     else {
       //If multiple boxes are found, this will select the first, which should be the top-most chat box on the screen.
@@ -366,11 +367,13 @@ function readBuffBar() {
   if (crystalMaskSetting != 0) {
     // First check if a buff bar has already been found, if not look for one now
     if (buffReader.pos === null) {
-      console.log("Error: Unable to find buffbar");
+      console.log("Unable to find buffbar");
 
       buffReader.find();
     }
     else {
+      console.log("Buffbar found!");
+
       let buffReadout = buffReader.read();
       const image = new Image;
       image.src = "./assets/crystalmask.png";
@@ -717,7 +720,7 @@ $('document').ready(function() {
     updateCompactMode();
   }
 
-  // Check for legacy tooltip setting, set it & remove it
+  // Check for legacy tooltip setting, set it with new setting & remove legacy
   if (localStorage.susTooltip) {
     let legacyTtSetting = JSON.parse(localStorage.susTooltip);
 
@@ -733,7 +736,7 @@ $('document').ready(function() {
   if (localStorage.susCMask) {
     crystalMaskSetting = parseInt(localStorage.susCMask);
 
-    // Check for old settings and change to valid value
+    // Check for legacy cmask setting, set it with new setting
     if(crystalMaskSetting == 2) {
       crystalMaskSetting = 1;
       crystalMaskSoundSetting = 1;
@@ -752,5 +755,9 @@ $('document').ready(function() {
     crystalMaskSoundSetting = parseInt(localStorage.susCMaskSound);
 
     updateAlertSound();
+  }
+
+  if (localStorage.susDebug) {
+    elid("debugButton").classList.remove("d-none");
   }
 });
