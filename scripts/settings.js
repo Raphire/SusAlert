@@ -50,10 +50,12 @@ $('document').ready(function() {
   });
 
   $(".cMask").change(function () {
-    localStorage.setItem("susCMask", $(this).val());
+    crystalMaskSetting = parseInt($(this).val());
+    localStorage.setItem("susCMask", crystalMaskSetting);
+
+    toggleSoundEffectSetting();
 
     window.opener.updateCrystalMaskSetting();
-    toggleSoundEffectSetting();
   });
 
   $(".cMaskSound").change(function () {
@@ -63,6 +65,8 @@ $('document').ready(function() {
   });
 
   $("#startDelayInput").change(function () {
+    startOffset = $(this).val();
+
     if (startOffset >= 0 && startOffset <= 2000) {
       localStorage.setItem("susStartDelay", startOffset);
 
@@ -71,6 +75,8 @@ $('document').ready(function() {
   });
 
   $("#midDelayInput").change(function () {
+    midOffset = $(this).val();
+
     if (midOffset >= 5 && midOffset <= 25) {
       localStorage.setItem("susMidDelay", midOffset);
 

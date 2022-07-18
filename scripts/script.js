@@ -372,8 +372,6 @@ function readBuffBar() {
       buffReader.find();
     }
     else {
-      console.log("Buffbar found!");
-
       let buffReadout = buffReader.read();
       const image = new Image;
       image.src = "./assets/crystalmask.png";
