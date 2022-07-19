@@ -151,8 +151,12 @@ function readChatbox() {
 
   for (a in opts) {
     chat += opts[a].text + " ";
+  }  
+  
+  if (opts[0] != null)
+  {
+    console.log(opts[0].text)
   }
-  console.log(chat);
   
   if(!isPaused) {
     // Check for lines indicating the core can be attacked.
