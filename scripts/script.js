@@ -65,6 +65,9 @@ chatReader.readargs = {
     A1lib.mixColor(67, 188, 188), //Contribution Score Green
     A1lib.mixColor(102, 152, 255), //Notable Drops Blue
     A1lib.mixColor(235, 47, 47), //Rot Mistake Red
+    A1lib.mixColor(255, 255, 0), //Blessing From The Gods Yellow
+    A1lib.mixColor(0, 255, 255), //Seren Spirit Cyan
+    A1lib.mixColor(30, 255, 0), //Catalyst Of Alteration Green
   ],
   backwards: true,
 };
