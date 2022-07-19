@@ -54,9 +54,12 @@ var countdownFinishSound = new Audio("./assets/beeps.mp3");
 let chatReader = new Chatbox.default();
 chatReader.readargs = {
   colors: [
-    A1lib.mixColor(255, 255, 255),
+    A1lib.mixColor(255, 255, 255), //White
     //1lib.mixColor(128, 69, 182), //Old Purple
     A1lib.mixColor(130, 70, 184), //New Purple
+    A1lib.mixColor(159,255,159), //Clan chat green
+    A1lib.mixColor(255, 82, 86), //PM Red
+    A1lib.mixColor(255, 0, 0), //Red
   ],
   backwards: true,
 };
@@ -152,7 +155,7 @@ function readChatbox() {
   for (a in opts) {
     chat += opts[a].text + " ";
   }  
-  
+
   if (opts[0] != null)
   {
     console.log(opts[0].text)
