@@ -60,6 +60,10 @@ chatReader.readargs = {
     A1lib.mixColor(159,255,159), //Clan chat green
     A1lib.mixColor(255, 82, 86), //PM Red
     A1lib.mixColor(255, 0, 0), //Red
+    A1lib.mixColor(0, 174, 0), //Crystal Mask Green
+    A1lib.mixColor(45, 184, 20), //Completion Time Green
+    A1lib.mixColor(67, 188, 188), //Contribution Score Green
+    A1lib.mixColor(102, 152, 255), //Notable Drops Blue
   ],
   backwards: true,
 };
