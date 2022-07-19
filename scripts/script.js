@@ -56,6 +56,7 @@ chatReader.readargs = {
   colors: [
     A1lib.mixColor(255, 255, 255),
     A1lib.mixColor(128, 69, 182),
+    A1lib.mixColor(255, 255, 255), //White
   ],
   backwards: true,
 };
