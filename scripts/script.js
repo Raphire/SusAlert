@@ -55,8 +55,8 @@ let chatReader = new Chatbox.default();
 chatReader.readargs = {
   colors: [
     A1lib.mixColor(255, 255, 255),
-    A1lib.mixColor(128, 69, 182),
-    A1lib.mixColor(255, 255, 255), //White
+    //1lib.mixColor(128, 69, 182), //Old Purple
+    A1lib.mixColor(130, 70, 184), //New Purple
   ],
   backwards: true,
 };
