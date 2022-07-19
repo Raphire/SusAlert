@@ -152,6 +152,7 @@ function readChatbox() {
   for (a in opts) {
     chat += opts[a].text + " ";
   }
+  console.log(chat);
   
   if(!isPaused) {
     // Check for lines indicating the core can be attacked.
@@ -159,6 +160,11 @@ function readChatbox() {
                           chat.indexOf("dark feast subsides. Strike now!") > -1 || 
                           chat.indexOf("is the time. To the core!") > -1)) {
       startAttack();
+      console.log(
+        "[" + chat.indexOf("is vulnerable. Attack its core!") + "] " +
+        "[" + chat.indexOf("dark feast subsides. Strike now!") + "] " +
+        "[" + chat.indexOf("is the time. To the core!") + "] "
+        );
     }
     
     // Check for lines indicating the attack phase has ended
