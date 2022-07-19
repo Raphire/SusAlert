@@ -158,11 +158,6 @@ function showSelectedChat(chat) {
 // Reading and parsing info from the chatbox.
 function readChatbox() {
   var opts = chatReader.read() || [];
-  var chat = "";
-
-  for (a in opts) {
-    chat += opts[a].text + " ";
-  }  
 
   if (opts[0] != null)
   {
@@ -171,21 +166,16 @@ function readChatbox() {
   
   if(!isPaused) {
     // Check for lines indicating the core can be attacked.
-    if (!isAttackable && (chat.indexOf("is vulnerable. Attack its core!") > -1 || 
-                          chat.indexOf("dark feast subsides. Strike now!") > -1 || 
-                          chat.indexOf("is the time. To the core!") > -1)) {
+    if (!isAttackable && (opts[0].indexOf("is vulnerable. Attack its core!") > -1 || 
+                          opts[0].indexOf("dark feast subsides. Strike now!") > -1 || 
+                          opts[0].indexOf("is the time. To the core!") > -1)) {
       startAttack();
-      console.log(
-        "[" + chat.indexOf("is vulnerable. Attack its core!") + "] " +
-        "[" + chat.indexOf("dark feast subsides. Strike now!") + "] " +
-        "[" + chat.indexOf("is the time. To the core!") + "] "
-        );
     }
     
     // Check for lines indicating the attack phase has ended
-    if (isAttackable && (chat.indexOf("feeds again - stand ready!") > -1 || 
-                         chat.indexOf("out - it is awakening.") > -1 ||
-                         chat.indexOf("is going to wake any moment.") > -1)) { // Might not be correct?
+    if (isAttackable && (opts[0].indexOf("feeds again - stand ready!") > -1 || 
+                         opts[0].indexOf("out - it is awakening.") > -1 ||
+                         opts[0].indexOf("is going to wake any moment.") > -1)) { // Might not be correct?
       endAttack();
     }
   }
