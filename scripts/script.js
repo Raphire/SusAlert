@@ -166,8 +166,6 @@ function readChatbox()
 
   for (var line in opts)
   {
-  //if (opts[0] != null)
-  //{
     console.log(line.text)
   
     if(!isPaused) 
