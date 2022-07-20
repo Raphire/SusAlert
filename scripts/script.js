@@ -68,6 +68,10 @@ chatReader.readargs = {
     A1lib.mixColor(0, 255, 255), //Seren Spirit Cyan
     A1lib.mixColor(30, 255, 0), //Catalyst Of Alteration Green
     A1lib.mixColor(127, 169, 255), //Public Chat Blue
+    A1lib.mixColor(0, 255, 0), //Artificer's Measure Green
+    A1lib.mixColor(255, 112, 0), //Luck Ring Orange
+    A1lib.mixColor(163, 53, 238) //Rare Drop Purple
+
   ],
   backwards: true,
 };
