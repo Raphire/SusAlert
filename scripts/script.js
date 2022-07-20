@@ -54,12 +54,11 @@ var countdownFinishSound = new Audio("./assets/beeps.mp3");
 let chatReader = new Chatbox.default();
 chatReader.readargs = {
   colors: [
-    A1lib.mixColor(255, 255, 255), //White
-    //1lib.mixColor(128, 69, 182), //Old Purple
-    A1lib.mixColor(130, 70, 184), //New Purple
+    A1lib.mixColor(255, 255, 255), //Normal Text White
+    A1lib.mixColor(130, 70, 184), //Gorvek Purple
     A1lib.mixColor(159,255,159), //Clan chat green
     A1lib.mixColor(255, 82, 86), //PM Red
-    A1lib.mixColor(255, 0, 0), //Red
+    A1lib.mixColor(255, 0, 0), //Very Red Red
     A1lib.mixColor(0, 174, 0), //Crystal Mask Green
     A1lib.mixColor(45, 184, 20), //Completion Time Green
     A1lib.mixColor(67, 188, 188), //Contribution Score Green
