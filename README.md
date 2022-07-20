@@ -12,8 +12,8 @@ The timer may drift out of sync after the mid fungi (attack) phase, but you can 
 To function SusAlert needs the following:
 - Alt1 toolkit must be installed, you can install that [here](https://runeapps.org/alt1).
 - The bosstimer must be visible on-screen, this can be changed in Gameplay Settings > Interfaces > Information Windows > Boss kill timer.
-- Chatwindow MUST be opaque (0% transparency), this can be changed in the Gameplay Settings > 
-Interfaces > Appearance > Transparency.
+- ~~Chatwindow MUST be opaque (0% transparency), this can be changed in the Gameplay Settings > 
+Interfaces > Appearance > Transparency~~. This has been fixed and now works with any interface transparency.
 - Interface scaling needs to be at 100% (this is the default).
 - Game messages need to be turned on (plugin is tested with fontsize 12).
 
