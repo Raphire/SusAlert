@@ -167,17 +167,17 @@ function readChatbox()
     if(!isPaused) 
     {
       // Check for lines indicating the core can be attacked.
-      if (!isAttackable && (opts[0].indexOf("is vulnerable. Attack its core!") > -1 || 
-                            opts[0].indexOf("dark feast subsides. Strike now!") > -1 || 
-                            opts[0].indexOf("is the time. To the core!") > -1)) 
+      if (!isAttackable && (opts[0].text.includes("is vulnerable. Attack its core!") || 
+                            opts[0].text.includes("dark feast subsides. Strike now!") || 
+                            opts[0].text.includes("is the time. To the core!") )) 
       {
         startAttack();
       }
       
       // Check for lines indicating the attack phase has ended
-      if (isAttackable && (opts[0].indexOf("feeds again - stand ready!") > -1 || 
-                          opts[0].indexOf("out - it is awakening.") > -1 ||
-                          opts[0].indexOf("is going to wake any moment.") > -1))  // Might not be correct?
+      if (isAttackable && (opts[0].text.includes("feeds again - stand ready!") || 
+                          opts[0].text.includes("out - it is awakening.") ||
+                          opts[0].text.includes("is going to wake any moment.") ))  // Might not be correct?
       {
         endAttack();
       }
