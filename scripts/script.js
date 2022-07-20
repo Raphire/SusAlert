@@ -164,24 +164,26 @@ function readChatbox()
 {
   var opts = chatReader.read() || [];
 
-  if (opts[0] != null)
+  for (var line in opts)
   {
-    console.log(opts[0].text)
+  //if (opts[0] != null)
+  //{
+    console.log(line.text)
   
     if(!isPaused) 
     {
       // Check for lines indicating the core can be attacked.
-      if (!isAttackable && (opts[0].text.includes("is vulnerable. Attack its core!") || 
-                            opts[0].text.includes("dark feast subsides. Strike now!") || 
-                            opts[0].text.includes("is the time. To the core!") )) 
+      if (!isAttackable && (line.text.includes("is vulnerable. Attack its core!") || 
+                            line.text.includes("dark feast subsides. Strike now!") || 
+                            line.text.includes("is the time. To the core!") )) 
       {
         startAttack();
       }
       
       // Check for lines indicating the attack phase has ended
-      if (isAttackable && (opts[0].text.includes("feeds again - stand ready!") || 
-                          opts[0].text.includes("out - it is awakening.") ||
-                          opts[0].text.includes("is going to wake any moment.") ))  // Might not be correct?
+      if (isAttackable && (line.text.includes("feeds again - stand ready!") || 
+                          line.text.includes("out - it is awakening.") ||
+                          line.text.includes("is going to wake any moment.") ))  // Might not be correct?
       {
         endAttack();
       }
