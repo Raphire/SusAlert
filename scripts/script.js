@@ -68,6 +68,7 @@ chatReader.readargs = {
     A1lib.mixColor(255, 255, 0), //Blessing From The Gods Yellow
     A1lib.mixColor(0, 255, 255), //Seren Spirit Cyan
     A1lib.mixColor(30, 255, 0), //Catalyst Of Alteration Green
+    A1lib.mixColor(127, 169, 255), //Public Chat Blue
   ],
   backwards: true,
 };
