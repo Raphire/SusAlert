@@ -162,26 +162,30 @@ function showSelectedChat(chat) {
 // Reading and parsing info from the chatbox.
 function readChatbox() 
 {
-  var opts = chatReader.read() || [];
+  var lines = chatReader.read() || [];
+  const numLines = lines.length;
 
-  for (var line in opts)
+  for (let idx = 0; idx < numLines; idx++)
   {
-    console.log(line.text)
-  
     if(!isPaused) 
     {
+      if (debugMode)
+      {
+        console.log(lines[idx])
+      }
+
       // Check for lines indicating the core can be attacked.
-      if (!isAttackable && (line.text.includes("is vulnerable. Attack its core!") || 
-                            line.text.includes("dark feast subsides. Strike now!") || 
-                            line.text.includes("is the time. To the core!") )) 
+      if (!isAttackable && (lines[idx].text.includes("is vulnerable. Attack its core!") || 
+                            lines[idx].text.includes("dark feast subsides. Strike now!") || 
+                            lines[idx].text.includes("is the time. To the core!") )) 
       {
         startAttack();
       }
       
       // Check for lines indicating the attack phase has ended
-      if (isAttackable && (line.text.includes("feeds again - stand ready!") || 
-                          line.text.includes("out - it is awakening.") ||
-                          line.text.includes("is going to wake any moment.") ))  // Might not be correct?
+      if (isAttackable && (lines[idx].text.includes("feeds again - stand ready!") || 
+                          lines[idx].text.includes("out - it is awakening.") ||
+                          lines[idx].text.includes("is going to wake any moment.") ))  // Might not be correct?
       {
         endAttack();
       }
