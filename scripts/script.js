@@ -89,7 +89,7 @@ let buffReadInterval = null;
 // Boss timer interval
 let bossTimer = setInterval(function () {
   calculateTimeAndUpdateUI();
-}, 330);
+}, 500);
 
 // Try to find chatbox
 try {
@@ -140,7 +140,7 @@ let findChat = setInterval(function () {
       }
 
       intervalCount = intervalCount + 1;
-    }, 165);
+    }, 250);
   }
 }, 1000);
 
@@ -276,6 +276,7 @@ function calculateTimeAndUpdateUI() {
             else if (!recalButtonVisible && ((parseInt(key) + 7) <= adjTime && adjTime < (parseInt(key) + 9))) {
               recalButtonVisible = true;
               elid("recalButton").classList.remove("d-none");
+              message("");
             }
           }
           // This is different attack
@@ -298,14 +299,14 @@ function calculateTimeAndUpdateUI() {
 
       let timeLeft = (attackTime - adjTime).toFixed(0);  
 
-      if(timeLeft != oldTimeLeft) {
-        if (timeLeft == 0) {
-          timeLeft = 0;
-        }
-
-        oldTimeLeft = timeLeft;
+      if (timeLeft != oldTimeLeft && timeLeft >= 0) {
+        oldTimeLeft = Math.abs(timeLeft);
 
         updateAttacksUI(incomingAttack, upcomingAttack, timeLeft);
+      }
+      else if (incomingAttack == 0 && currentTooltip != "") {
+        updateTooltip();
+        message("");
       }
     }
   }
@@ -315,22 +316,9 @@ function calculateTimeAndUpdateUI() {
 function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
   // Check whether there is an incoming attack, and update UI & tooltip accordingly
   if (incomingAttack != 0) {
-    if (timeLeft <= 0) {
-      var color = "white";
+    var color = "white";
 
-      if (styleSetting == 1) {
-        color = "red";
-      }
-
-      if (timeLeft == 0 && countdownSoundSetting != 0) {
-        countdownFinishSound.play();
-      }
-
-      message("Incoming attack: \n" + attacks[incomingAttack][0], "incomingBox", color);
-    }
-    else {
-      var color = "white";
-
+    if (timeLeft > 0) {
       if (styleSetting == 1) {
         if (timeLeft == 2) {
           color = "yellow";
@@ -346,28 +334,33 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
 
       message("Incoming attack in " + timeLeft + ": \n" + attacks[incomingAttack][0], "incomingBox", color);
     }
-  }
-  else if (incomingAttack == 0 && currentTooltip != "") {
-    updateTooltip();
-    message("");
-  }
-  
-  if (incomingAttack != 0 && currentTooltip == "") {
-    if (tooltipSetting == 1) {
-      updateTooltip(attacks[incomingAttack][0]);
-    }
-    else if (tooltipSetting == 2) {
-      updateTooltip(attacks[incomingAttack][1]);
-    }
-    else if (tooltipSetting == 3) {
-      updateTooltip(attacks[incomingAttack][0] + ", " + attacks[incomingAttack][1]);
-    }
-  }
+    else {
+      if (styleSetting == 1) {
+        color = "red";
+      }
 
-  // Check whether there is an upcoming attack & update UI accordingly
-  if (upcomingAttack != 0) {
-    let keys = Object.keys(attacks);
-    message("Next attack: " + attacks[keys[upcomingAttack]][0], "upcomingBox");
+      message("Incoming attack: \n" + attacks[incomingAttack][0], "incomingBox", color);
+
+      if (countdownSoundSetting != 0) {
+        countdownFinishSound.play();
+      }
+    }
+
+    // Update tooltip & upcoming attack UI if no tooltip is currently displayed
+    if (currentTooltip == "") {
+      if (tooltipSetting == 1) {
+        updateTooltip(attacks[incomingAttack][0]);
+      }
+      else if (tooltipSetting == 2) {
+        updateTooltip(attacks[incomingAttack][1]);
+      }
+      else if (tooltipSetting == 3) {
+        updateTooltip(attacks[incomingAttack][0] + ", " + attacks[incomingAttack][1]);
+      }
+
+      let keys = Object.keys(attacks);
+      message("Next attack: " + attacks[keys[upcomingAttack]][0], "upcomingBox");
+    }
   }
 }
 
@@ -391,8 +384,6 @@ function readBuffBar() {
   if (crystalMaskSetting != 0) {
     // First check if a buff bar has already been found, if not look for one now
     if (buffReader.pos === null) {
-      console.log("Unable to find buffbar");
-
       buffReader.find();
     }
     else {
@@ -503,7 +494,7 @@ function nudgeTimer(time) {
 
 // Updates the text inside element
 function message(str,elementId="incomingBox",color="white") {
-  if(elid(elementId).innerHTML != str){
+  if (elid(elementId).innerHTML != str) {
     elid(elementId).innerHTML = str;
     elid(elementId).style.color = color;
   }
@@ -572,7 +563,7 @@ function updateCountdownSoundSetting(playSound=false) {
 }
 
 // Update the compact mode setting with new value from localstorage
-function updateCompactMode(showModal=false){
+function updateCompactMode(showModal=false) {
   compactModeSetting = parseInt(localStorage.susCompactMode);
 
   if (compactModeSetting === 0) {
@@ -590,7 +581,7 @@ function updateCompactMode(showModal=false){
     A1lib.identifyApp("appconfig.json");
   }
 
-  if(showModal){
+  if (showModal) {
     $('#resizeModal').modal('show');
 
     console.log("Compact mode setting changed to: " + compactModeSetting);
@@ -759,7 +750,7 @@ $('document').ready(function() {
     crystalMaskSetting = parseInt(localStorage.susCMask);
 
     // Check for legacy cmask setting, set it with new setting
-    if(crystalMaskSetting == 2) {
+    if (crystalMaskSetting == 2) {
       crystalMaskSetting = 1;
       crystalMaskSoundSetting = 1;
 
