@@ -54,8 +54,24 @@ var countdownFinishSound = new Audio("./assets/beeps.mp3");
 let chatReader = new Chatbox.default();
 chatReader.readargs = {
   colors: [
-    A1lib.mixColor(255, 255, 255),
-    A1lib.mixColor(128, 69, 182),
+    A1lib.mixColor(255, 255, 255), //Normal Text White
+    A1lib.mixColor(130, 70, 184), //Gorvek Purple
+    A1lib.mixColor(159,255,159), //Clan chat green
+    A1lib.mixColor(255, 82, 86), //PM Red
+    A1lib.mixColor(255, 0, 0), //Very Red Red
+    A1lib.mixColor(0, 174, 0), //Crystal Mask Green
+    A1lib.mixColor(45, 184, 20), //Completion Time Green
+    A1lib.mixColor(67, 188, 188), //Contribution Score Green
+    A1lib.mixColor(102, 152, 255), //Notable Drops Blue
+    A1lib.mixColor(235, 47, 47), //Rot Mistake Red
+    A1lib.mixColor(255, 255, 0), //Blessing From The Gods Yellow
+    A1lib.mixColor(0, 255, 255), //Seren Spirit Cyan
+    A1lib.mixColor(30, 255, 0), //Catalyst Of Alteration Green
+    A1lib.mixColor(127, 169, 255), //Public Chat Blue
+    A1lib.mixColor(0, 255, 0), //Artificer's Measure Green
+    A1lib.mixColor(255, 112, 0), //Luck Ring Orange
+    A1lib.mixColor(163, 53, 238) //Rare Drop Purple
+
   ],
   backwards: true,
 };
@@ -144,27 +160,35 @@ function showSelectedChat(chat) {
 }
 
 // Reading and parsing info from the chatbox.
-function readChatbox() {
-  var opts = chatReader.read() || [];
-  var chat = "";
+function readChatbox() 
+{
+  var lines = chatReader.read() || [];
+  const numLines = lines.length;
 
-  for (a in opts) {
-    chat += opts[a].text + " ";
-  }
-  
-  if (!isPaused) {
-    // Check for lines indicating the core can be attacked.
-    if (!isAttackable && (chat.indexOf("is vulnerable. Attack its core!") > -1 || 
-                          chat.indexOf("dark feast subsides. Strike now!") > -1 || 
-                          chat.indexOf("is the time. To the core!") > -1)) {
-      startAttack();
-    }
-    
-    // Check for lines indicating the attack phase has ended
-    if (isAttackable && (chat.indexOf("feeds again - stand ready!") > -1 || 
-                         chat.indexOf("out - it is awakening.") > -1 ||
-                         chat.indexOf("is going to wake any moment.") > -1)) { // Might not be correct?
-      endAttack();
+  for (let idx = 0; idx < numLines; idx++)
+  {
+    if(!isPaused) 
+    {
+      if (debugMode)
+      {
+        console.log(lines[idx])
+      }
+
+      // Check for lines indicating the core can be attacked.
+      if (!isAttackable && (lines[idx].text.includes("is vulnerable. Attack its core!") || 
+                            lines[idx].text.includes("dark feast subsides. Strike now!") || 
+                            lines[idx].text.includes("is the time. To the core!") )) 
+      {
+        startAttack();
+      }
+      
+      // Check for lines indicating the attack phase has ended
+      if (isAttackable && (lines[idx].text.includes("feeds again - stand ready!") || 
+                          lines[idx].text.includes("out - it is awakening.") ||
+                          lines[idx].text.includes("is going to wake any moment.") ))  // Might not be correct?
+      {
+        endAttack();
+      }
     }
   }
 }
