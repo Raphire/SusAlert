@@ -14,7 +14,7 @@ To function SusAlert needs the following:
 - The bosstimer must be visible on-screen, this can be changed in Gameplay Settings > Interfaces > Information Windows > Boss kill timer.
 - Interface scaling needs to be at 100% (this is the default).
 - Game messages need to be turned on (plugin is tested with fontsize 12).
-- Any interface transparency should work, if you do encounter issues try setting the interface transparency below 50%.
+- Any interface transparency should work, if you do encounter issues try setting the interface transparency to below 50%.
 
 ## Installation
 To install SusAlert copy & paste this link into your browser:<br/>
