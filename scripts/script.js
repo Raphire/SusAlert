@@ -46,6 +46,11 @@ let attacks = {
   144: ["Mid energy fungi", "Go to mid"],
 }
 
+let countdownColors = {
+  0: { 5: "white", 4: "white", 3: "white", 2: "white", 1: "white", 0: "white"},
+  1: { 5: "white", 4: "white", 3: "white", 2: "yellow", 1: "orange", 0: "red"}
+}
+
 let alertSound = new Audio("./assets/shatter.mp3");
 var countdownSound = new Audio("./assets/beep.mp3");
 var countdownFinishSound = new Audio("./assets/beeps.mp3");
@@ -316,18 +321,9 @@ function calculateTimeAndUpdateUI() {
 function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
   // Check whether there is an incoming attack, and update UI & tooltip accordingly
   if (incomingAttack != 0) {
-    var color = "white";
+    var color = countdownColors[styleSetting][timeLeft];
 
     if (timeLeft > 0) {
-      if (styleSetting == 1) {
-        if (timeLeft == 2) {
-          color = "yellow";
-        }
-        else if (timeLeft == 1) {
-          color = "orange";
-        }
-      }
-
       if (countdownSoundSetting != 0 && (timeLeft > 0 && timeLeft < 4)) {
         countdownSound.play();
       }
@@ -335,10 +331,6 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
       message("Incoming attack in " + timeLeft + ": \n" + attacks[incomingAttack][0], "incomingBox", color);
     }
     else {
-      if (styleSetting == 1) {
-        color = "red";
-      }
-
       message("Incoming attack: \n" + attacks[incomingAttack][0], "incomingBox", color);
 
       if (countdownSoundSetting != 0) {
