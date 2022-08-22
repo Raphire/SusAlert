@@ -30,7 +30,7 @@ let midOffset = 14;
 
 let debugMode = false;
 
-// Array containing croesus' attacks, their timings and the counter move
+// Dictionary containing croesus' attacks, their timings and the counter move
 let attacks = {
   15: ["Red bomb", "Move"],
   27: ["Fairy ring", "Move"],
@@ -46,6 +46,7 @@ let attacks = {
   144: ["Mid energy fungi", "Go to mid"],
 }
 
+// Dictionary containing the countdown message colors, corresponding to time remaining in seconds
 let countdownColors = {
   0: { 5: "white", 4: "white", 3: "white", 2: "white", 1: "white", 0: "white"},
   1: { 5: "white", 4: "white", 3: "white", 2: "yellow", 1: "orange", 0: "red"}
@@ -59,23 +60,23 @@ var countdownFinishSound = new Audio("./assets/beeps.mp3");
 let chatReader = new Chatbox.default();
 chatReader.readargs = {
   colors: [
-    A1lib.mixColor(255, 255, 255), //Normal Text White
-    A1lib.mixColor(130, 70, 184), //Gorvek Purple
-    A1lib.mixColor(159,255,159), //Clan chat green
-    A1lib.mixColor(255, 82, 86), //PM Red
-    A1lib.mixColor(255, 0, 0), //Very Red Red
-    A1lib.mixColor(0, 174, 0), //Crystal Mask Green
-    A1lib.mixColor(45, 184, 20), //Completion Time Green
-    A1lib.mixColor(67, 188, 188), //Contribution Score Green
-    A1lib.mixColor(102, 152, 255), //Notable Drops Blue
-    A1lib.mixColor(235, 47, 47), //Rot Mistake Red
-    A1lib.mixColor(255, 255, 0), //Blessing From The Gods Yellow
-    A1lib.mixColor(0, 255, 255), //Seren Spirit Cyan
-    A1lib.mixColor(30, 255, 0), //Catalyst Of Alteration Green
-    A1lib.mixColor(127, 169, 255), //Public Chat Blue
-    A1lib.mixColor(0, 255, 0), //Artificer's Measure Green
-    A1lib.mixColor(255, 112, 0), //Luck Ring Orange
-    A1lib.mixColor(163, 53, 238) //Rare Drop Purple
+    A1lib.mixColor(255, 255, 255), // Normal Text White
+    A1lib.mixColor(130, 70, 184),  // Gorvek Purple
+    A1lib.mixColor(159,255,159),   // Clan chat green
+    A1lib.mixColor(255, 82, 86),   // PM Red
+    A1lib.mixColor(255, 0, 0),     // Very Red Red
+    A1lib.mixColor(0, 174, 0),     // Crystal Mask Green
+    A1lib.mixColor(45, 184, 20),   // Completion Time Green
+    A1lib.mixColor(67, 188, 188),  // Contribution Score Green
+    A1lib.mixColor(102, 152, 255), // Notable Drops Blue
+    A1lib.mixColor(235, 47, 47),   // Rot Mistake Red
+    A1lib.mixColor(255, 255, 0),   // Blessing From The Gods Yellow
+    A1lib.mixColor(0, 255, 255),   // Seren Spirit Cyan
+    A1lib.mixColor(30, 255, 0),    // Catalyst Of Alteration Green
+    A1lib.mixColor(127, 169, 255), // Public Chat Blue
+    A1lib.mixColor(0, 255, 0),     // Artificer's Measure Green
+    A1lib.mixColor(255, 112, 0),   // Luck Ring Orange
+    A1lib.mixColor(163, 53, 238)   //Rare Drop Purple
 
   ],
   backwards: true,
@@ -95,15 +96,6 @@ let buffReadInterval = null;
 let bossTimer = setInterval(function () {
   calculateTimeAndUpdateUI();
 }, 500);
-
-// Try to find chatbox
-try {
-  chatReader.find();
-  chatReader.read();
-}
-catch {
-  console.log("Could not find chatbox on initial load");
-}
 
 // Chat finder & parser functions adapted from: https://github.com/ZeroGwafa/SerenTracker
 let findChat = setInterval(function () {
@@ -149,8 +141,8 @@ let findChat = setInterval(function () {
   }
 }, 1000);
 
+// Shows a temporary rectangle around the selected chatbox
 function showSelectedChat(chat) {
-  // Attempt to show a temporary rectangle around the chatbox. Skip if overlay is not enabled.
   try {
     alt1.overLayRect(
       A1lib.mixColor(255, 255, 255),
@@ -238,7 +230,7 @@ function calculateMidOffset() {
   elid("recalButton").classList.add("d-none");
 }
 
-// calculate & adjust internal time and update the UI
+// Calculate & adjust internal time and update the UI
 function calculateTimeAndUpdateUI() {
   if (!isPaused) {
     let upcomingAttack = 0;
@@ -304,6 +296,7 @@ function calculateTimeAndUpdateUI() {
 
       let timeLeft = (attackTime - adjTime).toFixed(0);  
 
+      // Only update UI if the timeleft is >= 0 and timeLeft has changed
       if (timeLeft != oldTimeLeft && timeLeft >= 0) {
         oldTimeLeft = Math.abs(timeLeft);
 
@@ -324,7 +317,7 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
     var color = countdownColors[styleSetting][timeLeft];
 
     if (timeLeft > 0) {
-      if (countdownSoundSetting != 0 && (timeLeft > 0 && timeLeft < 4)) {
+      if (countdownSoundSetting != 0 && timeLeft < 4) {
         countdownSound.play();
       }
 
@@ -413,6 +406,8 @@ function readBuffBar() {
           // Play sound if enabled in settings
           if (crystalMaskSoundSetting != 0) {
             alertSound.play();
+
+            // To do: Add text overlay as an option
             //alt1.overLayTextEx("Crystalmask has shattered!", A1lib.mixColor(0, 255, 0), 25,parseInt(alt1.rsWidth/2),parseInt((alt1.rsHeight/2)-300),3000,"monospace",true,true);
           }
         }
