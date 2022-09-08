@@ -49,12 +49,13 @@ let attacks = {
 // Dictionary containing the countdown message colors, corresponding to time remaining in seconds
 let countdownColors = {
   0: { 5: "white", 4: "white", 3: "white", 2: "white", 1: "white", 0: "white"},
-  1: { 5: "white", 4: "white", 3: "white", 2: "yellow", 1: "orange", 0: "red"}
+  1: { 5: "white", 4: "white", 3: "white", 2: "yellow", 1: "orange", 0: "red"},
+  2: { 5: "white", 4: "white", 3: "red", 2: "orange", 1: "yellow", 0: "limegreen"}
 }
 
 let alertSound = new Audio("./assets/shatter.mp3");
-var countdownSound = new Audio("./assets/beep.mp3");
-var countdownFinishSound = new Audio("./assets/beeps.mp3");
+var countdownSound = new Audio("./assets/softbeep.mp3");
+var countdownFinishSound = new Audio("./assets/softendbeep.mp3");
 
 // Set Chat reader
 let chatReader = new Chatbox.default();
@@ -302,8 +303,11 @@ function calculateTimeAndUpdateUI() {
 
         updateAttacksUI(incomingAttack, upcomingAttack, timeLeft);
       }
-      else if (incomingAttack == 0 && currentTooltip != "") {
-        updateTooltip();
+      else if (incomingAttack == 0) {
+        if(currentTooltip != "") {
+          updateTooltip();
+        }
+
         message("");
       }
     }
@@ -317,7 +321,7 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
     var color = countdownColors[styleSetting][timeLeft];
 
     if (timeLeft > 0) {
-      if (countdownSoundSetting != 0 && timeLeft < 4) {
+      if (countdownSoundSetting != 0 && timeLeft < 4 && countdownSoundSetting != 69)  {
         countdownSound.play();
       }
 
@@ -342,6 +346,8 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
           break;
         case 3:
           updateTooltip(attacks[incomingAttack][0] + ", " + attacks[incomingAttack][1]);
+          break;
+        case 0:
           break;
         default:
           console.log("Error: Invalid tooltip setting!");
@@ -536,15 +542,33 @@ function updateCountdownSoundSetting(playSound=false) {
     switch(countdownSoundSetting) {
       case 1:
         countdownSound = new Audio("./assets/beep.mp3");
-        countdownSound.volume = 0.6;
+        countdownSound.volume = 0.7;
         countdownFinishSound = new Audio("./assets/beeps.mp3");
-        countdownFinishSound.volume = 0.6;
+        countdownFinishSound.volume = 0.7;
         break;
       case 2:
         countdownSound = new Audio("./assets/race1.mp3");
         countdownSound.volume = 0.2;
         countdownFinishSound = new Audio("./assets/race2.mp3");
-        countdownFinishSound.volume = 0.2;
+        countdownFinishSound.volume = 0.15;
+        break;
+      case 3:
+        countdownSound = new Audio("./assets/softbeep.mp3");
+        countdownSound.volume = 0.7;
+        countdownFinishSound = new Audio("./assets/softendbeep.mp3");
+        countdownFinishSound.volume = 0.7;
+        break;
+      case 4:
+        countdownSound = new Audio("./assets/xylo.mp3");
+        countdownSound.volume = 0.4;
+        countdownFinishSound = new Audio("./assets/xyloend.mp3");
+        countdownFinishSound.volume = 0.4;
+        break;
+      case 69:
+        countdownSound = new Audio("./assets/warningend.mp3");
+        countdownSound.volume = 0.5;
+        countdownFinishSound = new Audio("./assets/warningend.mp3");
+        countdownFinishSound.volume = 0.5;
         break;
       default:
         console.log("Error: Invalid countdown sound setting!");
@@ -620,7 +644,7 @@ function updateAlertSound(playSound=false) {
         break;
       case 2:
         alertSound = new Audio("./assets/shatter2.mp3");
-        alertSound.volume = 0.5;
+        alertSound.volume = 0.45;
         break;
       case 3:
         alertSound = new Audio("./assets/bell.mp3");
