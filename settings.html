@@ -82,12 +82,26 @@
     </div>
 
     <!-- Compact Mode Selector -->
-    <div class="row">
+    <div id="compactModeSetting" class="row settings-region">
       <div class="col" title="Enables/disables compact mode">
         <p>Compact Mode</p>
       </div>
       <div class="col">
-        <select class="compactModeSelect main-select-width">
+        <select id="compactModeSelect" class="compactModeSelect main-select-width">
+          <option value="" disabled>Select Option</option>
+          <option value="1">Disabled</option>
+          <option value="0">Enabled</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Statue Indicator Selector -->
+    <div id="extendedModeSetting" class="row settings-region">
+      <div class="col" title="Enables/disables statue indicator">
+        <p>Statue Indicator</p>
+      </div>
+      <div class="col">
+        <select id="extendedModeSelect" class="extendedModeSelect main-select-width">
           <option value="" disabled>Select Option</option>
           <option value="1">Disabled</option>
           <option value="0">Enabled</option>

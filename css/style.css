@@ -139,6 +139,25 @@
     z-index: 1;
 }
 
+.statue-size {
+  width: 125px;
+  height: 112px;
+}
+
+.statue-size.top-statues {
+  margin-bottom: 10px;
+}
+
+.statue-size.left-statues {
+  margin-right: 10px;
+  margin-left: 5px;
+}
+
+.statue-compass-title {
+  margin-bottom:-7px;
+  font-weight: bold;
+}
+
 .settings-subregion {
   margin-left: 5px;
   position: relative;
@@ -149,6 +168,12 @@
 }
 
 .settings-subregion.locked {
+  opacity: 0.5;
+  -webkit-filter: blur(1px);
+  filter: blur(1px);
+}
+
+.settings-region.locked {
   opacity: 0.5;
   -webkit-filter: blur(1px);
   filter: blur(1px);

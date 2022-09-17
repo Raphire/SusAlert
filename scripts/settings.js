@@ -1,11 +1,34 @@
 let tooltipSetting = 1;
 let styleSetting = 0;
 let compactModeSetting = 1;
+let extendedModeSetting = 1;
 let crystalMaskSetting = 0;
 let crystalMaskSoundSetting = 0;
 let countdownSoundSetting = 0;
 let startOffset = 0;
 let midOffset = 14;
+
+function toggleCompactModeSetting() {
+  if (compactModeSetting == 0) {
+    elid("extendedModeSetting").classList.add("locked");
+    elid("extendedModeSelect").disabled = true;
+  }
+  else {
+    elid("extendedModeSetting").classList.remove("locked");
+    elid("extendedModeSelect").disabled = false;
+  }
+}
+
+function toggleExtendedModeSetting() {
+  if (extendedModeSetting == 0) {
+    elid("compactModeSetting").classList.add("locked");
+    elid("compactModeSelect").disabled = true;
+  }
+  else {
+    elid("compactModeSetting").classList.remove("locked");
+    elid("compactModeSelect").disabled = false;
+  }
+}
 
 function toggleSoundEffectSetting() {
   if (crystalMaskSetting == 1) {
@@ -44,9 +67,21 @@ $('document').ready(function() {
   });
 
   $(".compactModeSelect").change(function () {
-    localStorage.setItem("susCompactMode", parseInt($(this).val()));
+    compactModeSetting = parseInt($(this).val());
+    localStorage.setItem("susCompactMode", compactModeSetting);
+
+    toggleCompactModeSetting();
 
     window.opener.updateCompactMode(true);
+  });
+
+  $(".extendedModeSelect").change(function () {
+    extendedModeSetting = parseInt($(this).val());
+    localStorage.setItem("susExtendedMode", extendedModeSetting);
+
+    toggleExtendedModeSetting();
+
+    window.opener.updateExtendedMode(true);
   });
 
   $(".cMask").change(function () {
@@ -125,9 +160,18 @@ $('document').ready(function() {
   // Check for saved styleSetting & set it
   if (localStorage.susCompactMode) {
     compactModeSetting = parseInt(localStorage.susCompactMode);
+    toggleCompactModeSetting();
   }
 
   $(".compactModeSelect").val(compactModeSetting);
+
+  // Check for saved styleSetting & set it
+  if (localStorage.susExtendedMode) {
+    extendedModeSetting = parseInt(localStorage.susExtendedMode);
+    toggleExtendedModeSetting();
+  }
+
+  $(".extendedModeSelect").val(extendedModeSetting);
 
   // Check for saved crystalmask detection & set it
   if (localStorage.susCMask) {

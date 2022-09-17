@@ -30,7 +30,7 @@
     <!-- Menu Buttons -->
     <div class="row">
       <div class="col">
-        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("settings.html", "_blank", "height=450, width=400, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
+        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("settings.html", "_blank", "height=495, width=400, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
         <div id="infoButton" title="Information" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("info.html", "_blank", "height=405, width=430, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
         <div id="debugButton" title="Debug" type="button" class="nissmallimagebutton menubutton float-right d-none">~</div>
       </div>
@@ -47,13 +47,37 @@
       <div id="recalButton" title="Syncs the bosstimer (Keybind: alt + 1)" type="button" class="nisbutton menubutton d-none">Click when fungus dies</div>
     </div>
 
+    <div id="statuesBox" class="d-none">
+      <div class="row"><div class="col text-center statue-compass-title">North</div></div>
+      <div class="row">
+        <div><img id="VendiStatue" src="assets/statues/Vendi - algae-calcified.png" class="statue-size left-statues top-statues"></div>
+        <div><img id="OphalmiStatue" src="assets/statues/Ophalmi - calcified-timber.png" class="statue-size top-statues" ></div>
+        <div><img id="SanaStatue" src="assets/statues/Sana - spores-algae.png" class="statue-size left-statues"></div>
+        <div><img id="TaggaStatue" src="assets/statues/Tagga - timber-spores.png" class="statue-size"></div>
+      </div>
+    </div>
+
     <!-- Resize Modal -->
     <div class="modal fade" id="resizeModal" tabindex="-1" role="dialog" aria-labelledby="resizeModal" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-body text-center">
-            Please manually resize this window
+            Please manually resize this window up/down<br/>
             <button type="button" class="btn btn-sm btn-primary mt-2" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="resizeModal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body text-center">
+            <b>New update!</b><br/>
+            Try out the new statue indicators,<br/>
+            which can be enabled in the settings.<br/>
+            <button type="button" class="btn btn-sm btn-primary mt-2" data-dismiss="modal">Don't show again</button>
           </div>
         </div>
       </div>
