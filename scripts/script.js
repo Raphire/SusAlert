@@ -636,9 +636,9 @@ function updateCountdownSoundSetting(playSound=false) {
         break;
       case 4:
         countdownSound = new Audio("./assets/xylo.mp3");
-        countdownSound.volume = 0.4;
+        countdownSound.volume = 0.3;
         countdownFinishSound = new Audio("./assets/xyloend.mp3");
-        countdownFinishSound.volume = 0.4;
+        countdownFinishSound.volume = 0.25;
         break;
       case 69:
         countdownSound = new Audio("./assets/warningend.mp3");
@@ -766,6 +766,10 @@ function updateAlertSound(playSound=false) {
       case 7:
         alertSound = new Audio("./assets/alert.mp3");
         alertSound.volume = 0.2;
+        break;
+      case 69:
+        alertSound = new Audio("./assets/warningend.mp3");
+        alertSound.volume = 0.5;
         break;
       default:
         console.log("Error: Invalid crystal mask sound setting!");

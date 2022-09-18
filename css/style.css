@@ -141,11 +141,11 @@
 
 .statue-size {
   width: 125px;
-  height: 112px;
+  height: 100px;
 }
 
 .statue-size.top-statues {
-  margin-bottom: 10px;
+  margin-bottom: 7px;
 }
 
 .statue-size.left-statues {
@@ -154,7 +154,8 @@
 }
 
 .statue-compass-title {
-  margin-bottom:-7px;
+  margin-bottom:-6px;
+  margin-top:-2px;
   font-weight: bold;
 }
 
@@ -185,4 +186,19 @@
 
 .sub-select-width {
   width: 124px;
+}
+
+.hr.statueDivider {
+  position: absolute;
+  width: 88%;
+  top: 251px;
+  border-top: 1px solid gray;
+}
+
+.vr.statueDivider {
+  position: absolute;
+  height: 190px;
+  top:-95px;
+  left:120px;
+  border-left: 1px solid gray;
 }

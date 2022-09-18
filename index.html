@@ -18,45 +18,6 @@
 
 <body class="nis body" id="body">
   <div class="container">
-    <!-- Timer & +/- Buttons -->
-    <div class="row">
-      <div class="col">
-        <div id="timerBox" class="nistext float-left h6">00:00</div>
-        <div id="minusButton" title="Reduces timer by 1 second" type="button" class="nissmallimagebutton menubutton">-</div>
-        <div id="plusButton" title="Increases timer by 1 second" type="button" class="nissmallimagebutton menubutton">+</div>
-      </div>
-    </div>
-
-    <!-- Menu Buttons -->
-    <div class="row">
-      <div class="col">
-        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("settings.html", "_blank", "height=495, width=400, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
-        <div id="infoButton" title="Information" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("info.html", "_blank", "height=405, width=430, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
-        <div id="debugButton" title="Debug" type="button" class="nissmallimagebutton menubutton float-right d-none">~</div>
-      </div>
-    </div>
-
-    <!-- Upcoming Attacks Textbox-->
-    <div class="row">
-      <div id="upcomingBox" class="nistext"></div>
-    </div>
-
-    <!-- Incoming Attacks Textbox-->
-    <div class="row">
-      <div id="incomingBox" class="nistext font-weight-bold h5">Loading...</div>
-      <div id="recalButton" title="Syncs the bosstimer (Keybind: alt + 1)" type="button" class="nisbutton menubutton d-none">Click when fungus dies</div>
-    </div>
-
-    <div id="statuesBox" class="d-none">
-      <div class="row"><div class="col text-center statue-compass-title">North</div></div>
-      <div class="row">
-        <div><img id="VendiStatue" src="assets/statues/Vendi - algae-calcified.png" class="statue-size left-statues top-statues"></div>
-        <div><img id="OphalmiStatue" src="assets/statues/Ophalmi - calcified-timber.png" class="statue-size top-statues" ></div>
-        <div><img id="SanaStatue" src="assets/statues/Sana - spores-algae.png" class="statue-size left-statues"></div>
-        <div><img id="TaggaStatue" src="assets/statues/Tagga - timber-spores.png" class="statue-size"></div>
-      </div>
-    </div>
-
     <!-- Resize Modal -->
     <div class="modal fade" id="resizeModal" tabindex="-1" role="dialog" aria-labelledby="resizeModal" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -81,6 +42,49 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Timer & +/- Buttons -->
+    <div class="row">
+      <div class="col">
+        <div id="timerBox" class="nistext float-left h6">00:00</div>
+        <div id="minusButton" title="Reduces timer by 1 second" type="button" class="nissmallimagebutton menubutton">-</div>
+        <div id="plusButton" title="Increases timer by 1 second" type="button" class="nissmallimagebutton menubutton">+</div>
+      </div>
+    </div>
+
+    <!-- Menu Buttons -->
+    <div class="row">
+      <div class="col">
+        <div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("settings.html", "_blank", "height=495, width=400, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
+        <div id="infoButton" title="Information" type="button" class="nissmallimagebutton menubutton float-right" onclick='window.open("info.html", "_blank", "height=405, width=430, status=yes, toolbar=no, menubar=no, location=no,addressbar=no");'></div>
+        <div id="debugButton" title="Debug" type="button" class="nissmallimagebutton menubutton float-right d-none">~</div>
+      </div>
+    </div>
+
+    <!-- Upcoming Attacks Textbox -->
+    <div class="row">
+      <div id="upcomingBox" class="nistext"></div>
+    </div>
+
+    <!-- Incoming Attacks Textbox -->
+    <div class="row">
+      <div id="incomingBox" class="nistext font-weight-bold h5">Loading...</div>
+      <div id="recalButton" title="Syncs the bosstimer (Keybind: alt + 1)" type="button" class="nisbutton menubutton d-none">Click when fungus dies</div>
+    </div>
+
+    <!-- Statue Indicator -->
+    <div id="statuesBox" class="d-none">
+      <div class="row"><div class="col text-center statue-compass-title">North</div></div>
+      <div class="row">
+        <div><img id="VendiStatue" src="assets/statues/Vendi - algae-calcified.png" class="statue-size left-statues top-statues"></div>
+        <div><img id="OphalmiStatue" src="assets/statues/Ophalmi - calcified-timber.png" class="statue-size top-statues" ></div>
+        <div><img id="SanaStatue" src="assets/statues/Sana - spores-algae.png" class="statue-size left-statues"></div>
+        <div><img id="TaggaStatue" src="assets/statues/Tagga - timber-spores.png" class="statue-size"></div>
+      </div>
+
+      <div class="hr statueDivider" />
+      <div class="vr statueDivider" />
     </div>
 </body>
 
