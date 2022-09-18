@@ -1,0 +1,16 @@
+{
+    "appName": "SusAlert",
+    "description": "Keeps track of the croesus' attacks and gives onscreen warnings.",
+    "appUrl": "./index.html",
+    "configUrl": "./appconfig.json",
+    "iconUrl": "./assets/favicon.png",
+    "defaultWidth": 283,
+    "defaultHeight": 310,
+    "minWidth": 283,
+    "minHeight": 310,
+    "maxWidth": 283,
+    "maxHeight": 310,
+    "requestHandlers": [],
+    "activators": [],
+    "permissions": "pixel,gamestate,overlay"
+}

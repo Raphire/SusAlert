@@ -8,28 +8,6 @@ let countdownSoundSetting = 0;
 let startOffset = 0;
 let midOffset = 14;
 
-function toggleCompactModeSetting() {
-  if (compactModeSetting == 0) {
-    elid("extendedModeSetting").classList.add("locked");
-    elid("extendedModeSelect").disabled = true;
-  }
-  else {
-    elid("extendedModeSetting").classList.remove("locked");
-    elid("extendedModeSelect").disabled = false;
-  }
-}
-
-function toggleExtendedModeSetting() {
-  if (extendedModeSetting == 0) {
-    elid("compactModeSetting").classList.add("locked");
-    elid("compactModeSelect").disabled = true;
-  }
-  else {
-    elid("compactModeSetting").classList.remove("locked");
-    elid("compactModeSelect").disabled = false;
-  }
-}
-
 function toggleSoundEffectSetting() {
   if (crystalMaskSetting == 1) {
     elid("cMaskSoundSetting").classList.remove("locked");
@@ -70,18 +48,14 @@ $('document').ready(function() {
     compactModeSetting = parseInt($(this).val());
     localStorage.setItem("susCompactMode", compactModeSetting);
 
-    toggleCompactModeSetting();
-
-    window.opener.updateCompactMode(true);
+    window.opener.updateUISize(true);
   });
 
   $(".extendedModeSelect").change(function () {
     extendedModeSetting = parseInt($(this).val());
     localStorage.setItem("susExtendedMode", extendedModeSetting);
 
-    toggleExtendedModeSetting();
-
-    window.opener.updateExtendedMode(true);
+    window.opener.updateUISize(true);
   });
 
   $(".cMask").change(function () {
@@ -160,7 +134,6 @@ $('document').ready(function() {
   // Check for saved styleSetting & set it
   if (localStorage.susCompactMode) {
     compactModeSetting = parseInt(localStorage.susCompactMode);
-    toggleCompactModeSetting();
   }
 
   $(".compactModeSelect").val(compactModeSetting);
@@ -168,7 +141,6 @@ $('document').ready(function() {
   // Check for saved styleSetting & set it
   if (localStorage.susExtendedMode) {
     extendedModeSetting = parseInt(localStorage.susExtendedMode);
-    toggleExtendedModeSetting();
   }
 
   $(".extendedModeSelect").val(extendedModeSetting);

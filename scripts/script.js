@@ -659,55 +659,87 @@ function updateCountdownSoundSetting(playSound=false) {
   }
 }
 
-// Update the compact mode setting with new value from localstorage
-function updateCompactMode(showModal=false) {
+// Update the UI mode settings with new value(s) from localstorage, and update UI
+function updateUISize(showModal=false) {
   compactModeSetting = parseInt(localStorage.susCompactMode);
+  extendedModeSetting = parseInt(localStorage.susExtendedMode);
 
-  if (compactModeSetting === 0) {
-    elid("upcomingBox").classList.add("d-none");
-    elid("upcomingBox").classList.remove("d-block");
-    elid("recalButton").classList.add("recalButtonCompact");
+  if (compactModeSetting === 0 && extendedModeSetting === 0) {
+    hideUpcomingbox();
+
+    showStatueIndicator();
+
+    compactStatueIndicator();
+
+    A1lib.identifyApp("appconfig_statues_compact.json");
+  }
+  else if (compactModeSetting === 0) {
+    hideUpcomingbox();
+
+    hideStatueIndicator();
 
     A1lib.identifyApp("appconfig_compact.json");
   }
+  else if (extendedModeSetting === 0) {
+    showUpcomingbox();
+
+    showStatueIndicator();
+    
+    uncompactStatueIndicator();
+
+    A1lib.identifyApp("appconfig_statues.json");
+  }
   else {
-    elid("upcomingBox").classList.add("d-block");
-    elid("upcomingBox").classList.remove("d-none");
-    elid("recalButton").classList.remove("recalButtonCompact");
+    showUpcomingbox();
+
+    hideStatueIndicator();
 
     A1lib.identifyApp("appconfig.json");
   }
 
   if (showModal) {
     $('#resizeModal').modal('show');
-
-    console.log("Compact mode setting changed to: " + compactModeSetting);
   }
 }
 
-// Update the compact mode setting with new value from localstorage
-function updateExtendedMode(showModal=false) {
-  extendedModeSetting = parseInt(localStorage.susExtendedMode);
+function showUpcomingbox() {
+  elid("upcomingBox").classList.remove("d-none");
+  elid("upcomingBox").classList.add("d-block");
+  elid("recalButton").classList.remove("compactMode");
+}
 
-  if (extendedModeSetting === 0) {
-    elid("statuesBox").classList.remove("d-none");
-    elid("statuesBox").classList.add("d-block");
+function hideUpcomingbox() {
+  elid("upcomingBox").classList.add("d-none");
+  elid("upcomingBox").classList.remove("d-block");
+  elid("recalButton").classList.add("compactMode");
+}
 
+function showStatueIndicator() {
+  elid("statuesBox").classList.remove("d-none");
+  elid("statuesBox").classList.add("d-block");
+}
 
-    A1lib.identifyApp("appconfig_extended.json");
-  }
-  else {
-    elid("statuesBox").classList.add("d-none");
-    elid("statuesBox").classList.remove("d-block");
+function hideStatueIndicator() {
+  elid("statuesBox").classList.add("d-none");
+  elid("statuesBox").classList.remove("d-block");
+}
 
-    A1lib.identifyApp("appconfig.json");
-  }
+function compactStatueIndicator() {
+  elid("hrStatueDivider").classList.add("compactMode");
+  elid("vrStatueDivider").classList.add("compactMode");
+  elid("VendiStatue").classList.add("compactMode");
+  elid("OphalmiStatue").classList.add("compactMode");
+  elid("SanaStatue").classList.add("compactMode");
+  elid("TaggaStatue").classList.add("compactMode");
+}
 
-  if (showModal) {
-    $('#resizeModal').modal('show');
-
-    console.log("Extended mode setting changed to: " + compactModeSetting);
-  }
+function uncompactStatueIndicator() {
+  elid("hrStatueDivider").classList.remove("compactMode");
+  elid("vrStatueDivider").classList.remove("compactMode");
+  elid("VendiStatue").classList.remove("compactMode");
+  elid("OphalmiStatue").classList.remove("compactMode");
+  elid("SanaStatue").classList.remove("compactMode");
+  elid("TaggaStatue").classList.remove("compactMode");
 }
 
 // Update the crystal mask setting with new value from localstorage
@@ -861,14 +893,14 @@ $('document').ready(function() {
   if (localStorage.susCompactMode) {
     compactModeSetting = parseInt(localStorage.susCompactMode);
 
-    updateCompactMode();
+    updateUISize();
   }
 
   // Check for saved styleSetting & set it
   if (localStorage.susExtendedMode) {
     extendedModeSetting = parseInt(localStorage.susExtendedMode);
 
-    updateExtendedMode();
+    updateUISize();
   }
 
   // Check for legacy tooltip setting, set it with new setting & remove legacy

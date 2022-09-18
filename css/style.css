@@ -89,7 +89,7 @@
   font-size:15px;
 }
 
-.recalButtonCompact{
+#recalButton.compactMode {
   top: 46px !important;
 }
 
@@ -144,6 +144,11 @@
   height: 100px;
 }
 
+.statue-size.compactMode {
+  width: 125px !important;
+  height: 90px !important;
+}
+
 .statue-size.top-statues {
   margin-bottom: 7px;
 }
@@ -195,10 +200,19 @@
   border-top: 1px solid gray;
 }
 
+.hr.statueDivider.compactMode {
+  top: 202px !important;
+}
+
 .vr.statueDivider {
   position: absolute;
   height: 190px;
   top:-95px;
   left:120px;
   border-left: 1px solid gray;
+}
+
+.vr.statueDivider.compactMode {
+  top:-85px !important;
+  height: 170px !important;
 }
