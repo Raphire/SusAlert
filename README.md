@@ -1,8 +1,7 @@
 # SusAlert
 SusAlert is an alt1 toolkit app for the croesus bossfight, it keeps track of croesus' attacks and provides you with visual and (optional) audio cues. In addition to that it can also display the status of all 4 statues and show the status of the crystal mask spell, with optional alerts for when it expires.
 
-![SusAlert-MainWindow](/assets/mainscreen.png)
-
+![SusAlert-MainWindow](/assets/mainscreen-overview.png)
 ## How to use
 SusAlert is very easy to use, simply install and open the plugin in alt1 toolkit. It will automatically detect when the croesus fight starts and ends! Some features can be enabled and disabled in the settings, which can be accessed by pressing the cog icon in the top right.
 

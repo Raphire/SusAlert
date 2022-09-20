@@ -58,7 +58,7 @@ let alertSound = new Audio("./assets/shatter.mp3");
 var countdownSound = new Audio("./assets/softbeep.mp3");
 var countdownFinishSound = new Audio("./assets/softendbeep.mp3");
 
-// Set Chat reader
+// Set Chat reader with all textcolors etc.
 let chatReader = new Chatbox.default();
 chatReader.readargs = {
   colors: [
@@ -78,7 +78,7 @@ chatReader.readargs = {
     A1lib.mixColor(127, 169, 255), // Public Chat Blue
     A1lib.mixColor(0, 255, 0),     // Artificer's Measure Green
     A1lib.mixColor(255, 112, 0),   // Luck Ring Orange
-    A1lib.mixColor(163, 53, 238)   //Rare Drop Purple
+    A1lib.mixColor(163, 53, 238)   // Rare Drop Purple
 
   ],
   backwards: true,
@@ -139,7 +139,7 @@ let findChat = setInterval(function () {
       }
 
       intervalCount = intervalCount + 1;
-    }, 250);
+    }, 300);
   }
 }, 1000);
 
@@ -182,7 +182,7 @@ function readChatbox()
       }
       
       // Check for lines indicating the attack phase has ended
-      if (isAttackable && (lines[idx].text.includes("feeds again - stand ready!") || 
+      else if (isAttackable && (lines[idx].text.includes("feeds again - stand ready!") || 
                           lines[idx].text.includes("out - it is awakening.") ||
                           lines[idx].text.includes("is going to wake any moment.") ))  // Might not be correct?
       {
@@ -191,7 +191,7 @@ function readChatbox()
 
       // Check for lines for statue updates if the indicator is enabled
       if (extendedModeSetting == 0) {
-        // Ophalmi has all materials
+        // Ophalmi (Fishing) has all materials
         if ((lines[idx].text.includes("restore Ophalmi's statue") || 
             lines[idx].text.includes("Ophalmi's statue can be restored") ||
             lines[idx].text.includes("rekindle Ophalmi's spirit") )) 
@@ -199,56 +199,56 @@ function readChatbox()
           $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber - complete.png");
         }
 
-        // Sana has all materials
-        if ((lines[idx].text.includes("restore Sana's statue") || 
+        // Sana (Woodcutting) has all materials
+        else if ((lines[idx].text.includes("restore Sana's statue") || 
             lines[idx].text.includes("Sana's statue can be restored") ||
             lines[idx].text.includes("rekindle Sana's spirit") )) 
         {
           $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae - complete.png");
         }
 
-        // Tagga has all materials
-        if ((lines[idx].text.includes("restore Tagga's statue") || 
+        // Tagga (Mining) has all materials
+        else if ((lines[idx].text.includes("restore Tagga's statue") || 
             lines[idx].text.includes("Tagga's statue can be restored") ||
             lines[idx].text.includes("rekindle Tagga's spirit") )) 
         {
           $("#TaggaStatue").attr("src", "assets/statues/Tagga - timber-spores - complete.png");
         }
 
-        // Vendi has all materials
-        if ((lines[idx].text.includes("restore Vendi's statue") || 
+        // Vendi (Hunter) has all materials
+        else if ((lines[idx].text.includes("restore Vendi's statue") || 
             lines[idx].text.includes("Vendi's statue can be restored") ||
             lines[idx].text.includes("rekindle Vendi's spirit") )) 
         {
           $("#VendiStatue").attr("src", "assets/statues/Vendi - algae-calcified - complete.png");
         }
 
-        // Ophalmi is restored
-        if ((lines[idx].text.includes("Awaken the indomitable fisher") || 
+        // Ophalmi (Fishing) is restored
+        else if ((lines[idx].text.includes("Awaken the indomitable fisher") || 
             lines[idx].text.includes("Ophalmi will answer our call") ||
             lines[idx].text.includes("The statue is restored - awaken Ophalmi") )) 
         {
           $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber - built.png");
         }
 
-        // Sana is restored
-        if ((lines[idx].text.includes("Awaken the prodigious woodcrafter") || 
+        // Sana (Woodcutting) is restored
+        else if ((lines[idx].text.includes("Awaken the prodigious woodcrafter") || 
             lines[idx].text.includes("Sana will answer our call") ||
             lines[idx].text.includes("The statue is restored - awaken Sana") )) 
         {
           $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae - built.png");
         }
 
-        // Tagga is restored
-        if ((lines[idx].text.includes("Awaken the flint-hearted miner") || 
+        // Tagga (Mining) is restored
+        else if ((lines[idx].text.includes("Awaken the flint-hearted miner") || 
             lines[idx].text.includes("Tagga will answer our call") ||
             lines[idx].text.includes("The statue is restored - awaken Tagga") )) 
         {
           $("#TaggaStatue").attr("src", "assets/statues/Tagga - timber-spores - built.png");
         }
 
-        // Vendi has all materials
-        if ((lines[idx].text.includes("Awaken the dauntless hunter") || 
+        // Vendi (Hunter) has all materials
+        else if ((lines[idx].text.includes("Awaken the dauntless hunter") || 
             lines[idx].text.includes("Vendi will answer our call") ||
             lines[idx].text.includes("The statue is restored - awaken Vendi") )) 
         {
@@ -376,7 +376,10 @@ function calculateTimeAndUpdateUI() {
           updateTooltip();
         }
 
-        message("");
+        // Makes sure the "Encounter Started" message is not until 3 seconds after the encounter started.
+        if(time > 3000){
+          message("");
+        }
       }
     }
   }
@@ -518,7 +521,7 @@ function stopEncounter() {
 
   updateTooltip();
 
-  // Reset statue indicators if enabled!
+  // Reset statue indicators if enabled
   if (extendedModeSetting == 0) {
     $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber.png");
     $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae.png");
@@ -646,6 +649,8 @@ function updateCountdownSoundSetting(playSound=false) {
         countdownFinishSound = new Audio("./assets/warningend.mp3");
         countdownFinishSound.volume = 0.5;
         break;
+      case 0:
+        break;
       default:
         console.log("Error: Invalid countdown sound setting!");
         break;
@@ -661,8 +666,13 @@ function updateCountdownSoundSetting(playSound=false) {
 
 // Update the UI mode settings with new value(s) from localstorage, and update UI
 function updateUISize(showModal=false) {
-  compactModeSetting = parseInt(localStorage.susCompactMode);
-  extendedModeSetting = parseInt(localStorage.susExtendedMode);
+  if (localStorage.susCompactMode) {
+    compactModeSetting = parseInt(localStorage.susCompactMode);
+  }
+
+  if (localStorage.susExtendedMode) {
+    extendedModeSetting = parseInt(localStorage.susExtendedMode);
+  }
 
   if (compactModeSetting === 0 && extendedModeSetting === 0) {
     hideUpcomingbox();
@@ -699,6 +709,8 @@ function updateUISize(showModal=false) {
 
   if (showModal) {
     $('#resizeModal').modal('show');
+
+    console.log("UI mode settings changed to: " + compactModeSetting + " (compact mode), and " + extendedModeSetting + " (statue indicator)");
   }
 }
 
@@ -717,6 +729,12 @@ function hideUpcomingbox() {
 function showStatueIndicator() {
   elid("statuesBox").classList.remove("d-none");
   elid("statuesBox").classList.add("d-block");
+
+  // Reset all statue indicators, in case they were disabled mid-fight.
+  $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber.png");
+  $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae.png");
+  $("#TaggaStatue").attr("src", "assets/statues/Tagga - timber-spores.png");
+  $("#VendiStatue").attr("src", "assets/statues/Vendi - algae-calcified.png");
 }
 
 function hideStatueIndicator() {
@@ -803,6 +821,8 @@ function updateAlertSound(playSound=false) {
         alertSound = new Audio("./assets/warningend.mp3");
         alertSound.volume = 0.5;
         break;
+      case 0:
+        break;
       default:
         console.log("Error: Invalid crystal mask sound setting!");
         break;
@@ -882,24 +902,13 @@ $('document').ready(function() {
     styleSetting = parseInt(localStorage.susStyle);
   }
 
-  // Check for saved countdownSoundSetting & set it
+  // Check for saved countdownSoundSetting & update
   if (localStorage.susCountdownSound) {
-    countdownSoundSetting = parseInt(localStorage.susCountdownSound);
-
     updateCountdownSoundSetting();
   }
 
-  // Check for saved styleSetting & set it
-  if (localStorage.susCompactMode) {
-    compactModeSetting = parseInt(localStorage.susCompactMode);
-
-    updateUISize();
-  }
-
-  // Check for saved styleSetting & set it
-  if (localStorage.susExtendedMode) {
-    extendedModeSetting = parseInt(localStorage.susExtendedMode);
-
+  // Check for saved styleSetting & call UI update
+  if (localStorage.susCompactMode || localStorage.susExtendedMode) {
     updateUISize();
   }
 
@@ -933,17 +942,17 @@ $('document').ready(function() {
     }, 600);
   }
 
-  // Check for saved crystalmask sound setting & set it
+  // Check for saved crystalmask sound setting & update
   if (localStorage.susCMaskSound) {
-    crystalMaskSoundSetting = parseInt(localStorage.susCMaskSound);
-
     updateAlertSound();
   }
 
+  // Show debug button if susDebug flag exists in localstorage
   if (localStorage.susDebug) {
     elid("debugButton").classList.remove("d-none");
   }
 
+  // Show update message to those who've not seen it yet.
   if (!localStorage.susUpdate1) {
     localStorage.setItem("susUpdate1", 1);
 
