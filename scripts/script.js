@@ -177,20 +177,32 @@ function readChatbox()
     }
 
     try {
-      let lineTimeStr = lines[idx].fragments[1].text;
-      let lineTimeSplit = lineTimeStr.split(':');
       let lineTime = new Date();
+      let lineTimeStr;
 
-      lineTime.setHours(lineTimeSplit[0]);
-      lineTime.setMinutes(lineTimeSplit[1]);
-      lineTime.setSeconds(lineTimeSplit[2]);
+      try {
+        lineTimeStr = lines[idx].text.match(/[0-9]{2}[:]{1}[0-9]{2}[:]{1}[0-9]{2}/g)[0];
 
-      if (debugMode) {
-        console.log("New line time: " + lineTime);
-        console.log("Old line time: " + oldLineTime);
+        if (lineTimeStr != null) {
+          let lineTimeSplit = lineTimeStr.split(':');
+  
+          lineTime.setHours(lineTimeSplit[0]);
+          lineTime.setMinutes(lineTimeSplit[1]);
+          lineTime.setSeconds(lineTimeSplit[2]);
+  
+          if (debugMode) {
+            console.log("New line time: " + lineTime);
+            console.log("Old line time: " + oldLineTime);
+          }
+        }
+      }
+      catch {
+        if (debugMode) {
+          console.log("Error: No timestring in chatline");
+        }
       }
 
-      if(oldLineTime <= lineTime) {
+      if(oldLineTime <= lineTime || lineTimeStr == null) {
         oldLineTime = lineTime;
 
         // Check for lines indicating the core can be attacked.
@@ -265,10 +277,8 @@ function readChatbox()
           }
         }
       }
-      else {
-        if (debugMode) {
-          console.log("Error: Old message!");
-        }
+      else if (debugMode) {
+        console.log("Error: Old message!");
       }
     }
     catch {

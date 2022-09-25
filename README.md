@@ -13,6 +13,7 @@ To function SusAlert needs the following:
 - The bosstimer must be visible on-screen, this can be changed in Gameplay Settings > Interfaces > Information Windows > Boss kill timer.
 - Interface scaling needs to be at 100% (this is the default).
 - Game messages need to be turned on (plugin is tested with fontsize 12).
+- It is recommended to turn timestamps on in chat to improve chatreader accuracy. This can be changed by ticking the box in Gameplay Settings > Chat & Social > Chat Customisation > Local timestamps in chat box.
 - The recommended interface transparency is 0%, a transparent chatbox may cause issues with the statue indicators.
 
 ## Installation
