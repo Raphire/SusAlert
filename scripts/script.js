@@ -136,7 +136,7 @@ let findChat = setInterval(function () {
         readBossTimer();
       }
       else {
-        if(!isPaused) {
+        if (!isPaused) {
           readChatbox();
         }
         else {
@@ -146,7 +146,7 @@ let findChat = setInterval(function () {
       }
 
       intervalCount = intervalCount + 1;
-    }, 600);
+    }, 300);
   }
 }, 1000);
 
@@ -171,118 +171,119 @@ function readChatbox()
   var lines = chatReader.read() || [];
   const numLines = lines.length;
 
+  // Iterate through each chatline that was read
   for (let idx = 0; idx < numLines; idx++) {
+    let lineTime = new Date();
+    let lineTimeStr;
+
     if (debugMode) {
       console.log(lines[idx]);
     }
 
     try {
-      let lineTime = new Date();
-      let lineTimeStr;
+      // Match for the (first) timestamp in the chatline
+      lineTimeStr = lines[idx].text.match(/[0-9]{2}[:]{1}[0-9]{2}[:]{1}[0-9]{2}/g)[0];
 
-      try {
-        lineTimeStr = lines[idx].text.match(/[0-9]{2}[:]{1}[0-9]{2}[:]{1}[0-9]{2}/g)[0];
+      // Check whether a timestamp has been found in the chatline
+      if (lineTimeStr != null) {
+        let lineTimeSplit = lineTimeStr.split(':');
 
-        if (lineTimeStr != null) {
-          let lineTimeSplit = lineTimeStr.split(':');
-  
-          lineTime.setHours(lineTimeSplit[0]);
-          lineTime.setMinutes(lineTimeSplit[1]);
-          lineTime.setSeconds(lineTimeSplit[2]);
-  
-          if (debugMode) {
-            console.log("New line time: " + lineTime);
-            console.log("Old line time: " + oldLineTime);
-          }
-        }
-      }
-      catch {
-        if (debugMode) {
-          console.log("Error: No timestring in chatline");
-        }
-      }
-
-      if(oldLineTime <= lineTime || lineTimeStr == null) {
-        oldLineTime = lineTime;
-
-        // Check for lines indicating the core can be attacked.
-        if (!isAttackable && (lines[idx].text.includes("is vulnerable. Attack its core!") || 
-                              lines[idx].text.includes("dark feast subsides. Strike now!") || 
-                              lines[idx].text.includes("is the time. To the core!") )) 
-        {
-          startAttack();
-        }
-        
-        // Check for lines indicating the attack phase has ended
-        else if (isAttackable && (lines[idx].text.includes("feeds again - stand ready!") || 
-                                  lines[idx].text.includes("out - it is awakening.") ||
-                                  lines[idx].text.includes("is going to wake any moment.") )) 
-        {
-          endAttack();
+        // Check if chatline was from previous day & fix lineTime if true
+        if (lineTimeSplit[0] == 23 && lineTime.getHours() == 00) {
+          lineTime.setDate(lineTime.getDate() - 1);
         }
 
-        // Check for lines for statue updates if the indicator is enabled
-        if (extendedModeSetting == 0) {
-          // Statue has all materials
-          if (lines[idx].text.includes("Go - restore") || 
-              lines[idx].text.includes("statue can be restored") ||
-              lines[idx].text.includes("Now - rekindle")) 
-          {
-            if(lines[idx].text.includes("Ophalmi")) {
-              $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber - complete.png");
-            }
-            else if(lines[idx].text.includes("Sana")) {
-              $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae - complete.png");
-            }
-            else if(lines[idx].text.includes("Tagga")) {
-              $("#TaggaStatue").attr("src", "assets/statues/Tagga - timber-spores - complete.png");
-            }
-            else if(lines[idx].text.includes("Vendi")) {
-              $("#VendiStatue").attr("src", "assets/statues/Vendi - algae-calcified - complete.png");
-            }
-          }
-
-          // Statue is built/restored (variant 1)
-          else if (lines[idx].text.includes("will answer our call") ||
-                    lines[idx].text.includes("The statue is restored - awaken")) 
-          {
-            if(lines[idx].text.includes("Ophalmi")) {
-              $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber - built.png");
-            }
-            else if(lines[idx].text.includes("Sana")) {
-              $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae - built.png");
-            }
-            else if(lines[idx].text.includes("Tagga")) {
-              $("#TaggaStatue").attr("src", "assets/statues/Tagga - timber-spores - built.png");
-            }
-            else if(lines[idx].text.includes("Vendi")) {
-              $("#VendiStatue").attr("src", "assets/statues/Vendi - algae-calcified - built.png");
-            }
-          }
-
-          // Statue is built/restored (variant 2)
-          else if (lines[idx].text.includes("Awaken the")) {
-            if(lines[idx].text.includes("indomitable fisher")) {
-              $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber - built.png");
-            }
-            else if(lines[idx].text.includes("prodigious woodcrafter")) {
-              $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae - built.png");
-            }
-            else if(lines[idx].text.includes("flint-hearted miner")) {
-              $("#TaggaStatue").attr("src", "assets/statues/Tagga - timber-spores - built.png");
-            }
-            else if(lines[idx].text.includes("dauntless hunter")) {
-              $("#VendiStatue").attr("src", "assets/statues/Vendi - algae-calcified - built.png");
-            }
-          }
-        }
-      }
-      else if (debugMode) {
-        console.log("Error: Old message!");
+        lineTime.setHours(lineTimeSplit[0]);
+        lineTime.setMinutes(lineTimeSplit[1]);
+        lineTime.setSeconds(lineTimeSplit[2]);
       }
     }
     catch {
-      console.log("Error: Invalid chattext object");
+      if (debugMode) {
+        console.log("Error: No timestring in chatline");
+      }
+    }
+
+    // Check if timestamp is newer than previous read chatline, or if there's no timestamp at all (as timestamps are not enabled by default)
+    if (oldLineTime <= lineTime) {
+      if (lineTimeStr != null) {
+        oldLineTime = lineTime;
+      }
+
+      // Check for lines indicating the core can be attacked.
+      if (!isAttackable && (lines[idx].text.includes("is vulnerable. Attack its core!") || 
+                            lines[idx].text.includes("dark feast subsides. Strike now!") || 
+                            lines[idx].text.includes("is the time. To the core!") )) 
+      {
+        startAttack();
+      }
+      
+      // Check for lines indicating the attack phase has ended
+      else if (isAttackable && (lines[idx].text.includes("feeds again - stand ready!") || 
+                                lines[idx].text.includes("out - it is awakening.") ||
+                                lines[idx].text.includes("is going to wake any moment.") )) 
+      {
+        endAttack();
+      }
+
+      // Check for lines for statue updates if the indicator is enabled
+      if (extendedModeSetting == 0) {
+        // Statue has all materials
+        if (lines[idx].text.includes("Go - restore") || 
+            lines[idx].text.includes("statue can be restored") ||
+            lines[idx].text.includes("Now - rekindle")) 
+        {
+          if (lines[idx].text.includes("Ophalmi")) {
+            $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber - complete.png");
+          }
+          else if (lines[idx].text.includes("Sana")) {
+            $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae - complete.png");
+          }
+          else if (lines[idx].text.includes("Tagga")) {
+            $("#TaggaStatue").attr("src", "assets/statues/Tagga - timber-spores - complete.png");
+          }
+          else if (lines[idx].text.includes("Vendi")) {
+            $("#VendiStatue").attr("src", "assets/statues/Vendi - algae-calcified - complete.png");
+          }
+        }
+
+        // Statue is built/restored (variant 1)
+        else if (lines[idx].text.includes("will answer our call") ||
+                  lines[idx].text.includes("The statue is restored - awaken")) 
+        {
+          if (lines[idx].text.includes("Ophalmi")) {
+            $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber - built.png");
+          }
+          else if (lines[idx].text.includes("Sana")) {
+            $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae - built.png");
+          }
+          else if (lines[idx].text.includes("Tagga")) {
+            $("#TaggaStatue").attr("src", "assets/statues/Tagga - timber-spores - built.png");
+          }
+          else if (lines[idx].text.includes("Vendi")) {
+            $("#VendiStatue").attr("src", "assets/statues/Vendi - algae-calcified - built.png");
+          }
+        }
+
+        // Statue is built/restored (variant 2)
+        else if (lines[idx].text.includes("Awaken the")) {
+          if (lines[idx].text.includes("indomitable fisher")) {
+            $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber - built.png");
+          }
+          else if (lines[idx].text.includes("prodigious woodcrafter")) {
+            $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae - built.png");
+          }
+          else if (lines[idx].text.includes("flint-hearted miner")) {
+            $("#TaggaStatue").attr("src", "assets/statues/Tagga - timber-spores - built.png");
+          }
+          else if (lines[idx].text.includes("dauntless hunter")) {
+            $("#VendiStatue").attr("src", "assets/statues/Vendi - algae-calcified - built.png");
+          }
+        }
+      }
+    }
+    else if (debugMode) {
+      console.log("Error: Old message!");
     }
   }
 }
@@ -400,12 +401,12 @@ function calculateTimeAndUpdateUI() {
         updateAttacksUI(incomingAttack, upcomingAttack, timeLeft);
       }
       else if (incomingAttack == 0) {
-        if(currentTooltip != "") {
+        if (currentTooltip != "") {
           updateTooltip();
         }
 
         // Makes sure the "Encounter Started" message is not until 3 seconds after the encounter started.
-        if(time > 3000){
+        if (time > 3000){
           message("");
         }
       }
