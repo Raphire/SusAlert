@@ -50,9 +50,30 @@ let attacks = {
 
 // Dictionary containing the countdown message colors, corresponding to time remaining in seconds
 let countdownColors = {
-  0: { 5: "white", 4: "white", 3: "white", 2: "white", 1: "white", 0: "white"},
-  1: { 5: "white", 4: "white", 3: "white", 2: "yellow", 1: "orange", 0: "red"},
-  2: { 5: "white", 4: "white", 3: "red", 2: "orange", 1: "yellow", 0: "limegreen"}
+  0: { 5: "white", 4: "white", 3: "white", 2: "white", 1: "white", 0: "white" },
+  1: { 5: "white", 4: "white", 3: "white", 2: "yellow", 1: "orange", 0: "red" },
+  2: { 5: "white", 4: "white", 3: "red", 2: "orange", 1: "yellow", 0: "limegreen" }
+}
+
+// Dictionary containing the alert sounds and their volume
+let alertSounds = {
+  1: ["./assets/shatter.mp3", 0.6],
+  2: ["./assets/shatter2.mp3", 0.45],
+  3: ["./assets/bell.mp3", 0.2],
+  4: ["./assets/spell.mp3", 0.1],
+  5: ["./assets/damage.mp3", 0.2],
+  6: ["./assets/fireball.mp3", 0.2],
+  7: ["./assets/alert.mp3", 0.2],
+  69: ["./assets/warningend.mp3", 0.5]
+}
+
+// Dictionary containing the countdown sounds and their volume
+let countdownSounds = {
+  1: [["./assets/beep.mp3", 0.7], ["./assets/beeps.mp3", 0.7]],
+  2: [["./assets/race1.mp3", 0.2], ["./assets/race2.mp3", 0.15]],
+  3: [["./assets/softbeep.mp3", 0.7], ["./assets/softendbeep.mp3", 0.7]],
+  4: [["./assets/xylo.mp3", 0.3], ["./assets/xyloend.mp3", 0.25]],
+  69: [["./assets/warningend.mp3", 0.5], ["./assets/warningend.mp3", 0.5]]
 }
 
 let alertSound = new Audio("./assets/shatter.mp3");
@@ -647,46 +668,17 @@ function updateCountdownSoundSetting(playSound=false) {
   if (localStorage.susCountdownSound) {
     countdownSoundSetting = parseInt(localStorage.susCountdownSound);
 
-    switch(countdownSoundSetting) {
-      case 1:
-        countdownSound = new Audio("./assets/beep.mp3");
-        countdownSound.volume = 0.7;
-        countdownFinishSound = new Audio("./assets/beeps.mp3");
-        countdownFinishSound.volume = 0.7;
-        break;
-      case 2:
-        countdownSound = new Audio("./assets/race1.mp3");
-        countdownSound.volume = 0.2;
-        countdownFinishSound = new Audio("./assets/race2.mp3");
-        countdownFinishSound.volume = 0.15;
-        break;
-      case 3:
-        countdownSound = new Audio("./assets/softbeep.mp3");
-        countdownSound.volume = 0.7;
-        countdownFinishSound = new Audio("./assets/softendbeep.mp3");
-        countdownFinishSound.volume = 0.7;
-        break;
-      case 4:
-        countdownSound = new Audio("./assets/xylo.mp3");
-        countdownSound.volume = 0.3;
-        countdownFinishSound = new Audio("./assets/xyloend.mp3");
-        countdownFinishSound.volume = 0.25;
-        break;
-      case 69:
-        countdownSound = new Audio("./assets/warningend.mp3");
-        countdownSound.volume = 0.5;
-        countdownFinishSound = new Audio("./assets/warningend.mp3");
-        countdownFinishSound.volume = 0.5;
-        break;
-      case 0:
-        break;
-      default:
-        console.log("Error: Invalid countdown sound setting!");
-        break;
+    if (countdownSoundSetting != 0) {
+      countdownSound = new Audio(countdownSounds[countdownSoundSetting][0][0]);
+      countdownSound.volume = countdownSounds[countdownSoundSetting][0][1];
+      countdownFinishSound = new Audio(countdownSounds[countdownSoundSetting][1][0]);
+      countdownFinishSound.volume = countdownSounds[countdownSoundSetting][1][1];
     }
 
-    if (playSound && countdownSoundSetting != 0) {
-      countdownFinishSound.play();
+    if (playSound) {
+      if (countdownSoundSetting != 0) {
+        countdownFinishSound.play();
+      }
 
       console.log("Countdown sound setting changed to: " + countdownSoundSetting);
     }
@@ -817,48 +809,15 @@ function updateAlertSound(playSound=false) {
   if (localStorage.susCMaskSound) {
     crystalMaskSoundSetting = parseInt(localStorage.susCMaskSound);
 
-    switch(crystalMaskSoundSetting) {
-      case 1:
-        alertSound = new Audio("./assets/shatter.mp3");
-        alertSound.volume = 0.6;
-        break;
-      case 2:
-        alertSound = new Audio("./assets/shatter2.mp3");
-        alertSound.volume = 0.45;
-        break;
-      case 3:
-        alertSound = new Audio("./assets/bell.mp3");
-        alertSound.volume = 0.2;
-        break;
-      case 4:
-        alertSound = new Audio("./assets/spell.mp3");
-        alertSound.volume = 0.1;
-        break;
-      case 5:
-        alertSound = new Audio("./assets/damage.mp3");
-        alertSound.volume = 0.2;
-        break;
-      case 6:
-        alertSound = new Audio("./assets/fireball.mp3");
-        alertSound.volume = 0.2;
-        break;
-      case 7:
-        alertSound = new Audio("./assets/alert.mp3");
-        alertSound.volume = 0.2;
-        break;
-      case 69:
-        alertSound = new Audio("./assets/warningend.mp3");
-        alertSound.volume = 0.5;
-        break;
-      case 0:
-        break;
-      default:
-        console.log("Error: Invalid crystal mask sound setting!");
-        break;
+    if (crystalMaskSoundSetting != 0) {
+      alertSound = new Audio(alertSounds[crystalMaskSoundSetting][0]);
+      alertSound.volume = alertSounds[crystalMaskSoundSetting][1];  
     }
-  
-    if (playSound && crystalMaskSoundSetting != 0) {
-      alertSound.play();
+
+    if (playSound) {
+      if (crystalMaskSoundSetting != 0) {
+        alertSound.play();
+      }
 
       console.log("Crystal mask sound setting changed to: " + crystalMaskSoundSetting);
     }
