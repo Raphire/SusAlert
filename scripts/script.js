@@ -25,7 +25,7 @@ let styleSetting = 0;
 let countdownSoundSetting = 0;
 let compactModeSetting = 1;
 let extendedModeSetting = 1;
-let crystalMaskSetting = 0;
+let crystalMaskSetting = 1;
 let crystalMaskSoundSetting = 0;
 let startOffset = 0;
 let midOffset = 14;
@@ -528,12 +528,14 @@ function readBuffBar() {
       
           elid("body").classList.add("green-border");
           elid("body").classList.remove("red-border");
+          elid("cMaskImage").classList.remove("d-none");
         }
         else if (crystalMaskActive && !imgFound) {
           crystalMaskActive = false;
   
           elid("body").classList.remove("green-border");
           elid("body").classList.add("red-border");
+          elid("cMaskImage").classList.add("d-none");
     
           // Play sound if enabled in settings
           if (crystalMaskSoundSetting != 0) {
@@ -793,6 +795,7 @@ function updateCrystalMaskSetting() {
   
       elid("body").classList.remove("green-border");
       elid("body").classList.remove("red-border");
+      elid("cMaskImage").classList.add("d-none");
     }
     else if (buffReadInterval === null) {
       buffReadInterval = setInterval(function () {
@@ -924,7 +927,9 @@ $('document').ready(function() {
       localStorage.setItem("susCMask", 1);
       localStorage.setItem("susCMaskSound", 1);
     }
+  }
 
+  if (crystalMaskSetting != 0) {
     buffReadInterval = setInterval(function () {
       readBuffBar();
     }, 600);

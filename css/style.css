@@ -29,6 +29,15 @@
   z-index: 10; 
 }
 
+#cMaskImage{
+  margin-top:7px;
+  position:absolute;
+  top: 0px;
+  left: 143px;
+  width:21px;
+  height:21px;
+}
+
 #upcomingBox{
   margin-top:8px; 
   margin-left:7px;
