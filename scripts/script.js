@@ -181,21 +181,6 @@ let findChat = setInterval(function () {
   }
 }, 1000);
 
-// Shows a temporary rectangle around the selected chatbox
-function showSelectedChat(chat) {
-  try {
-    alt1.overLayRect(
-      A1lib.mixColor(255, 255, 255),
-      chat.mainbox.rect.x,
-      chat.mainbox.rect.y,
-      chat.mainbox.rect.width,
-      chat.mainbox.rect.height,
-      2000,
-      3
-    );
-  } catch { }
-}
-
 // Reading and parsing info from the chatbox.
 function readChatbox() 
 {
@@ -332,6 +317,67 @@ function readBossTimer() {
     }
 
     attackEndCount = attackEndCount + 1;
+  }
+}
+
+// Reading & parsing info from the buff bar
+function readBuffBar() {
+  // Only check if crystalmask detection is enabled
+  if (crystalMaskSetting != 0) {
+    // First check if a buff bar has already been found, if not look for one now
+    if (buffReader.pos === null) {
+      buffReader.find();
+    }
+    else {
+      let buffReadout = buffReader.read();
+      const image = new Image;
+      image.src = "./assets/crystalmask.png";
+      image.onload = () => {
+        let imgFound = false;
+
+        ctx.drawImage(image, 0, 0);
+        imageData = ctx.getImageData(0, 0, 25, 25);
+        
+        // Iterate through all buffs to find a buff matching the imgSrc
+        for (var buffObj in buffReadout) {
+          let countMatch = buffReadout[buffObj].countMatch(imageData,false).passed;
+          
+          if (countMatch >= 70) {
+            imgFound = true;
+          }
+        }
+
+        // Add border if buff is found
+        if (imgFound && !crystalMaskActive) {
+          crystalMaskActive = true;
+      
+          if (crystalMaskBorderSetting != 0) {
+            elid("body").classList.add(borderColors[crystalMaskBorderSetting][0]);
+            elid("body").classList.remove(borderColors[crystalMaskBorderSetting][1]);
+          }
+
+          elid("cMaskImage").classList.remove("d-none");
+        }
+        else if (crystalMaskActive && !imgFound) {
+          crystalMaskActive = false;
+  
+          if (crystalMaskBorderSetting != 0) {
+            elid("body").classList.remove(borderColors[crystalMaskBorderSetting][0]);
+            elid("body").classList.add(borderColors[crystalMaskBorderSetting][1]);
+          }
+
+          elid("cMaskImage").classList.add("d-none");
+    
+          // Play sound if enabled in settings
+          if (crystalMaskSoundSetting != 0) {
+            alertSound.play();
+
+            // To do: Add text overlay as an option
+            //alt1.overLayTextEx("Crystalmask has shattered!", A1lib.mixColor(0, 255, 0), 25,parseInt(alt1.rsWidth/2),parseInt((alt1.rsHeight/2)-300),3000,"monospace",true,true);
+          }
+        }
+      }
+    }
   }
 }
 
@@ -491,81 +537,6 @@ function updateAttacksUI(incomingAttack, upcomingAttack, timeLeft) {
   }
 }
 
-// Updates the text in the tooltip
-function updateTooltip(str = "") {
-  currentTooltip = str;
-
-  if (currentTooltip != "") {
-    if (!alt1.setTooltip(" " + currentTooltip)) {
-      console.log("Error: No tooltip permission");
-    }
-  }
-  else {
-    alt1.clearTooltip();
-  }
-}
-
-// Reading & parsing info from the buff bar
-function readBuffBar() {
-  // Only check if crystalmask detection is enabled
-  if (crystalMaskSetting != 0) {
-    // First check if a buff bar has already been found, if not look for one now
-    if (buffReader.pos === null) {
-      buffReader.find();
-    }
-    else {
-      let buffReadout = buffReader.read();
-      const image = new Image;
-      image.src = "./assets/crystalmask.png";
-      image.onload = () => {
-        let imgFound = false;
-
-        ctx.drawImage(image, 0, 0);
-        imageData = ctx.getImageData(0, 0, 25, 25);
-        
-        // Iterate through all buffs to find a buff matching the imgSrc
-        for (var buffObj in buffReadout) {
-          let countMatch = buffReadout[buffObj].countMatch(imageData,false).passed;
-          
-          if (countMatch >= 70) {
-            imgFound = true;
-          }
-        }
-
-        // Add border if buff is found
-        if (imgFound && !crystalMaskActive) {
-          crystalMaskActive = true;
-      
-          if (crystalMaskBorderSetting != 0) {
-            elid("body").classList.add(borderColors[crystalMaskBorderSetting][0]);
-            elid("body").classList.remove(borderColors[crystalMaskBorderSetting][1]);
-          }
-
-          elid("cMaskImage").classList.remove("d-none");
-        }
-        else if (crystalMaskActive && !imgFound) {
-          crystalMaskActive = false;
-  
-          if (crystalMaskBorderSetting != 0) {
-            elid("body").classList.remove(borderColors[crystalMaskBorderSetting][0]);
-            elid("body").classList.add(borderColors[crystalMaskBorderSetting][1]);
-          }
-
-          elid("cMaskImage").classList.add("d-none");
-    
-          // Play sound if enabled in settings
-          if (crystalMaskSoundSetting != 0) {
-            alertSound.play();
-
-            // To do: Add text overlay as an option
-            //alt1.overLayTextEx("Crystalmask has shattered!", A1lib.mixColor(0, 255, 0), 25,parseInt(alt1.rsWidth/2),parseInt((alt1.rsHeight/2)-300),3000,"monospace",true,true);
-          }
-        }
-      }
-    }
-  }
-}
-
 // Start of boss encounter
 function startEncounter(offset = 0) {
   isPaused = false;
@@ -628,21 +599,6 @@ function endAttack() {
   
   attackOffset = attackOffset + (Date.now() - attackStartDate) / 1000;
   console.log("Attack ended, time offset: " + attackOffset);
-}
-
-// Increases timer by time
-function nudgeTimer(time) {
-  startDate = new Date(startDate).getTime() + time;
-  
-  calculateTimeAndUpdateUI();
-}
-
-// Updates the text inside element
-function message(str,elementId="incomingBox",color="white") {
-  if (elid(elementId).innerHTML != str) {
-    elid(elementId).innerHTML = str;
-    elid(elementId).style.color = color;
-  }
 }
 
 // Gets called when user presses the alt + 1 keybind.
@@ -753,52 +709,6 @@ function updateUISize(showModal=false) {
   }
 }
 
-function showUpcomingbox() {
-  elid("upcomingBox").classList.remove("d-none");
-  elid("upcomingBox").classList.add("d-block");
-  elid("recalButton").classList.remove("compactMode");
-}
-
-function hideUpcomingbox() {
-  elid("upcomingBox").classList.add("d-none");
-  elid("upcomingBox").classList.remove("d-block");
-  elid("recalButton").classList.add("compactMode");
-}
-
-function showStatueIndicator() {
-  elid("statuesBox").classList.remove("d-none");
-  elid("statuesBox").classList.add("d-block");
-
-  // Reset all statue indicators, in case they were disabled mid-fight.
-  $("#OphalmiStatue").attr("src", "assets/statues/Ophalmi - calcified-timber.png");
-  $("#SanaStatue").attr("src", "assets/statues/Sana - spores-algae.png");
-  $("#TaggaStatue").attr("src", "assets/statues/Tagga - timber-spores.png");
-  $("#VendiStatue").attr("src", "assets/statues/Vendi - algae-calcified.png");
-}
-
-function hideStatueIndicator() {
-  elid("statuesBox").classList.add("d-none");
-  elid("statuesBox").classList.remove("d-block");
-}
-
-function compactStatueIndicator() {
-  elid("hrStatueDivider").classList.add("compactMode");
-  elid("vrStatueDivider").classList.add("compactMode");
-  elid("VendiStatue").classList.add("compactMode");
-  elid("OphalmiStatue").classList.add("compactMode");
-  elid("SanaStatue").classList.add("compactMode");
-  elid("TaggaStatue").classList.add("compactMode");
-}
-
-function uncompactStatueIndicator() {
-  elid("hrStatueDivider").classList.remove("compactMode");
-  elid("vrStatueDivider").classList.remove("compactMode");
-  elid("VendiStatue").classList.remove("compactMode");
-  elid("OphalmiStatue").classList.remove("compactMode");
-  elid("SanaStatue").classList.remove("compactMode");
-  elid("TaggaStatue").classList.remove("compactMode");
-}
-
 // Update the crystal mask setting with new value from localstorage
 function updateCrystalMaskSetting() {
   if (localStorage.susCMask) {
@@ -806,15 +716,9 @@ function updateCrystalMaskSetting() {
 
     if (crystalMaskSetting == 0) {
       clearInterval(buffReadInterval);
+      hideCrystalMaskIndicator();
       buffReadInterval = null;
       crystalMaskActive = false;
-  
-      elid("body").classList.remove("green-border");
-      elid("body").classList.remove("red-border");
-      elid("body").classList.remove("blue-border");
-      elid("body").classList.remove("yellow-border");
-      elid("body").classList.remove("white-border");
-      elid("cMaskImage").classList.add("d-none");
     }
     else if (buffReadInterval === null) {
       buffReadInterval = setInterval(function () {
@@ -831,11 +735,7 @@ function updateCrystalMaskBorder() {
   if (localStorage.susCMaskBorder) {
     crystalMaskBorderSetting = parseInt(localStorage.susCMaskBorder);
     
-    elid("body").classList.remove("green-border");
-    elid("body").classList.remove("red-border");
-    elid("body").classList.remove("blue-border");
-    elid("body").classList.remove("yellow-border");
-    elid("body").classList.remove("white-border");
+    hideCrystalMaskIndicator();
 
     if (crystalMaskActive) {
       crystalMaskActive = false;
@@ -881,10 +781,6 @@ function updateMidOffset() {
 
     console.log("Mid delay changed to: " + midOffset);
   }
-}
-
-function getChatReader() {
-  return chatReader;
 }
 
 $('document').ready(function() {
