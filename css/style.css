@@ -106,8 +106,20 @@
   border: 2px solid #008000FF !important; 
 }
 
+.blue-border {
+  border: 2px solid #0096FFFF !important; 
+}
+
 .red-border {
   border: 2px solid #800000FF !important; 
+}
+
+.yellow-border {
+  border: 2px solid #FFFF00FF !important; 
+}
+
+.white-border {
+  border: 2px solid #FFFFFFFF !important; 
 }
 
 .input-width {
@@ -177,9 +189,12 @@
   margin-left: 5px;
   position: relative;
   border-left: 1px solid #777;
-  border-bottom-left-radius: 6px;
   padding-left: 2px;
   height:30px; 
+}
+
+.settings-subregion.bottom-subsetting {
+  border-bottom-left-radius: 6px;
 }
 
 .settings-subregion.locked {

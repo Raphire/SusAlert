@@ -3,6 +3,7 @@ let styleSetting = 0;
 let compactModeSetting = 1;
 let extendedModeSetting = 1;
 let crystalMaskSetting = 1;
+let crystalMaskBorderSetting = 1;
 let crystalMaskSoundSetting = 0;
 let countdownSoundSetting = 0;
 let startOffset = 0;
@@ -12,10 +13,14 @@ function toggleSoundEffectSetting() {
   if (crystalMaskSetting == 1) {
     elid("cMaskSoundSetting").classList.remove("locked");
     elid("cMaskSoundSelect").disabled = false;
+    elid("cMaskBorderSetting").classList.remove("locked");
+    elid("cMaskBorderSelect").disabled = false;
   }
   else {
     elid("cMaskSoundSetting").classList.add("locked");
     elid("cMaskSoundSelect").disabled = true;
+    elid("cMaskBorderSetting").classList.add("locked");
+    elid("cMaskBorderSelect").disabled = true;
   }
 }
 
@@ -65,6 +70,12 @@ $('document').ready(function() {
     toggleSoundEffectSetting();
 
     window.opener.updateCrystalMaskSetting();
+  });
+
+  $(".cMaskBorder").change(function () {
+    localStorage.setItem("susCMaskBorder", $(this).val());
+
+    window.opener.updateCrystalMaskBorder(true);
   });
 
   $(".cMaskSound").change(function () {
@@ -152,6 +163,13 @@ $('document').ready(function() {
   }
 
   $(".cMask").val(crystalMaskSetting);
+
+  // Check for saved crystalmask border effect & set it
+  if (localStorage.susCMaskBorder) {
+    crystalMaskBorderSetting = parseInt(localStorage.susCMaskBorder);
+  }
+
+  $("#cMaskBorderSelect").val(crystalMaskBorderSetting);
 
   // Check for saved crystalmask sound effect & set it
   if (localStorage.susCMaskSound) {

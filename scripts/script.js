@@ -26,6 +26,7 @@ let countdownSoundSetting = 0;
 let compactModeSetting = 1;
 let extendedModeSetting = 1;
 let crystalMaskSetting = 1;
+let crystalMaskBorderSetting = 1;
 let crystalMaskSoundSetting = 0;
 let startOffset = 0;
 let midOffset = 14;
@@ -65,6 +66,15 @@ let alertSounds = {
   6: ["./assets/fireball.mp3", 0.2],
   7: ["./assets/alert.mp3", 0.2],
   69: ["./assets/warningend.mp3", 0.5]
+}
+
+// Dictionary containing border colors for settings
+let borderColors = {
+  1: ["green-border", "red-border"],
+  2: ["blue-border", "red-border"],
+  3: ["blue-border", "yellow-border"],
+  4: ["blue-border", "white-border"],
+  5: ["white-border", "red-border"]
 }
 
 // Dictionary containing the countdown sounds and their volume
@@ -526,15 +536,21 @@ function readBuffBar() {
         if (imgFound && !crystalMaskActive) {
           crystalMaskActive = true;
       
-          elid("body").classList.add("green-border");
-          elid("body").classList.remove("red-border");
+          if (crystalMaskBorderSetting != 0) {
+            elid("body").classList.add(borderColors[crystalMaskBorderSetting][0]);
+            elid("body").classList.remove(borderColors[crystalMaskBorderSetting][1]);
+          }
+
           elid("cMaskImage").classList.remove("d-none");
         }
         else if (crystalMaskActive && !imgFound) {
           crystalMaskActive = false;
   
-          elid("body").classList.remove("green-border");
-          elid("body").classList.add("red-border");
+          if (crystalMaskBorderSetting != 0) {
+            elid("body").classList.remove(borderColors[crystalMaskBorderSetting][0]);
+            elid("body").classList.add(borderColors[crystalMaskBorderSetting][1]);
+          }
+
           elid("cMaskImage").classList.add("d-none");
     
           // Play sound if enabled in settings
@@ -795,6 +811,9 @@ function updateCrystalMaskSetting() {
   
       elid("body").classList.remove("green-border");
       elid("body").classList.remove("red-border");
+      elid("body").classList.remove("blue-border");
+      elid("body").classList.remove("yellow-border");
+      elid("body").classList.remove("white-border");
       elid("cMaskImage").classList.add("d-none");
     }
     else if (buffReadInterval === null) {
@@ -804,6 +823,25 @@ function updateCrystalMaskSetting() {
     }
 
     console.log("Crystal mask setting changed to: " + crystalMaskSetting);
+  }
+}
+
+// Update the crystal mask border setting with new value from localstorage
+function updateCrystalMaskBorder() {
+  if (localStorage.susCMaskBorder) {
+    crystalMaskBorderSetting = parseInt(localStorage.susCMaskBorder);
+    
+    elid("body").classList.remove("green-border");
+    elid("body").classList.remove("red-border");
+    elid("body").classList.remove("blue-border");
+    elid("body").classList.remove("yellow-border");
+    elid("body").classList.remove("white-border");
+
+    if (crystalMaskActive) {
+      crystalMaskActive = false;
+    }
+    
+    console.log("Crystal mask border setting changed to: " + crystalMaskBorderSetting);
   }
 }
 
@@ -933,6 +971,11 @@ $('document').ready(function() {
     buffReadInterval = setInterval(function () {
       readBuffBar();
     }, 600);
+  }
+
+  // Check for saved crystalmask border setting & update
+  if (localStorage.susCMaskBorder) {
+    crystalMaskBorderSetting = parseInt(localStorage.susCMaskBorder);
   }
 
   // Check for saved crystalmask sound setting & update
