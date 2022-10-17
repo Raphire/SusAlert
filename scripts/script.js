@@ -306,13 +306,15 @@ function readChatbox()
 
 // Checks for boss timer on-screen and starts/stops the timer accordingly
 function readBossTimer() {
-  if (isPaused && bossTimerReader.find() != null) {
+  if (bossTimerReader.find() != null) {
     attackEndCount = 0;
-    startEncounter(startOffset);
+
+    if (isPaused) {
+      startEncounter(startOffset);
+    }
   }
   else if (!isPaused && bossTimerReader.find() == null && debugMode == false) {
-    if (attackEndCount >= 3) {
-      attackEndCount = 0;
+    if (attackEndCount >= 4) {
       stopEncounter();
     }
 
@@ -554,6 +556,7 @@ function stopEncounter() {
   recalButtonVisible = false;
   currentTooltip = "";
   lastUpcomingMessage = "";
+  attackEndCount = 0;
   attackOffset = 0;
   recalOffset = 0;
   intervalCount = 0;
