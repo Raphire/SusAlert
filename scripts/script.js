@@ -29,9 +29,11 @@ let crystalMaskSetting = 1;
 let crystalMaskBorderSetting = 1;
 let crystalMaskSoundSetting = 0;
 let startOffset = 0;
+let endCountRequired = 6;
 let midOffset = 14;
 
 let debugMode = false;
+let debugStart = false;
 
 // Dictionary containing croesus' attacks, their timings and the counter move
 let attacks = {
@@ -197,7 +199,7 @@ function readChatbox()
     }
 
     try {
-      // Match for the (first) timestamp in the chatline
+      // Get the (first) timestamp in the chatline if present
       lineTimeStr = lines[idx].text.match(/[0-9]{2}[:]{1}[0-9]{2}[:]{1}[0-9]{2}/g)[0];
 
       // Check whether a timestamp has been found in the chatline
@@ -227,23 +229,38 @@ function readChatbox()
       }
 
       // Check for lines indicating the core can be attacked.
-      if (!isAttackable && (lines[idx].text.includes("is vulnerable. Attack its core!") || 
-                            lines[idx].text.includes("dark feast subsides. Strike now!") || 
-                            lines[idx].text.includes("is the time. To the core!") )) 
+      if (!isAttackable && (lines[idx].text.includes("is vulnerable. Attack its core") || 
+                            lines[idx].text.includes("dark feast subsides. Strike now") || 
+                            lines[idx].text.includes("is the time. To the core") )) 
       {
         startAttack();
       }
       
       // Check for lines indicating the attack phase has ended
-      else if (isAttackable && (lines[idx].text.includes("feeds again - stand ready!") || 
-                                lines[idx].text.includes("out - it is awakening.") ||
-                                lines[idx].text.includes("is going to wake any moment.") )) 
+      else if (isAttackable && (lines[idx].text.includes("feeds again - stand ready") || 
+                                lines[idx].text.includes("out - it is awakening") ||
+                                lines[idx].text.includes("is going to wake any moment") )) 
       {
         endAttack();
       }
 
+      // Check for lines indicating the bossfight has ended
+      else if (isAttackable && (lines[idx].text.includes("Croesus sleeps...and we enjoy a brief respite") ||
+                                lines[idx].text.includes("We wouldn't have managed that without") || 
+                                lines[idx].text.includes("The Cathedral is safe...for now") || 
+                                lines[idx].text.includes("You have done it. Enjoy this victory while it lasts, World Guardian") )) 
+      {
+        stopEncounter();
+
+        if (debugMode) {
+          debugStart = false;
+
+          console.log("Encounter ended via chatline.");
+        }
+      }
+
       // Check for lines for statue updates if the indicator is enabled
-      if (extendedModeSetting == 0) {
+      else if (extendedModeSetting == 0) {
         // Statue has all materials
         if (lines[idx].text.includes("Go - restore") || 
             lines[idx].text.includes("statue can be restored") ||
@@ -313,8 +330,8 @@ function readBossTimer() {
       startEncounter(startOffset);
     }
   }
-  else if (!isPaused && bossTimerReader.find() == null && debugMode == false) {
-    if (attackEndCount >= 4) {
+  else if (!isPaused && bossTimerReader.find() == null && debugStart == false) {
+    if (attackEndCount >= endCountRequired) {
       stopEncounter();
     }
 
@@ -777,6 +794,15 @@ function updateStartOffset() {
   }
 }
 
+// Update the start delay with new value from localstorage
+function updateEndCountRequired() {
+  if (localStorage.susEndCount) {
+    endCountRequired = parseInt(localStorage.susEndCount);
+
+    console.log("End count changed to: " + endCountRequired);
+  }
+}
+
 // Update the mid delay with new value from localstorage
 function updateMidOffset() {
   if (localStorage.susMidDelay) {
@@ -788,13 +814,13 @@ function updateMidOffset() {
 
 $('document').ready(function() {
   $("#debugButton").click(function () {
-    if (debugMode == false) {
+    if (debugStart == false) {
+      debugStart = true;
       startEncounter();
-      debugMode = true;
     }
     else {
+      debugStart = false;
       stopEncounter();
-      debugMode = false;
     }
   });
 
@@ -813,6 +839,11 @@ $('document').ready(function() {
   // Check for saved start delay & set it
   if (localStorage.susStartDelay) {
     startOffset = parseInt(localStorage.susStartDelay);
+  }
+
+  // Check for saved end count & set it
+  if (localStorage.susEndCount) {
+    endCountRequired = parseInt(localStorage.susEndCount);
   }
   
   // Check for saved delay & set it
@@ -885,5 +916,6 @@ $('document').ready(function() {
   // Show debug button if susDebug flag exists in localstorage
   if (localStorage.susDebug) {
     elid("debugButton").classList.remove("d-none");
+    debugMode = true;
   }
 });

@@ -7,6 +7,7 @@ let crystalMaskBorderSetting = 1;
 let crystalMaskSoundSetting = 0;
 let countdownSoundSetting = 0;
 let startOffset = 0;
+let endCountRequired = 6;
 let midOffset = 14;
 
 function toggleSoundEffectSetting() {
@@ -94,6 +95,16 @@ $('document').ready(function() {
     }
   });
 
+  $("#endDelayInput").change(function () {
+    endCountRequired = $(this).val();
+
+    if (endCountRequired >= 2 && endCountRequired <= 12) {
+      localStorage.setItem("susEndCount", endCountRequired);
+
+      window.opener.updateEndCountRequired();
+    }
+  });
+
   $("#midDelayInput").change(function () {
     midOffset = $(this).val();
 
@@ -105,6 +116,7 @@ $('document').ready(function() {
   });
 
   startDelayInput = document.getElementsByName('startDelayInput');
+  endDelayInput = document.getElementsByName('endDelayInput');
   delayInput = document.getElementsByName('midDelayInput');
 
   // Check for saved start delay & set it
@@ -113,6 +125,13 @@ $('document').ready(function() {
   }
     
   startDelayInput[0].value = startOffset;
+
+  // Check for saved end count & set it
+  if (localStorage.susEndCount) {
+    endCountRequired = parseInt(localStorage.susEndCount);
+  }
+    
+  endDelayInput[0].value = endCountRequired;
   
   // Check for saved delay & set it
   if (localStorage.susMidDelay) {
