@@ -125,10 +125,8 @@ let buffReader = new BuffsReader.default();
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
 
-// Buff reader interval
 let buffReadInterval = null;
 
-// Boss timer interval
 let bossTimer = setInterval(function () {
   calculateTimeAndUpdateUI();
 }, 500);
@@ -136,17 +134,35 @@ let bossTimer = setInterval(function () {
 // Chat finder & parser functions adapted from: https://github.com/ZeroGwafa/SerenTracker
 let findChat = setInterval(function () {
   if (chatReader.pos === null) {
-    var dots = ".";
+    try {
+      var dots = ".";
     
-    for (var y = 0; y < loadingCount % 3; y++) {
-      dots += ".";
+      for (var y = 0; y < loadingCount % 3; y++) {
+        dots += ".";
+      }
+  
+      loadingCount++;
+  
+      message("Looking for chatbox" + dots);
+      
+      chatReader.find();
     }
+    catch (e) {
+      if (e.message == "capturehold failed") {
+        message("Error: Cannot find RS client","upcomingBox");
+        message("Restart Alt1 & SusAlert");
+      }
+      else if (e.message.includes("No permission")) {
+        message("Error: No permission","upcomingBox");
+        message("Add SusAlert to Alt1");
+      }
+      else {
+        message("Unknown Error");
+      }
 
-    loadingCount++;
-
-    message("Looking for chatbox" + dots);
-    
-    chatReader.find();
+      clearInterval(findChat);
+      clearInterval(buffReadInterval);
+    }
   }
   else {
     console.log("Chatbox found!");
@@ -164,6 +180,15 @@ let findChat = setInterval(function () {
     }
     
     showSelectedChat(chatReader.pos);
+
+    // Start interval for crystal mask detection if enabled
+    if (crystalMaskSetting != 0) {
+      buffReadInterval = setInterval(function () {
+        readBuffBar();
+      }, 600);
+    }
+
+    // Start interval for reading chatbox/bosstimer
     setInterval(function () {
       if (intervalCount % 2) {
         readBossTimer();
@@ -228,7 +253,7 @@ function readChatbox()
         oldLineTime = lineTime;
       }
 
-      // Check for lines indicating the core can be attacked.
+      // Check for lines indicating the attack phase has started
       if (!isAttackable && (lines[idx].text.includes("is vulnerable. Attack its core") || 
                             lines[idx].text.includes("dark feast subsides. Strike now") || 
                             lines[idx].text.includes("is the time. To the core") )) 
@@ -895,12 +920,6 @@ $('document').ready(function() {
       localStorage.setItem("susCMask", 1);
       localStorage.setItem("susCMaskSound", 1);
     }
-  }
-
-  if (crystalMaskSetting != 0) {
-    buffReadInterval = setInterval(function () {
-      readBuffBar();
-    }, 600);
   }
 
   // Check for saved crystalmask border setting & update
