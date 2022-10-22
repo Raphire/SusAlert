@@ -26,7 +26,7 @@
         <p>Selected Chatbox</p>
       </div>
       <div class="col">
-        <select class="chat main-select-width">
+        <select class="chat main-select-width" title="Changes which chatwindow is read by SusAlert">
           <option value="" disabled>Select Chat</option>
         </select>
       </div>
@@ -34,11 +34,11 @@
 
     <!-- Tooltip selector -->
     <div class="row">
-      <div class="col" title="Enables/disables tooltip next to cursor with attacks/hints">
+      <div class="col" title="Enables/disables a tooltip that displays info about incoming attacks next to your cursor">
         <p>Cursor Tooltip</p>
       </div>
       <div class="col">
-        <select class="ttSelect main-select-width">
+        <select class="ttSelect main-select-width" title="Enables/disables a tooltip that displays info about incoming attacks next to your cursor">
           <option value="" disabled>Select Option</option>
           <option value="0">Disabled</option>
           <option value="1">Attack only</option>
@@ -51,10 +51,10 @@
     <!-- Countdown style selector -->
     <div class="row" style="margin-bottom:-10px;">
       <div class="col" title="Changes the style of the attack countdown messages">
-        <p>Countdown Style</p>
+        <p>Countdown Text Style</p>
       </div>
       <div class="col">
-        <select class="styleSelect main-select-width">
+        <select class="styleSelect main-select-width" title="Changes the style of the attack countdown messages">
           <option value="" disabled>Select Option</option>
           <option value="0">Default (white)</option>
           <option value="1">Colorful</option>
@@ -69,7 +69,7 @@
         <p>Sound Effect</p>
       </div>
       <div class="col">
-        <select class="countdownSoundSelect sub-select-width">
+        <select class="countdownSoundSelect sub-select-width" title="Changes the sound effect that is played during the attack countdown">
           <option value="" disabled>Select Option</option>
           <option value="0">Disabled</option>
           <option value="1">Beep</option>
@@ -83,11 +83,11 @@
 
     <!-- Compact Mode Selector -->
     <div id="compactModeSetting" class="row settings-region">
-      <div class="col" title="Enables/disables compact mode">
+      <div class="col" title="Removes certain UI elements & reduces overall size of the SusAlert UI">
         <p>Compact Mode</p>
       </div>
       <div class="col">
-        <select id="compactModeSelect" class="compactModeSelect main-select-width">
+        <select id="compactModeSelect" class="compactModeSelect main-select-width" title="Removes certain UI elements & reduces overall size of the SusAlert UI">
           <option value="" disabled>Select Option</option>
           <option value="1">Disabled</option>
           <option value="0">Enabled</option>
@@ -97,11 +97,11 @@
 
     <!-- Statue Indicator Selector -->
     <div id="extendedModeSetting" class="row settings-region">
-      <div class="col" title="Enables/disables statue indicator">
+      <div class="col" title="Expands the UI to add an indicator showing the status of the 4 statues during the Croesus fight">
         <p>Statue Indicator</p>
       </div>
       <div class="col">
-        <select id="extendedModeSelect" class="extendedModeSelect main-select-width">
+        <select id="extendedModeSelect" class="extendedModeSelect main-select-width"  title="Expands the UI to add an indicator showing the status of the 4 statues during the Croesus fight">
           <option value="" disabled>Select Option</option>
           <option value="1">Disabled</option>
           <option value="0">Enabled</option>
@@ -109,13 +109,13 @@
       </div>
     </div>
 
-    <!-- Crystal mask detection selector -->
+    <!-- Crystal Mask detection selector -->
     <div class="row" style="margin-bottom:-10px;">
-      <div class="col" title="Enables/disables the crystalmask indicator">
-        <p>Crystalmask Indicator</p>
+      <div class="col" title="Adds an indicator for the Crystal Mask spell">
+        <p>Crystal Mask Indicator</p>
       </div>
       <div class="col">
-        <select class="cMask main-select-width">
+        <select class="cMask main-select-width" title="Adds an indicator for the Crystal Mask spell">
           <option value="" disabled>Select Option</option>
           <option value="0">Disabled</option>
           <option value="1">Enabled</option>
@@ -123,13 +123,13 @@
       </div>
     </div>
 
-    <!-- Crystal mask border selector -->
+    <!-- Crystal Mask border selector -->
     <div id="cMaskBorderSetting" class="row settings-subregion">
-      <div class="col" title="Changes the border around the app to indicate crystal mask's status">
+      <div class="col" title="Changes the border around the app to indicate Crystal Mask's status">
         <p>Border Color</p>
       </div>
       <div class="col">
-        <select id="cMaskBorderSelect" class="cMaskBorder sub-select-width">
+        <select id="cMaskBorderSelect" class="cMaskBorder sub-select-width" title="Changes the border around the app to indicate Crystal Mask's status">
           <option value="" disabled>Select Option</option>
           <option value="0">Disabled</option>
           <option value="1">Green/Red</option>
@@ -141,13 +141,13 @@
       </div>
     </div>
 
-    <!-- Crystal mask sound selector -->
+    <!-- Crystal Mask sound selector -->
     <div id="cMaskSoundSetting" class="row settings-subregion bottom-subsetting" style="margin-bottom:-5px;">
-      <div class="col" title="Changes the sound effect that is played when crystal mask is used or runs out">
+      <div class="col" title="Changes the sound effect that is played when Crystal Mask is used or runs out">
         <p>Sound Effect</p>
       </div>
       <div class="col">
-        <select id="cMaskSoundSelect" class="cMaskSound sub-select-width">
+        <select id="cMaskSoundSelect" class="cMaskSound sub-select-width" title="Changes the sound effect that is played when Crystal Mask is used or runs out">
           <option value="" disabled>Select Option</option>
           <option value="0">Disabled</option>
           <option value="1">Shatter 1</option>
@@ -170,7 +170,7 @@
         <p>Start Delay (ms)</p>
       </div>
       <div class="col">
-        <input class="input-width" type="number" id="startDelayInput" name="startDelayInput" placeholder="0" min="0" max="2000">
+        <input class="input-width" type="number" id="startDelayInput" name="startDelayInput" placeholder="0" min="0" max="2000" title="The delay after the start of an encounter is detected (default: 0)">
       </div>
     </div>
 
@@ -180,7 +180,7 @@
         <p>End Check Time (ticks)</p>
       </div>
       <div class="col">
-        <input class="input-width" type="number" id="endDelayInput" name="endDelayInput" placeholder="6" min="2" max="12">
+        <input class="input-width" type="number" id="endDelayInput" name="endDelayInput" placeholder="6" min="2" max="12" title="How long SusAlert must check that the bosstimer is gone before ending the encounter (default: 6)">
       </div>
     </div>
 
@@ -190,7 +190,7 @@
         <p>Delay After Mid (s)</p>
       </div>
       <div class="col">
-        <input class="input-width" type="number" id="midDelayInput" name="midDelayInput" placeholder="14" min="5" max="25">
+        <input class="input-width" type="number" id="midDelayInput" name="midDelayInput" placeholder="14" min="5" max="25" title="The delay after the mid energy fungus (default: 14)">
       </div>
     </div>
 

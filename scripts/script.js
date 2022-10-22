@@ -771,7 +771,7 @@ function updateCrystalMaskSetting() {
       }, 600);
     }
 
-    console.log("Crystal mask setting changed to: " + crystalMaskSetting);
+    console.log("Crystal Mask setting changed to: " + crystalMaskSetting);
   }
 }
 
@@ -786,7 +786,7 @@ function updateCrystalMaskBorder() {
       crystalMaskActive = false;
     }
     
-    console.log("Crystal mask border setting changed to: " + crystalMaskBorderSetting);
+    console.log("Crystal Mask border setting changed to: " + crystalMaskBorderSetting);
   }
 }
 
@@ -805,7 +805,7 @@ function updateAlertSound(playSound=false) {
         alertSound.play();
       }
 
-      console.log("Crystal mask sound setting changed to: " + crystalMaskSoundSetting);
+      console.log("Crystal Mask sound setting changed to: " + crystalMaskSoundSetting);
     }
   }
 }
