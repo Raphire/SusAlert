@@ -5,6 +5,7 @@ A1lib.identifyApp("appconfig.json");
 
 let isPaused = true;
 let isAttackable = false;
+let chatEndDetected = false;
 let recalButtonVisible = false;
 let crystalMaskActive = false;
 let startDate = Date.now();
@@ -29,7 +30,7 @@ let crystalMaskSetting = 1;
 let crystalMaskBorderSetting = 1;
 let crystalMaskSoundSetting = 0;
 let startOffset = 0;
-let endCountRequired = 6;
+let endCountRequired = 10;
 let midOffset = 14;
 
 let debugMode = false;
@@ -275,12 +276,10 @@ function readChatbox()
                                 lines[idx].text.includes("The Cathedral is safe...for now") || 
                                 lines[idx].text.includes("You have done it. Enjoy this victory while it lasts, World Guardian") )) 
       {
-        stopEncounter();
+        chatEndDetected = true;
 
         if (debugMode) {
-          debugStart = false;
-
-          console.log("Encounter ended via chatline.");
+          console.log("Encounter end detected via chatline.");
         }
       }
 
@@ -356,7 +355,12 @@ function readBossTimer() {
     }
   }
   else if (!isPaused && bossTimerReader.find() == null && debugStart == false) {
-    if (attackEndCount >= endCountRequired) {
+    // End encounter if an end of fight chatline has been detected & bosstimer has not been detected for at least 2 ticks
+    if (chatEndDetected && attackEndCount >= 3) {
+      stopEncounter();
+    }
+    // In case a chatline was missed end encounter after a set amount of time (10 ticks by default)
+    else if (attackEndCount >= endCountRequired) {
       stopEncounter();
     }
 
@@ -595,6 +599,7 @@ function startEncounter(offset = 0) {
 function stopEncounter() {
   isPaused = true;
   isAttackable = false;
+  chatEndDetected = false;
   recalButtonVisible = false;
   currentTooltip = "";
   lastUpcomingMessage = "";
@@ -869,6 +874,12 @@ $('document').ready(function() {
   // Check for saved end count & set it
   if (localStorage.susEndCount) {
     endCountRequired = parseInt(localStorage.susEndCount);
+
+    // Check if set value isn't below 6 (for legacy users)
+    if (endCountRequired < 6) {
+      endCountRequired = 6;
+      localStorage.setItem("susEndCount", 6);
+    }
   }
   
   // Check for saved delay & set it

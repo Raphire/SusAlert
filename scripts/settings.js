@@ -98,7 +98,7 @@ $('document').ready(function() {
   $("#endDelayInput").change(function () {
     endCountRequired = $(this).val();
 
-    if (endCountRequired >= 2 && endCountRequired <= 12) {
+    if (endCountRequired >= 6 && endCountRequired <= 20) {
       localStorage.setItem("susEndCount", endCountRequired);
 
       window.opener.updateEndCountRequired();
