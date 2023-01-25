@@ -150,15 +150,17 @@ let findChat = setInterval(function () {
     }
     catch (e) {
       if (e.message == "capturehold failed") {
-        message("Error: Cannot find RS client","upcomingBox");
-        message("Restart Alt1 & SusAlert");
+        message("Error: Can't find RS\nclient; Restart Alt1");
       }
       else if (e.message.includes("No permission")) {
-        message("Error: No permission","upcomingBox");
-        message("Add SusAlert to Alt1");
+        message("Error: No permission\nInstall app first");
+      }
+      else if (e.message == "alt1 is not defined") {
+        message("Error: Alt1 is not found\nOpen app in Alt1");
       }
       else {
-        message("Unknown Error");
+        message("Unknown Error\nCheck console for info");
+        console.log("Error: " + e.message);
       }
 
       clearInterval(findChat);
