@@ -121,7 +121,7 @@ chatReader.readargs = {
 
 let bossTimerReader = new BossTimer.default();
 
-let buffReader = new BuffsReader.default();
+let buffReader = new Buffs.default();
 
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
